@@ -72,7 +72,7 @@ pip install --upgrade federal-register
 
 ## Usage
 
-Here is a simple example of using the `place_holder` library.
+Here is a simple example of using the `powerbi` library.
 
 ```python
 from pprint import pprint

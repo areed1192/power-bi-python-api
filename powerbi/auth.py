@@ -19,10 +19,6 @@ class PowerBiAuth():
     AUTH_ENDPOINT = '/oauth2/v2.0/authorize?'
     TOKEN_ENDPOINT = '/oauth2/v2.0/token'
 
-    OFFICE365_AUTHORITY_URL = 'https://login.live.com'
-    OFFICE365_AUTH_ENDPOINT = '/oauth20_authorize.srf?'
-    OFFICE365_TOKEN_ENDPOINT = '/oauth20_token.srf'
-
     def __init__(
         self,
         client_id: str,
@@ -80,7 +76,6 @@ class PowerBiAuth():
         self.graph_session = None
         self.id_token = None
 
-        self.office_url = self.OFFICE365_AUTHORITY_URL + self.OFFICE365_AUTH_ENDPOINT
         self.graph_url = self.AUTHORITY_URL + self.account_type + self.AUTH_ENDPOINT
 
         # Initialize the Credential App.

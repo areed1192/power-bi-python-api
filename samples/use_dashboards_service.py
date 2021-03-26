@@ -1,3 +1,4 @@
+from pprint import pprint
 from configparser import ConfigParser
 from powerbi.client import PowerBiClient
 
@@ -23,3 +24,16 @@ power_bi_client = PowerBiClient(
 
 # Initialize the `Dashboards` service.
 dashboard_service = power_bi_client.dashboards()
+
+# Add a dashboard to our Workspace.
+dashboard_service.add_dashboard(name='tradingRobot')
+
+# Get all the dashboards in our Org.
+pprint(dashboard_service.get_dashboards())
+
+# Grab all the dashboards for a specific workspace.
+pprint(
+    dashboard_service.get_group_dashboards(
+        group_id='f78705a2-bead-4a5c-ba57-166794b05c78'
+    )
+)

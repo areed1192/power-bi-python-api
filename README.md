@@ -1,4 +1,4 @@
-# Template Repo
+# Unofficial Power Bi Python API
 
 ## Table of Contents
 
@@ -9,9 +9,16 @@
 
 ## Overview
 
+Power BI is a business analytics service by Microsoft. It aims to provide interactive
+visualizations and business intelligence capabilities with an interface simple enough
+for end users to create their own reports and dashboards. It is part of the Microsoft
+Power Platform. This library allows you to use the Power BI Rest API from python. Along
+with providing the different endpoints, it will also handle the authentication process
+for you.
+
 ## Setup
 
-**Setup - Requirements Install:***
+**Setup - Requirements Install:**
 
 For this particular project, you only need to install the dependencies, to use the project. The dependencies
 are listed in the `requirements.txt` file and can be installed by running the following command:
@@ -47,7 +54,7 @@ pip install .
 This will install all the dependencies listed in the `setup.py` file. Once done
 you can use the library wherever you want.
 
-**Setup - PyPi Install:**
+<!-- **Setup - PyPi Install:**
 
 To **install** the library, run the following command from the terminal.
 
@@ -61,14 +68,45 @@ To **upgrade** the library, run the following command from the terminal.
 
 ```console
 pip install --upgrade federal-register
-```
+``` -->
 
 ## Usage
 
 Here is a simple example of using the `place_holder` library.
 
 ```python
+from pprint import pprint
+from configparser import ConfigParser
+from powerbi.client import PowerBiClient
 
+# Initialize the Parser.
+config = ConfigParser()
+
+# Read the file.
+config.read('config/config.ini')
+
+# Get the specified credentials.
+client_id = config.get('power_bi_api', 'client_id')
+redirect_uri = config.get('power_bi_api', 'redirect_uri')
+client_secret = config.get('power_bi_api', 'client_secret')
+
+# Initialize the Client.
+power_bi_client = PowerBiClient(
+    client_id=client_id,
+    client_secret=client_secret,
+    scope=['https://analysis.windows.net/powerbi/api/.default'],
+    redirect_uri=redirect_uri,
+    credentials='config/power_bi_state.jsonc'
+)
+
+# Initialize the `Dashboards` service.
+dashboard_service = power_bi_client.dashboards()
+
+# Add a dashboard to our Workspace.
+dashboard_service.add_dashboard(name='my_new_dashboard')
+
+# Get all the dashboards in our Org.
+pprint(dashboard_service.get_dashboards())
 ```
 
 ## Support These Projects
@@ -81,5 +119,5 @@ pay monthly fees.
 **YouTube:**
 If you'd like to watch more of my content, feel free to visit my YouTube channel [Sigma Coding](https://www.youtube.com/c/SigmaCoding).
 
-<!-- **Hire Me:**
-If you have a project, you think I can help you with feel free to reach out at [coding.sigma@gmail.com](mailto:coding.sigma@gmail.com?subject=[GitHub]%20Project%20Proposal) or fill out the [contract request form](https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAa__aAmF1hURFg5ODdaVTg1TldFVUhDVjJHWlRWRzhZRy4u) -->
+**Questions:**
+If you have questions please feel free to reach out to me at [coding.sigma@gmail.com](mailto:coding.sigma@gmail.com?subject=[GitHub]%20Fred%20Library)

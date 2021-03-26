@@ -1,3 +1,4 @@
+from pprint import pprint
 from configparser import ConfigParser
 from powerbi.client import PowerBiClient
 
@@ -21,5 +22,10 @@ power_bi_client = PowerBiClient(
     credentials='config/power_bi_state.jsonc'
 )
 
-# Initialize the `Dashboards` service.
-dashboard_service = power_bi_client.dashboards()
+# Initialize the `Groups` service.
+groups_service = power_bi_client.groups()
+
+# List all the groups.
+pprint(
+    groups_service.get_groups()
+)

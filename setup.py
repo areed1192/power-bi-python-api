@@ -7,7 +7,7 @@ with open(file="README.md", mode="r") as fh:
 
 setup(
 
-    name='',
+    name='python-power-bi',
 
     # Define Author Info.
     author='Alex Reed',
@@ -17,19 +17,22 @@ setup(
     version='0.1.0',
 
     # Define descriptions.
-    description='',
+    description='The Unofficial Python API wrapper for the Microsoft Power BI REST API.',
     long_description=long_description,
     long_description_content_type="text/markdown",
 
     # Define repo location.
-    url='',
+    url='https://github.com/areed1192/power-bi-python-api.git',
 
     # Define dependencies.
-    install_requires=[],
+    install_requires=[
+        'msal==1.5.0',
+        'requests==2.24.0'
+    ],
 
     # Specify folder content.
     packages=find_namespace_packages(
-        include=[]
+        include=['powerbi']
     ),
 
     # Define the python version.

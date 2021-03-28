@@ -176,12 +176,10 @@ class PowerBiSession():
             }
         elif not response.ok:
 
-            print(len(response.content))
-
             if len(response.content) == 0:
                 response_data = ''
             else:
-                response_data = json.loads(response.json())
+                response_data = response.json()
 
             response.request.headers['Authorization'] = 'Bearer XXXXXXX'
 

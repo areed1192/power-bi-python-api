@@ -8,7 +8,8 @@ from powerbi.auth import PowerBiAuth
 from powerbi.session import PowerBiSession
 from powerbi.dashboards import Dashboards
 from powerbi.groups import Groups
-
+from powerbi.template_apps import TemplateApps
+from powerbi.users import Users
 
 class TestPowerBiSession(TestCase):
 
@@ -72,6 +73,22 @@ class TestPowerBiSession(TestCase):
         self.assertIsInstance(
             self.power_bi_client.groups(),
             Groups
+        )
+
+    def test_creates_instance_of_users(self):
+        """Create an instance and make sure it's a `Users` object"""
+
+        self.assertIsInstance(
+            self.power_bi_client.users(),
+            Users
+        )
+
+    def test_creates_instance_of_template_apps(self):
+        """Create an instance and make sure it's a `TemplateApps` object"""
+
+        self.assertIsInstance(
+            self.power_bi_client.template_apps(),
+            TemplateApps
         )
 
     def tearDown(self) -> None:

@@ -5,7 +5,8 @@ from powerbi.session import PowerBiSession
 from powerbi.auth import PowerBiAuth
 from powerbi.dashboards import Dashboards
 from powerbi.groups import Groups
-
+from powerbi.users import Users
+from powerbi.template_apps import TemplateApps
 
 class PowerBiClient():
 
@@ -125,5 +126,55 @@ class PowerBiClient():
 
         # Grab the Groups Object for the session.
         object = Groups(session=self.power_bi_session)
+
+        return object
+
+    def users(self) -> Users:
+        """Used to access the `Users` Services and metadata.
+
+        ### Returns
+        ---
+        Dashboards:
+            The `Users` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> users_service = power_bi_client.users()
+        """
+
+        # Grab the Users Object for the session.
+        object = Users(session=self.power_bi_session)
+
+        return object
+
+    def template_apps(self) -> TemplateApps:
+        """Used to access the `TemplateApps` Services and metadata.
+
+        ### Returns
+        ---
+        Dashboards:
+            The `TemplateApps` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> template_apps_service = power_bi_client.template_apps()
+        """
+
+        # Grab the TemplateApps Object for the session.
+        object = TemplateApps(session=self.power_bi_session)
 
         return object

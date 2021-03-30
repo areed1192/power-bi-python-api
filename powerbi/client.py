@@ -7,6 +7,8 @@ from powerbi.dashboards import Dashboards
 from powerbi.groups import Groups
 from powerbi.users import Users
 from powerbi.template_apps import TemplateApps
+from powerbi.dataflow_storage_account import DataflowStorageAccount
+
 
 class PowerBiClient():
 
@@ -176,5 +178,30 @@ class PowerBiClient():
 
         # Grab the TemplateApps Object for the session.
         object = TemplateApps(session=self.power_bi_session)
+
+        return object
+
+    def dataflow_storage_account(self) -> DataflowStorageAccount:
+        """Used to access the `DataflowStorageAccount` Services and metadata.
+
+        ### Returns
+        ---
+        Dashboards:
+            The `DataflowStorageAccount` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> dataflow_storage_service = power_bi_client.dataflow_storage_accounts()
+        """
+
+        # Grab the DataflowStorageAccount Object for the session.
+        object = DataflowStorageAccount(session=self.power_bi_session)
 
         return object

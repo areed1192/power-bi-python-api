@@ -11,7 +11,7 @@ from enum import Enum
 class Column():
 
     """
-    Overview:
+    ### Overview
     ----
     Represents a column inside of a `PowerBiTable`
     object.
@@ -20,8 +20,8 @@ class Column():
     def __init__(self, name: str, data_type: Union[str, Enum]) -> None:
         """Initializes a new `Column` object.
 
-        Parameters
-        ----------
+        ### Parameters
+        ----
         name : str
             The column name.
 
@@ -48,7 +48,7 @@ class Column():
 
         ### Returns
         ----
-        str : 
+        str :
             The column name.
         """
         return self.column.get('name', None)
@@ -71,7 +71,7 @@ class Column():
 
         ### Returns
         ----
-        str : 
+        str :
             One of the allowed data types.
         """
         return self.column.get('dataType', None)
@@ -97,7 +97,7 @@ class Column():
 
         ### Returns
         ----
-        str : 
+        str :
             The format of the column as specified in
             FORMAT_STRING.
         """
@@ -122,7 +122,7 @@ class Column():
 
         ### Returns
         ----
-        str : 
+        str :
             String value to be used for the data category
             which describes the data within this column.
         """
@@ -152,7 +152,7 @@ class Column():
 
         ### Returns
         ----
-        bool : 
+        bool :
             If `True` the column is hidden, `False`
             otherwise.
         """
@@ -178,7 +178,7 @@ class Column():
 
         ### Returns
         ----
-        str : 
+        str :
             String name of a column in the same table to be
             used to order the current column.
         """
@@ -204,7 +204,7 @@ class Column():
 
         ### Returns
         ----
-        str : 
+        str :
             Aggregate Function to use for summarizing this
             column.
         """
@@ -238,10 +238,14 @@ class Column():
         return self.column
 
 
+class Row():
+    pass
+
+
 class Measure():
 
     """
-    Overview:
+    ### Overview
     ----
     Represents a `Measure` inside of a `PowerBiColumn`
     object.
@@ -272,7 +276,7 @@ class Measure():
 
         ### Returns
         ----
-        str : 
+        str :
             The measure name.
         """
         return self.measure.get('name', None)
@@ -295,7 +299,7 @@ class Measure():
 
         ### Returns
         ----
-        str : 
+        str :
             A valid DAX expression.
         """
         return self.measure.get('dataType', None)
@@ -318,7 +322,7 @@ class Measure():
 
         ### Returns
         ----
-        str : 
+        str :
             The format of the measure as specified in
             FORMAT_STRING.
         """
@@ -344,7 +348,7 @@ class Measure():
 
         ### Returns
         ----
-        bool : 
+        bool :
             If `True` the measure is hidden, `False`
             otherwise.
         """
@@ -376,20 +380,238 @@ class Measure():
         return self.measure
 
 
+class Relationship():
+
+    """
+    ### Overview
+    ----
+    Represents a `Relationship` inside of a `PowerBiModel`
+    object.
+    """
+
+    def __init__(self, name: str, from_table: str, to_table: str, from_column: str, to_column: str) -> None:
+        """Initializes a new `Relationship` object.
+
+        ### Parameters
+        -----
+        name : str
+            The measure name.
+
+        expression : str
+            A valid DAX expression.
+        """
+
+        self.relationship = {
+            'name': name,
+            'fromColumn': from_column,
+            'toColumn': to_column,
+            'fromTable': from_table,
+            'toTable': to_table,
+            'crossFilteringBehavior': 'OneDirection'
+        }
+
+    @property
+    def name(self) -> str:
+        """The relationship name.
+
+        ### Returns
+        ----
+        str :
+            The relationship name.
+        """
+        return self.relationship.get('name', None)
+
+    @name.setter
+    def name(self, name: str) -> None:
+        """Sets the relationship name.
+
+        ### Parameters
+        ----
+        name : str
+            The name you want the relationship
+            to be.
+        """
+
+        self.relationship.update({'name': name})
+
+    @property
+    def from_table(self) -> str:
+        """Returns the `fromTable` property.
+
+        ### Returns
+        ----
+        str :
+            Name of the foreign key table.
+        """
+        return self.relationship.get('fromTable', None)
+
+    @from_table.setter
+    def from_table(self, from_table: str) -> None:
+        """Sets the `fromTable` propery.
+
+        ### Parameters
+        ----
+        from_table : str
+            Name of the foreign key table.
+        """
+
+        self.relationship.update({'fromTable': from_table})
+
+    @property
+    def to_table(self) -> str:
+        """Returns the `toTable` property.
+
+        ### Returns
+        ----
+        str :
+            Name of the primary key table.
+        """
+        return self.relationship.get('toTable', None)
+
+    @to_table.setter
+    def to_table(self, to_table: str) -> None:
+        """Sets the `toTable` propery.
+
+        ### Parameters
+        ----
+        to_table : str
+            Name of the primary key table.
+        """
+
+        self.relationship.update({'toTable': to_table})
+
+    @property
+    def from_column(self) -> str:
+        """Returns the `toColumn` property.
+
+        ### Returns
+        ----
+        str :
+            Name of the foreign key column.
+        """
+        return self.relationship.get('fromColumn', None)
+
+    @from_column.setter
+    def from_column(self, from_column: str) -> None:
+        """Sets the `fromColumn` propery.
+
+        ### Parameters
+        ----
+        from_column : str
+            Name of the foreign key column.
+        """
+
+        self.relationship.update({'fromColumn': from_column})
+
+    @property
+    def to_column(self) -> str:
+        """Returns the `toColumn` property.
+
+        ### Returns
+        ----
+        str :
+            Name of the primary key column.
+        """
+        return self.relationship.get('toColumn', None)
+
+    @to_column.setter
+    def to_column(self, to_column: str) -> None:
+        """Sets the `toColumn` propery.
+
+        ### Parameters
+        ----
+        to_column : str
+            Name of the primary key column.
+        """
+
+        self.relationship.update({'toColumn': to_column})
+
+    @property
+    def cross_filtering_behavior(self) -> str:
+        """Returns the `crossFilteringBehavior` property.
+
+        ### Returns
+        ----
+        str :
+            The filter direction of the relationship: [`OneDirection`,
+            `BothDirections`, `Automatic`].
+        """
+        return self.relationship.get('crossFilteringBehavior', None)
+
+    @cross_filtering_behavior.setter
+    def cross_filtering_behavior(self, cross_filtering_behavior: str = 'OneDirection') -> None:
+        """Sets the `crossFilteringBehavior` propery.
+
+        ### Parameters
+        ----
+        cross_filtering_behavior : str (optional, Default='OneDirection')
+            The filter direction of the relationship: [`OneDirection`,
+            `BothDirections`, `Automatic`].
+        """
+
+        self.relationship.update(
+            {'crossFilteringBehavior': cross_filtering_behavior})
+
+    def to_dict(self) -> dict:
+        """Returns the relationship properties.
+
+        ### Returns
+        ----
+        dict
+            A dictionary containing each of the relationship
+            properties.
+        """
+
+        return self.relationship
+
+
+class Columns():
+
+    """
+    ### Overview
+    ----
+    Represents a collection of `Column` objects
+    that are found inside of a `PowerBiTable` object.
+    """
+
+    def __init__(self) -> None:
+        self.columns = []
+
+    def __setitem__(self, index: int, data: Column) -> None:
+        self.columns[index] = data
+
+    def __getitem__(self, index: int) -> Column:
+        return self.columns[index]
+
+    def __delitem__(self, index: int) -> None:
+        del self.columns[index]
+
+
 class Table():
 
     """
-    Overview:
+    ### Overview
     ----
     Represents a Table inside of a PowerBi
     dataset.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, name: str) -> None:
+        """Initializes the `Table` object.
+
+        ### Parameters
+        ----
+        name : str
+            User defined name of the table.
+            It is also used as the identifier
+            of the table.
+        """
+
+        self._columns = Columns()
 
         self.table = {
             'name': '',
-            'columns': [],
+            'columns': self._columns,
             'measures': [],
             'rows': []
         }
@@ -401,7 +623,9 @@ class Table():
         ### Returns
         ----
         str : 
-            The table name.
+            User defined name of the table.
+            It is also used as the identifier
+            of the table.
         """
         return self.table.get('name', None)
 
@@ -412,11 +636,167 @@ class Table():
         ### Parameters
         ----
         name : str
-            The name you want the table to be.
+            User defined name of the table.
+            It is also used as the identifier
+            of the table.
         """
 
         self.table.update({'name': name})
 
+    @property
+    def columns(self) -> str:
+        """Gets the `columns` property.
+
+        ### Returns
+        ----
+        str : 
+            Collection of `Column` objects.
+        """
+        return self._columns
+
+    def add_column(self, column: Column) -> None:
+        """Adds a new `Column` to the `Columns`
+        collection.
+
+        ### Parameters
+        ----
+        column : Column
+            A `Column` object with the properties
+            set.
+        """
+
+        self._columns[len(self._columns)]
+
+    def get_column(self, index: int) -> Column:
+        """Gets a `Column` from the `Columns`
+        collection.
+
+        ### Parameters
+        ----
+        index : int
+            The index of the column you want
+            to return from the collection.
+
+        ### Returns
+        ----
+        Column :
+            A `PowerBiColumn` object.
+        """
+
+        return self._columns[index]
+
+    def del_column(self, index: int) -> None:
+        """Deletes a `Column` to the `Columns`
+        collection.
+
+        ### Parameters
+        ----
+        index : int
+            The index of the column you want
+            to delete from the collection.
+        """
+
+        del self._columns[index]
+
+    @property
+    def measures(self) -> str:
+        """Gets the `measures` property.
+
+        ### Returns
+        ----
+        str : 
+            Collection of `measure` objects.
+        """
+        return self.table.get('measures', [])
+
+    @property
+    def add_measure(self, measure: Measure) -> None:
+        """Adds a column to the `measures` collection.
+
+        ### Parameters
+        ----
+        measure : measure 
+            A `Measure` object with the properties
+            set.
+        """
+
+        measures = self.table.get('measures', [])
+        measures.append(measure)
+
+    def del_measure(self, index: int = 0) -> None:
+        """Deletes a `Measure` in the `measures` collection.
+
+        ### Parameters
+        ----
+        index : int (optional=, Default=0) 
+            The index of the `Measure` object
+            that you wish to delete.
+        """
+
+        measures = self.table.get('measures', [])
+        measures.pop(index)
+
+    def get_measure(self, index: int = 0) -> Column:
+        """Gets a `Measure` in the `measures` collection by
+        indexing it.
+
+        ### Parameters
+        ----
+        index : int (optional=, Default=0) 
+            The index of the `Measure` object
+            that you wish to get.
+        """
+        return self.table.get('measures', [])[index]
+
+    @property
+    def rows(self) -> str:
+        """Gets the `rows` property.
+
+        ### Returns
+        ----
+        str : 
+            Collection of `row` objects.
+        """
+        return self.table.get('rows', [])
+
+    @property
+    def add_row(self, row: Row) -> None:
+        """Adds a `Row` object to the `rows` collection.
+
+        ### Parameters
+        ----
+        row : Row 
+            A `Row` object with the properties
+            set.
+        """
+
+        rows = self.table.get('rows', [])
+        rows.append(row)
+
+    def del_row(self, index: int = 0) -> None:
+        """Deletes a `Row` in the `rows` collection.
+
+        ### Parameters
+        ----
+        index : int (optional=, Default=0) 
+            The index of the `Row` object
+            that you wish to delete.
+        """
+
+        rows = self.table.get('rows', [])
+        rows.pop(index)
+
+    def get_row(self, index: int = 0) -> Row:
+        """Gets a `Row` in the `rows` collection by
+        indexing it.
+
+        ### Parameters
+        ----
+        index : int (optional=, Default=0) 
+            The index of the `Row` object
+            that you wish to get.
+        """
+        return self.table.get('rows', [])[index]
 
 # Name	Type	Description
 # columns
@@ -435,10 +815,11 @@ class Table():
 # Row[]
 # The data rows within this table
 
+
 class Dataset():
 
     """
-    Overview:
+    ### Overview
     ----
     Offers different utilities to help build datasets.
     """

@@ -1,3 +1,4 @@
+import json
 from enum import Enum
 
 
@@ -38,3 +39,19 @@ class ColumnAggregationMethods(Enum):
     Count = 'count'
     Average = 'average'
     DistinctCount = 'distinctCount'
+
+class DatasetModes(Enum):
+    """Represents all the dataset modes you can
+    use when creating a new `PowerBiDataset`
+
+    ### Usage:
+    ----
+        >>> from powerbi.enums import DatasetModes
+        >>> DatasetModes.AsAzure.value
+    """
+
+    AsAzure = 'AsAzure'
+    AsOnPrem = 'AsOnPrem'
+    Push = 'Push'
+    PushStreaming = 'PushStreaming'
+    Streaming = 'Streaming'

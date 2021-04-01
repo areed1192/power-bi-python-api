@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from datetime import date
 from typing import Union
@@ -6,6 +7,32 @@ from enum import Enum
 # https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/entity-data-model-primitive-data-types
 # https://docs.microsoft.com/en-us/power-bi/developer/automation/api-dataset-properties#data-type-restrictions
 # https://docs.microsoft.com/en-us/analysis-services/multidimensional-models/mdx/mdx-cell-properties-format-string-contents?view=asallproducts-allversions
+
+
+class PowerBiEncoder(json.JSONEncoder):
+
+    def __init__(self, *args, **kwargs):
+        json.JSONEncoder.__init__(self, *args, **kwargs)
+
+    def default(self, obj):
+        if isinstance(obj, Columns):
+            return obj.columns
+        elif isinstance(obj, Measures):
+            return obj.measures
+        if isinstance(obj, Column):
+            return obj.column
+        elif isinstance(obj, Measure):
+            return obj.measure
+        elif isinstance(obj, Dataset):
+            return obj.push_dataset
+        elif isinstance(obj, Tables):
+            return obj.tables
+        elif isinstance(obj, Table):
+            return obj.table
+        elif isinstance(obj, Relationships):
+            return obj.relationships
+        elif isinstance(obj, Relationship):
+            return obj.relationship
 
 
 class Column():
@@ -238,10 +265,6 @@ class Column():
         return self.column
 
 
-class Row():
-    pass
-
-
 class Measure():
 
     """
@@ -378,6 +401,18 @@ class Measure():
         """
 
         return self.measure
+
+    def to_json(self) -> str:
+        """Returns the measure properties as
+        a JSON formatted string.
+
+        ### Returns
+        ----
+        str
+            A string that contains the measure
+            properties.
+        """
+        return json.dumps(obj=self.measure, indent=4)
 
 
 class Relationship():
@@ -578,13 +613,92 @@ class Columns():
         self.columns = []
 
     def __setitem__(self, index: int, data: Column) -> None:
-        self.columns[index] = data
+        self.columns.append(data)
 
     def __getitem__(self, index: int) -> Column:
         return self.columns[index]
 
     def __delitem__(self, index: int) -> None:
         del self.columns[index]
+
+    def __len__(self) -> int:
+        return len(self.columns)
+
+
+class Measures():
+
+    """
+    ### Overview
+    ----
+    Represents a collection of `Measure` objects
+    that are found inside of a `PowerBiTable` object.
+    """
+
+    def __init__(self) -> None:
+        self.measures = []
+
+    def __setitem__(self, index: int, data: Column) -> None:
+        self.measures[index] = data
+
+    def __getitem__(self, index: int) -> Column:
+        return self.measures[index]
+
+    def __delitem__(self, index: int) -> None:
+        del self.measures[index]
+
+    def __len__(self) -> int:
+        return len(self.measures)
+
+
+class Relationships():
+
+    """
+    ### Overview
+    ----
+    Represents a collection of `Relationship` objects
+    that are found inside of a `PowerBiDataset` object.
+    """
+
+    def __init__(self) -> None:
+        self.relationships = []
+
+    def __setitem__(self, index: int, data: Column) -> None:
+        self.relationships[index] = data
+
+    def __getitem__(self, index: int) -> Column:
+        return self.relationships[index]
+
+    def __delitem__(self, index: int) -> None:
+        del self.relationships[index]
+
+    def __len__(self) -> int:
+        return len(self.relationships)
+
+
+class Tables():
+
+    """
+    ### Overview
+    ----
+    Represents a collection of `Table` objects
+    that are found inside of a `PowerBiDataset`
+    object.
+    """
+
+    def __init__(self) -> None:
+        self.tables = []
+
+    def __setitem__(self, index: int, data: Column) -> None:
+        self.tables.append(data)
+
+    def __getitem__(self, index: int) -> Column:
+        return self.tables[index]
+
+    def __delitem__(self, index: int) -> None:
+        del self.tables[index]
+
+    def __len__(self) -> int:
+        return len(self.tables)
 
 
 class Table():
@@ -608,13 +722,26 @@ class Table():
         """
 
         self._columns = Columns()
+        self._measures = Measures()
 
         self.table = {
-            'name': '',
+            'name': name,
             'columns': self._columns,
-            'measures': [],
+            'measures': self._measures,
             'rows': []
         }
+
+    def __repr__(self) -> str:
+        """Represents the string representation of the
+        table object.
+
+        ### Returns
+        ----
+        str
+            A JSON formatted string.
+        """
+
+        return json.dumps(obj=self.table, indent=4, cls=PowerBiEncoder)
 
     @property
     def name(self) -> str:
@@ -652,6 +779,7 @@ class Table():
         str : 
             Collection of `Column` objects.
         """
+
         return self._columns
 
     def add_column(self, column: Column) -> None:
@@ -665,7 +793,7 @@ class Table():
             set.
         """
 
-        self._columns[len(self._columns)]
+        self._columns[len(self._columns)] = column
 
     def get_column(self, index: int) -> Column:
         """Gets a `Column` from the `Columns`
@@ -707,7 +835,8 @@ class Table():
         str : 
             Collection of `measure` objects.
         """
-        return self.table.get('measures', [])
+
+        return self._measures
 
     @property
     def add_measure(self, measure: Measure) -> None:
@@ -746,6 +875,7 @@ class Table():
             The index of the `Measure` object
             that you wish to get.
         """
+
         return self.table.get('measures', [])[index]
 
     @property
@@ -754,18 +884,19 @@ class Table():
 
         ### Returns
         ----
-        str : 
+        str :
             Collection of `row` objects.
         """
+
         return self.table.get('rows', [])
 
     @property
-    def add_row(self, row: Row) -> None:
+    def add_row(self, row: dict) -> None:
         """Adds a `Row` object to the `rows` collection.
 
         ### Parameters
         ----
-        row : Row 
+        row : dict
             A `Row` object with the properties
             set.
         """
@@ -778,7 +909,7 @@ class Table():
 
         ### Parameters
         ----
-        index : int (optional=, Default=0) 
+        index : int (optional=, Default=0)
             The index of the `Row` object
             that you wish to delete.
         """
@@ -786,34 +917,18 @@ class Table():
         rows = self.table.get('rows', [])
         rows.pop(index)
 
-    def get_row(self, index: int = 0) -> Row:
+    def get_row(self, index: int = 0) -> dict:
         """Gets a `Row` in the `rows` collection by
         indexing it.
 
         ### Parameters
         ----
-        index : int (optional=, Default=0) 
+        index : int (optional=, Default=0)
             The index of the `Row` object
             that you wish to get.
         """
+
         return self.table.get('rows', [])[index]
-
-# Name	Type	Description
-# columns
-# Column[]
-# The column schema for this table
-
-# measures
-# Measure[]
-# The measures within this table
-
-# name
-# string
-# The table name
-
-# rows
-# Row[]
-# The data rows within this table
 
 
 class Dataset():
@@ -821,18 +936,52 @@ class Dataset():
     """
     ### Overview
     ----
-    Offers different utilities to help build datasets.
+    Represents a `PowerBiDataset` object with
+    different tables, relationships, and data
+    sources.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, name: str, tables: Tables = []) -> None:
+        """Initializes the `Dataset` object.
+
+        ### Parameters
+        ----
+        name : str
+            User defined name of the dataset.
+            It is also used as the identifier
+            of the dataset.
+
+        tables : object
+            A collection of `Table` objects
+            you want to be part of the dataset.
+        """
+
+        if len(tables) == 0:
+            self._tables = Tables()
+        else:
+            self._tables = tables
+
+        self._relationships = Relationships()
 
         self.push_dataset = {
-            'name': '',
-            'tables': [],
-            'datasources': '',
+            'name': name,
+            'tables': self._tables,
+            'datasources': [],
             'defaultMode': '',
-            'relationships': ''
+            'relationships': self._relationships
         }
+
+    def __repr__(self) -> str:
+        """Represents the string representation of the
+        table object.
+
+        ### Returns
+        ----
+        str
+            A JSON formatted string.
+        """
+
+        return json.dumps(obj=self.push_dataset, indent=4, cls=PowerBiEncoder)
 
     @property
     def name(self) -> str:
@@ -857,27 +1006,101 @@ class Dataset():
 
         self.push_dataset.update({'name': name})
 
-    def add_tables(self) -> None:
+    @property
+    def default_mode(self) -> str:
+        """Gets the `defaultMode` property.
+
+        ### Returns
+        ----
+        str : 
+            The dataset mode or type.
+        """
+        return self.push_dataset.get('defaultMode', None)
+
+    @default_mode.setter
+    def default_mode(self, default_mode: str) -> None:
+        """Sets the `defaultMode` property.
+
+        ### Parameters
+        ----
+        default_mode : str
+            The dataset mode or type.
+        """
+
+        self.push_dataset.update({'defaultMode': default_mode})
+
+    @property
+    def tables(self) -> Tables:
+        """Returns the `Tables` collection from
+        the dataset.
+
+        ### Returns
+        ----
+        Tables
+            [description]
+        """
+        return self._tables
+
+    def add_table(self, table: Table) -> None:
+        """Adds a new `Table` object to the `Tables`
+        collection.
+
+        ### Parameters
+        ----
+        table : Table
+            A table object with the properties set.
+        """
+
+        self._tables[len(self._tables)] = table
+
+    def del_table(self, index: int) -> None:
+        """Deletes a `Table` to the `Tables`
+        collection.
+
+        ### Parameters
+        ----
+        index : int
+            The index of the table you want
+            to delete from the collection.
+        """
+
+        del self._tables[index]
+
+    def get_table(self, index: int) -> Table:
+        """Gets a `Table` to the `Tables`
+        collection.
+
+        ### Parameters
+        ----
+        index : int
+            The index of the table you want
+            to get from the collection.
+        """
+
+        return self._tables[index]
+
+    @property
+    def relationships(self) -> Relationship:
         pass
 
+    def add_relationship(self) -> None:
+        pass
 
-# Name	Required	Type	Description
-# name	True
-# string
-# The dataset name
+    def del_relationship(self, index: int) -> None:
+        pass
 
-# tables	True
-# Table[]
-# The dataset tables.
+    def get_relationship(self, index: int) -> Relationship:
+        pass
 
-# datasources
-# Datasource[]
-# The datasources associated with this dataset.
+    @property
+    def data_sources(self) -> object:
+        pass
 
-# defaultMode
-# DatasetMode
-# The dataset mode or type.
+    def add_data_source(self) -> None:
+        pass
 
-# relationships
-# Relationship[]
-# The dataset relationships.
+    def del_data_source(self, index: int) -> None:
+        pass
+
+    def get_data_source(self, index: int) -> object:
+        pass

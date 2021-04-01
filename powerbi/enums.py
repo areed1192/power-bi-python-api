@@ -1,6 +1,8 @@
 import json
 from enum import Enum
 
+# https://docs.microsoft.com/en-us/rest/api/power-bi/datasets/getdatasources
+
 
 class ColumnDataTypes(Enum):
     """Represents all the data types you can use
@@ -40,6 +42,7 @@ class ColumnAggregationMethods(Enum):
     Average = 'average'
     DistinctCount = 'distinctCount'
 
+
 class DatasetModes(Enum):
     """Represents all the dataset modes you can
     use when creating a new `PowerBiDataset`
@@ -55,3 +58,22 @@ class DatasetModes(Enum):
     Push = 'Push'
     PushStreaming = 'PushStreaming'
     Streaming = 'Streaming'
+
+
+class DataSourceType(Enum):
+    """Represents all the datasource type you can
+    use when creating a new `PowerBiDataset`
+
+    ### Usage:
+    ----
+        >>> from powerbi.enums import DatasetModes
+        >>> DataSourceType.Web.value
+    """
+
+    AnalysisServices = 'AnalysisServices'
+    Sql = 'Sql'
+    File = 'File'
+    OData = 'OData'
+    Oracle = 'Oracle'
+    SAPHana = 'SAPHana'
+    SharePointList = 'SharePointList'

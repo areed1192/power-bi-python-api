@@ -701,6 +701,32 @@ class Tables():
         return len(self.tables)
 
 
+class DataSources():
+
+    """
+    ### Overview
+    ----
+    Represents a collection of `Datasource` objects
+    that are found inside of a `PowerBiDataset`
+    object.
+    """
+
+    def __init__(self) -> None:
+        self.datasources = []
+
+    def __setitem__(self, index: int, data: object) -> None:
+        self.datasources.append(data)
+
+    def __getitem__(self, index: int) -> object:
+        return self.datasources[index]
+
+    def __delitem__(self, index: int) -> None:
+        del self.datasources[index]
+
+    def __len__(self) -> int:
+        return len(self.datasources)
+
+
 class Table():
 
     """
@@ -951,7 +977,7 @@ class Dataset():
             It is also used as the identifier
             of the dataset.
 
-        tables : object
+        tables : Tables (optional, Default=[])
             A collection of `Table` objects
             you want to be part of the dataset.
         """
@@ -962,11 +988,12 @@ class Dataset():
             self._tables = tables
 
         self._relationships = Relationships()
+        self._data_sources = DataSources()
 
         self.push_dataset = {
             'name': name,
             'tables': self._tables,
-            'datasources': [],
+            'datasources': self._data_sources,
             'defaultMode': '',
             'relationships': self._relationships
         }
@@ -1037,7 +1064,7 @@ class Dataset():
         ### Returns
         ----
         Tables
-            [description]
+            The dataset's `Tables` collection.
         """
         return self._tables
 
@@ -1080,27 +1107,214 @@ class Dataset():
         return self._tables[index]
 
     @property
-    def relationships(self) -> Relationship:
-        pass
+    def relationships(self) -> Relationships:
+        """Returns the `Relationships` collection from
+        the dataset.
 
-    def add_relationship(self) -> None:
-        pass
+        ### Returns
+        ----
+        Relationships
+            The dataset's `Relationships` collection.
+        """
+
+        return self._relationships
+
+    def add_relationship(self, relationship: Relationship) -> None:
+        """Adds a `Relationship` to the `Relationships`
+        collection.
+
+        ### Parameters
+        ----
+        relationship : Relationship
+            The relationship object you want to add
+            to the collection.
+        """
+
+        self._relationships[len(self._relationships)] = relationship
 
     def del_relationship(self, index: int) -> None:
-        pass
+        """Deletes a `Relationship` to the `Relationships`
+        collection.
+
+        ### Parameters
+        ----
+        index : int
+            The index of the relationship you want
+            to delete from the collection.
+        """
+
+        del self._relationships[index]
 
     def get_relationship(self, index: int) -> Relationship:
-        pass
+        """Gets a `Relationship` to the `Relationships`
+        collection.
+
+        ### Parameters
+        ----
+        index : int
+            The index of the relationship you want
+            to get from the collection.
+        """
+
+        return self._relationships[index]
 
     @property
-    def data_sources(self) -> object:
-        pass
+    def data_sources(self) -> DataSources:
+        """Returns the `DataSources` collection from
+        the dataset.
 
-    def add_data_source(self) -> None:
-        pass
+        ### Returns
+        ----
+        Datasources
+            The dataset's `DataSources` collection.
+        """
+
+        return self._data_sources
+
+    def add_data_source(self, data_source: object) -> None:
+        """Adds a `DataSource` to the `DataSources`
+        collection.
+
+        ### Parameters
+        ----
+        data_source : DataSource
+            The data source object you want to add
+            to the collection.
+        """
+
+        self._data_sources[len(self._data_sources)] = data_source
 
     def del_data_source(self, index: int) -> None:
-        pass
+        """Deletes a `DataSource` to the `DataSources`
+        collection.
+
+        ### Parameters
+        ----
+        index : int
+            The index of the data source you want
+            to delete from the collection.
+        """
+
+        del self._data_sources[index]
 
     def get_data_source(self, index: int) -> object:
+        """Adds a `DataSource` to the `DataSources`
+        collection.
+
+        ### Parameters
+        ----
+        index : int
+            The index of the data source you want
+            to add to the collection.
+        """
+
+        return self._data_sources[index]
+
+
+class DataSource():
+
+    """
+    ### Overview
+    ----
+    Represents a `DataSource` object that is part
+    of a `PowerBiDataset` object.
+    """
+
+    def __init__(self, data_source_type: Union[str, Enum]) -> None:
+        """Initializes the `DataSource` object.
+
+        ### Parameters
+        ----
+        data_source_type : Union[str, Enum]
+            The datasource type, can also be a `DataSourceType`
+            enum.
+        """
+
+        if isinstance(data_source_type, Enum):
+            data_source_type = data_source_type.value
+
+        self.data_source_type = data_source_type
+
+        self.data_source = {
+            'datasourceType': self.data_source_type,
+            'connectionDetails': {},
+            'dataSourceId': '',
+            'gatewayId': ''
+        }
+
+    @property
+    def data_source_type(self) -> str:
+        """Gets the `dataSourceType` property.
+
+        ### Returns
+        ----
+        str : 
+            The `dataSourceType` property.
+        """
+        return self.data_source.get('datasourceType', None)
+
+    @data_source_type.setter
+    def data_source_type(self, data_source_type: str) -> None:
+        """Sets the `dataSourceType` property.
+
+        ### Parameters
+        ----
+        data_source_type : str
+            The `dataSourceType` with the properties set.
+        """
+
+        self.data_source.update({'datasourceType': data_source_type})
+
+    @property
+    def connection_details(self) -> str:
+        """Gets the `connectionDetails` property.
+
+        ### Returns
+        ----
+        str : 
+            The `connectionDetails` property.
+        """
+        return self.data_source.get('connectionDetails', None)
+
+    @connection_details.setter
+    def connection_details(self, connection_details: str) -> None:
+        """Sets the `connectionDetails` property.
+
+        ### Parameters
+        ----
+        connection_details : str
+            The `connectionDetails` with the properties set.
+        """
+
+        self.data_source.update({'connectionDetails': connection_details})
+
+
+class ConnectionDetails():
+
+    def __init__(self) -> None:
         pass
+
+
+# connectionDetails
+# DatasourceConnectionDetails
+# The datasource connection details
+
+# connectionString
+# string
+# (Deprecated) The datasource connection string. Available only for DirectQuery.
+
+# datasourceId
+# string
+# The bound datasource id. Empty when not bound to a gateway.
+
+# datasourceType
+# string
+# The datasource type
+
+# gatewayId
+# string
+# The bound gateway id. Empty when not bound to a gateway.
+
+# name
+# string
+# (Deprecated) The datasource name. Available only for DirectQuery.

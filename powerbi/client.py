@@ -9,6 +9,7 @@ from powerbi.users import Users
 from powerbi.template_apps import TemplateApps
 from powerbi.dataflow_storage_account import DataflowStorageAccount
 from powerbi.push_datasets import PushDatasets
+from powerbi.imports import Imports
 
 
 class PowerBiClient():
@@ -87,7 +88,7 @@ class PowerBiClient():
 
         ### Returns
         ---
-        Dashboards:
+        Dashboards :
             The `Dashboards` services Object.
 
         ### Usage
@@ -112,7 +113,7 @@ class PowerBiClient():
 
         ### Returns
         ---
-        Dashboards:
+        Groups :
             The `Groups` services Object.
 
         ### Usage
@@ -137,7 +138,7 @@ class PowerBiClient():
 
         ### Returns
         ---
-        Dashboards:
+        Users :
             The `Users` services Object.
 
         ### Usage
@@ -162,7 +163,7 @@ class PowerBiClient():
 
         ### Returns
         ---
-        Dashboards:
+        TemplateApps :
             The `TemplateApps` services Object.
 
         ### Usage
@@ -187,7 +188,7 @@ class PowerBiClient():
 
         ### Returns
         ---
-        Dashboards:
+        DataflowStorageAccount :
             The `DataflowStorageAccount` services Object.
 
         ### Usage
@@ -212,7 +213,7 @@ class PowerBiClient():
 
         ### Returns
         ---
-        Dashboards:
+        PushDatasets :
             The `PushDatasets` services Object.
 
         ### Usage
@@ -229,5 +230,30 @@ class PowerBiClient():
 
         # Grab the PushDatasets Object for the session.
         object = PushDatasets(session=self.power_bi_session)
+
+        return object
+
+    def imports(self) -> Imports:
+        """Used to access the `Imports` Services and metadata.
+
+        ### Returns
+        ---
+        Imports:
+            The `Imports` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> imports_service = power_bi_client.imports()
+        """
+
+        # Grab the Imports Object for the session.
+        object = Imports(session=self.power_bi_session)
 
         return object

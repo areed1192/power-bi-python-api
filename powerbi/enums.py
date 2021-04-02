@@ -115,3 +115,23 @@ class PrincipalType(Enum):
     App = 'App'
     Group = 'Group'
     User = 'User'
+
+
+class ImportConflictHandlerMode(Enum):
+    """Represents all the ImportConflictHandlerMode you can
+    use when creating a new `PowerBiImport`.
+
+    For more info, go to:
+    https://docs.microsoft.com/en-us/rest/api/power-bi/imports/postimport#importconflicthandlermode
+
+    ### Usage:
+    ----
+        >>> from powerbi.enums import ImportConflictHandlerMode
+        >>> ImportConflictHandlerMode.Abort.value
+    """
+
+    Abort = 'Abort'
+    CreateOrOverwrite = 'CreateOrOverwrite'
+    GenerateUniqueName = 'GenerateUniqueName'
+    Ignore = 'Ignore'
+    Overwrite = 'Overwrite'

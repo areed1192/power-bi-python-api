@@ -8,6 +8,7 @@ from powerbi.groups import Groups
 from powerbi.users import Users
 from powerbi.template_apps import TemplateApps
 from powerbi.dataflow_storage_account import DataflowStorageAccount
+from powerbi.push_datasets import PushDatasets
 
 
 class PowerBiClient():
@@ -203,5 +204,30 @@ class PowerBiClient():
 
         # Grab the DataflowStorageAccount Object for the session.
         object = DataflowStorageAccount(session=self.power_bi_session)
+
+        return object
+
+    def push_datasets(self) -> PushDatasets:
+        """Used to access the `PushDatasets` Services and metadata.
+
+        ### Returns
+        ---
+        Dashboards:
+            The `PushDatasets` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> push_datasets_service = power_bi_client.push_datasets()
+        """
+
+        # Grab the PushDatasets Object for the session.
+        object = PushDatasets(session=self.power_bi_session)
 
         return object

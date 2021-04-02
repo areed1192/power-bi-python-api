@@ -11,6 +11,7 @@ from powerbi.groups import Groups
 from powerbi.template_apps import TemplateApps
 from powerbi.users import Users
 from powerbi.dataflow_storage_account import DataflowStorageAccount
+from powerbi.push_datasets import PushDatasets
 
 class TestPowerBiSession(TestCase):
 
@@ -98,6 +99,14 @@ class TestPowerBiSession(TestCase):
         self.assertIsInstance(
             self.power_bi_client.dataflow_storage_account(),
             DataflowStorageAccount
+        )
+
+    def test_creates_instance_of_push_datasets(self):
+        """Create an instance and make sure it's a `PushDatasets` object"""
+
+        self.assertIsInstance(
+            self.power_bi_client.push_datasets(),
+            PushDatasets
         )
 
     def tearDown(self) -> None:

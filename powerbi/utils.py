@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 from datetime import date
+from powerbi.enums import DataSourceType
 from typing import Union
 from enum import Enum
 
@@ -33,6 +34,12 @@ class PowerBiEncoder(json.JSONEncoder):
             return obj.relationships
         elif isinstance(obj, Relationship):
             return obj.relationship
+        elif isinstance(obj, DataSources):
+            return obj.datasources
+        elif isinstance(obj, DataSource):
+            return obj.data_source
+        elif isinstance(obj, Dataset):
+            return obj.push_dataset
 
 
 class Column():
@@ -65,8 +72,8 @@ class Column():
             'dataCategory': '',
             'formatString': '',
             'isHidden': False,
-            'sortByColumn': '',
-            'summarizeBy': ''
+            'sortByColumn': None,
+            'summarizeBy': None
         }
 
     @property
@@ -624,6 +631,9 @@ class Columns():
     def __len__(self) -> int:
         return len(self.columns)
 
+    def __iter__(self):
+        return iter(self.columns)
+
 
 class Measures():
 
@@ -649,6 +659,9 @@ class Measures():
     def __len__(self) -> int:
         return len(self.measures)
 
+    def __iter__(self):
+        return iter(self.measures)
+
 
 class Relationships():
 
@@ -673,6 +686,9 @@ class Relationships():
 
     def __len__(self) -> int:
         return len(self.relationships)
+
+    def __iter__(self):
+        return iter(self.relationships)
 
 
 class Tables():
@@ -700,6 +716,9 @@ class Tables():
     def __len__(self) -> int:
         return len(self.tables)
 
+    def __iter__(self):
+        return iter(self.tables)
+
 
 class DataSources():
 
@@ -725,6 +744,9 @@ class DataSources():
 
     def __len__(self) -> int:
         return len(self.datasources)
+
+    def __iter__(self):
+        return iter(self.datasources)
 
 
 class Table():
@@ -768,6 +790,15 @@ class Table():
         """
 
         return json.dumps(obj=self.table, indent=4, cls=PowerBiEncoder)
+
+    def __getitem__(self, index: int) -> object:
+        return self.table[index]
+
+    def __delitem__(self, index: int) -> None:
+        del self.table[index]
+
+    def __iter__(self):
+        return iter(self.table)
 
     @property
     def name(self) -> str:
@@ -1010,6 +1041,12 @@ class Dataset():
 
         return json.dumps(obj=self.push_dataset, indent=4, cls=PowerBiEncoder)
 
+    def __getitem__(self, index: int) -> object:
+        return self.push_dataset[index]
+
+    def __delitem__(self, index: int) -> None:
+        del self.push_dataset[index]
+
     @property
     def name(self) -> str:
         """The dataset name.
@@ -1210,6 +1247,24 @@ class Dataset():
 
         return self._data_sources[index]
 
+    def _prep_for_post(self) -> dict:
+        """Preps the `Dataset` object so it's
+        valid JSON for the PostDataset endpoint.
+
+        ### Returns
+        ----
+        dict
+            A dataset with valid keys.
+        """
+
+        copy_push_dataset = self.push_dataset.copy()
+        del copy_push_dataset['datasources']
+
+        for table in copy_push_dataset['tables']:
+            del table['rows']
+
+        return copy_push_dataset
+
 
 class DataSource():
 
@@ -1293,28 +1348,3 @@ class ConnectionDetails():
 
     def __init__(self) -> None:
         pass
-
-
-# connectionDetails
-# DatasourceConnectionDetails
-# The datasource connection details
-
-# connectionString
-# string
-# (Deprecated) The datasource connection string. Available only for DirectQuery.
-
-# datasourceId
-# string
-# The bound datasource id. Empty when not bound to a gateway.
-
-# datasourceType
-# string
-# The datasource type
-
-# gatewayId
-# string
-# The bound gateway id. Empty when not bound to a gateway.
-
-# name
-# string
-# (Deprecated) The datasource name. Available only for DirectQuery.

@@ -947,8 +947,7 @@ class Table():
 
         return self.table.get('rows', [])
 
-    @property
-    def add_row(self, row: dict) -> None:
+    def add_row(self, row: Union[list, dict]) -> None:
         """Adds a `Row` object to the `rows` collection.
 
         ### Parameters
@@ -959,7 +958,11 @@ class Table():
         """
 
         rows = self.table.get('rows', [])
-        rows.append(row)
+
+        if isinstance(row, dict):
+            rows.append(row)
+        elif isinstance(row, list):
+            rows.extend(row)
 
     def del_row(self, index: int = 0) -> None:
         """Deletes a `Row` in the `rows` collection.
@@ -986,6 +989,9 @@ class Table():
         """
 
         return self.table.get('rows', [])[index]
+    
+    def as_dict(self) -> dict:
+        return self.table
 
 
 class Dataset():

@@ -64,7 +64,8 @@ class PowerBiSession():
 
         # Fake the headers.
         headers = {
-            "Authorization": "Bearer {access_token}".format(access_token=self.client.access_token)
+            "Authorization": "Bearer {access_token}".format(access_token=self.client.access_token),
+            "Content-Type": "application/json"
         }
 
         return headers

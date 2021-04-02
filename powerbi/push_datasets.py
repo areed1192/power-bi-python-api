@@ -3,6 +3,7 @@ import json
 from typing import Dict
 from typing import Union
 from powerbi.utils import Dataset
+from powerbi.utils import Table
 from powerbi.utils import PowerBiEncoder
 from powerbi.session import PowerBiSession
 
@@ -267,6 +268,170 @@ class PushDatasets():
             method='post',
             endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}/rows',
             json_payload=rows
+        )
+
+        return content
+
+    def put_dataset(self, dataset_id: str, table_name: str, table: Union[Table, dict]) -> Dict:
+        """Updates the metadata and schema for the specified table within the
+        specified dataset from "My Workspace".
+
+        ### Parameters
+        ----
+        dataset_id : str
+            The dataset ID.
+
+        table_name : str
+            The name of the table you want to update.
+
+        table : Union[Table, dict]
+            The table information you want updated, can
+            be a `Table` object.
+
+        ### Returns
+        ----
+        Dict
+            A `Table` object.
+
+        ### Usage
+        ----
+            >>> push_datasets_service = power_bi_client.push_datasets()
+            >>> push_datasets_service.put_dataset(
+                dataset_id='8ea21119-fb8f-4592-b2b8-141b824a2b7e',
+                table_name='sales_table',
+                table=new_table_sales
+            )
+        """
+
+        if isinstance(table, Table):
+
+            del table['rows']
+
+            table = json.dumps(
+                obj=table,
+                indent=4,
+                cls=PowerBiEncoder
+            )
+
+        content = self.power_bi_session.make_request(
+            method='put',
+            endpoint=f'myorg/datasets/{dataset_id}/tables/{table_name}',
+            data=table
+        )
+
+        return content
+
+    def put_group_dataset(self, group_id: str, dataset_id: str, table_name: str, table: Union[Table, dict]) -> Dict:
+        """Updates the metadata and schema for the specified table within the
+        specified dataset from the specified workspace.
+
+        ### Parameters
+        ----
+        group_id : str
+            The workspace ID.
+
+        dataset_id : str
+            The dataset ID.
+
+        table_name : str
+            The name of the table you want to update.
+
+        table : Union[Table, dict]
+            The table information you want updated, can
+            be a `Table` object.
+
+        ### Returns
+        ----
+        Dict
+            A `Table` object.
+
+        ### Usage
+        ----
+            >>> push_datasets_service = power_bi_client.push_datasets()
+            >>> push_datasets_service.put_group_dataset(
+                group_id='f78705a2-bead-4a5c-ba57-166794b05c78',
+                dataset_id='8ea21119-fb8f-4592-b2b8-141b824a2b7e',
+                table_name='sales_table',
+                table=new_table_sales
+            )
+        """
+
+        if isinstance(table, Table):
+
+            del table['rows']
+
+            table = json.dumps(
+                obj=table,
+                indent=4,
+                cls=PowerBiEncoder
+            )
+
+        content = self.power_bi_session.make_request(
+            method='put',
+            endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}',
+            data=table
+        )
+
+        return content
+
+    def delete_dataset_rows(self, dataset_id: str, table_name: str) -> None:
+        """Delets All rows from the specified table within the specified
+        dataset from "My Workspace".
+
+        ### Parameters
+        ----
+        dataset_id : str
+            The dataset id
+
+        table_name: str
+            The dataset table name you want to post rows
+            to.
+
+        ### Usage
+        ----
+            >>> push_datasets_service = power_bi_client.push_datasets()
+            >>> push_datasets_service.post_dataset_rows(
+                dataset_id='8ea21119-fb8f-4592-b2b8-141b824a2b7e',
+                table_name='sales_table'
+            )
+        """
+
+        content = self.power_bi_session.make_request(
+            method='delete',
+            endpoint=f'myorg/datasets/{dataset_id}/tables/{table_name}/rows'
+        )
+
+        return content
+
+    def delete_group_dataset_rows(self, group_id: str, dataset_id: str, table_name: str) -> None:
+        """Deletes all the data rows from the specified table, within the specified dataset, 
+        from the specified workspace.
+
+        ### Parameters
+        ----
+        group_id : str
+            The workspace id.
+
+        dataset_id : str
+            The dataset id
+
+        table_name: str
+            The dataset table name you want to post rows
+            to..
+
+        ### Usage
+        ----
+            >>> push_datasets_service = power_bi_client.push_datasets()
+            >>> push_datasets_service.post_group_dataset_rows(
+                group_id='f78705a2-bead-4a5c-ba57-166794b05c78',
+                dataset_id='8ea21119-fb8f-4592-b2b8-141b824a2b7e',
+                table_name='sales_table'
+            )
+        """
+
+        content = self.power_bi_session.make_request(
+            method='delete',
+            endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}/rows'
         )
 
         return content

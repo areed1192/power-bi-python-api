@@ -92,3 +92,58 @@ push_datasets_service.post_dataset_rows(
     table_name='sales_table',
     rows=new_rows
 )
+
+
+# Let's update the table by creating a new table object.
+new_table_sales = Table(name='sales_table')
+
+# Keep the Name Column.
+name_column = Column(name='partner_name', data_type=ColumnDataTypes.String)
+
+# Keep the Sales Column.
+sales_column = Column(name='partner_sales', data_type=ColumnDataTypes.Decimal)
+
+# Add a new column for the location.
+location_column = Column(
+    name='partner_location',
+    data_type=ColumnDataTypes.String
+)
+location_column.data_category = 'Location'
+
+new_table_sales.add_column(column=name_column)
+new_table_sales.add_column(column=sales_column)
+new_table_sales.add_column(column=location_column)
+
+new_rows = [
+    {
+        'partner_name': 'Alex Reed',
+        'partner_sales': 1000.30,
+        'partner_location': 'Great Falls, VA'
+    },
+    {
+        'partner_name': 'John Reed',
+        'partner_sales': 2000.30,
+        'partner_location': 'Houston, TX'
+    },
+    {
+        'partner_name': 'James Reed',
+        'partner_sales': 5000.30,
+        'partner_location': 'San Diego, CA'
+    }
+]
+
+# Update the table.
+pprint(
+    push_datasets_service.put_dataset(
+        dataset_id='8ea21119-fb8f-4592-b2b8-141b824a2b7e',
+        table_name='sales_table',
+        table=new_table_sales
+    )
+)
+
+# Add the new rows.
+push_datasets_service.post_dataset_rows(
+    dataset_id='8ea21119-fb8f-4592-b2b8-141b824a2b7e',
+    table_name='sales_table',
+    rows=new_rows
+)

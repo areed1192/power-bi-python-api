@@ -66,7 +66,7 @@ class DataSourceType(Enum):
 
     ### Usage:
     ----
-        >>> from powerbi.enums import DatasetModes
+        >>> from powerbi.enums import DataSourceType
         >>> DataSourceType.Web.value
     """
 
@@ -77,3 +77,41 @@ class DataSourceType(Enum):
     Oracle = 'Oracle'
     SAPHana = 'SAPHana'
     SharePointList = 'SharePointList'
+
+
+class GroupUserAccessRights(Enum):
+    """Represents all the GroupUserAccessRights type you can
+    use when creating a new `PowerBiGroupUser`.
+
+    For more info, go to:
+    https://docs.microsoft.com/en-us/rest/api/power-bi/groups/addgroupuser#groupuseraccessright
+
+    ### Usage:
+    ----
+        >>> from powerbi.enums import GroupUserAccessRights
+        >>> GroupUserAccessRights.Admin.value
+    """
+
+    Admin = 'Admin'
+    Contributor = 'Contributor'
+    Member = 'Member'
+    Remove = None
+    Viewer = 'Viewer'
+
+
+class PrincipalType(Enum):
+    """Represents all the PrincipalTypes you can
+    use when creating a new `PowerBiGroupUser`.
+
+    For more info, go to:
+    https://docs.microsoft.com/en-us/rest/api/power-bi/groups/addgroupuser#principaltype
+
+    ### Usage:
+    ----
+        >>> from powerbi.enums import PrincipalType
+        >>> PrincipalType.App.value
+    """
+
+    App = 'App'
+    Group = 'Group'
+    User = 'User'

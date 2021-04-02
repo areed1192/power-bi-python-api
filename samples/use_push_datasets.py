@@ -37,6 +37,14 @@ pprint(
     )
 )
 
+# Grab the tables from a Dataset.
+pprint(
+    push_datasets_service.get_group_tables(
+        group_id='f78705a2-bead-4a5c-ba57-166794b05c78',
+        dataset_id='8ea21119-fb8f-4592-b2b8-141b824a2b7e'
+    )
+)
+
 # Create a new Table Object.
 table_sales = Table(name='sales_table')
 
@@ -56,8 +64,6 @@ new_dataset.default_mode = 'Push'
 
 # Add the Sales table to it.
 new_dataset.add_table(table=table_sales)
-
-pprint(new_dataset)
 
 # pprint(
 #     push_datasets_service.post_dataset(
@@ -81,8 +87,8 @@ new_rows = [
     }
 ]
 
-pprint(push_datasets_service.post_dataset_rows(
+push_datasets_service.post_dataset_rows(
     dataset_id='8ea21119-fb8f-4592-b2b8-141b824a2b7e',
     table_name='sales_table',
     rows=new_rows
-))
+)

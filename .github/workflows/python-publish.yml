@@ -29,3 +29,10 @@ jobs:
       run: |
         python setup.py sdist bdist_wheel
         twine upload --repository testpypi --verbose dist/*
+    - name: Publish to PyPI
+      env:
+        TWINE_USERNAME: '__token__'
+        TWINE_PASSWORD: ${{ secrets.pypi_token }}
+      run: |
+        python setup.py sdist bdist_wheel
+        twine upload --verbose dist/*

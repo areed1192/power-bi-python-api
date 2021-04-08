@@ -5,7 +5,7 @@
       "name": "Python: Run Power BI Client",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/samples/use_client.py",
+      "program": "${workspaceFolder}/samples/use_reports_service.py",
       "console": "integratedTerminal"
     }
   ]

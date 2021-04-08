@@ -10,6 +10,7 @@ from powerbi.template_apps import TemplateApps
 from powerbi.dataflow_storage_account import DataflowStorageAccount
 from powerbi.push_datasets import PushDatasets
 from powerbi.imports import Imports
+from powerbi.reports import Reports
 
 
 class PowerBiClient():
@@ -255,5 +256,30 @@ class PowerBiClient():
 
         # Grab the Imports Object for the session.
         object = Imports(session=self.power_bi_session)
+
+        return object
+
+    def reports(self) -> Reports:
+        """Used to access the `Reports` Services and metadata.
+
+        ### Returns
+        ---
+        Reports:
+            The `Reports` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> reports_service = power_bi_client.reports()
+        """
+
+        # Grab the Reports Object for the session.
+        object = Reports(session=self.power_bi_session)
 
         return object

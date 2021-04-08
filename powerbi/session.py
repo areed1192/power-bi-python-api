@@ -88,6 +88,10 @@ class PowerBiSession():
 
         return url
 
+    def build_custom_request(self) -> requests.Request:
+
+        return requests.Request
+
     def make_request(
         self,
         method: str,
@@ -166,9 +170,15 @@ class PowerBiSession():
         request_session.close()
 
         # If it's okay and no details.
-        if response.ok and len(response.content) > 0:
+        if response.ok and len(response.content) > 0 and response.headers['Content-Type'] != 'application/zip':
+
+            print(response.content)
             
             return response.json()
+        
+        elif response.ok and len(response.content) > 0 and response.headers['Content-Type'] == 'application/zip':
+
+            return response.content
 
         elif len(response.content) > 0 and response.ok:
             return {

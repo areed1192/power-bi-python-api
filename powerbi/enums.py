@@ -135,3 +135,24 @@ class ImportConflictHandlerMode(Enum):
     GenerateUniqueName = 'GenerateUniqueName'
     Ignore = 'Ignore'
     Overwrite = 'Overwrite'
+
+class ExportFileFormats(Enum):
+    """Represents all the File Formats you can
+    export a `PowerBiReport` to.
+
+    ### Usage:
+    ----
+        >>> from powerbi.enums import ExportFileFormats
+        >>> ExportFileFormats.Pdf.value
+    """
+
+    AccessiblePdf = 'ACCESSIBLEPDF'
+    Csv = 'CSV'
+    WordDocument = 'DOCX'
+    Image = 'IMAGE'
+    MHTML = 'MHTML'
+    Pdf = 'PDF'
+    Png = 'PNG'
+    PowerPointDocument = 'PPTX'
+    ExcelDocument = 'XLSX'
+    Xml = 'XML'

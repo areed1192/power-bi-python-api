@@ -12,6 +12,7 @@ from powerbi.template_apps import TemplateApps
 from powerbi.users import Users
 from powerbi.dataflow_storage_account import DataflowStorageAccount
 from powerbi.push_datasets import PushDatasets
+from powerbi.available_features import AvailableFeatures
 
 class TestPowerBiSession(TestCase):
 
@@ -107,6 +108,14 @@ class TestPowerBiSession(TestCase):
         self.assertIsInstance(
             self.power_bi_client.push_datasets(),
             PushDatasets
+        )
+
+    def test_creates_instance_of_available_features(self):
+        """Create an instance and make sure it's a `AvailableFeatures` object"""
+
+        self.assertIsInstance(
+            self.power_bi_client.available_features(),
+            AvailableFeatures
         )
 
     def tearDown(self) -> None:

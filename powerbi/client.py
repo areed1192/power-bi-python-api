@@ -11,6 +11,7 @@ from powerbi.dataflow_storage_account import DataflowStorageAccount
 from powerbi.push_datasets import PushDatasets
 from powerbi.imports import Imports
 from powerbi.reports import Reports
+from powerbi.available_features import AvailableFeatures
 
 
 class PowerBiClient():
@@ -281,5 +282,30 @@ class PowerBiClient():
 
         # Grab the Reports Object for the session.
         object = Reports(session=self.power_bi_session)
+
+        return object
+
+    def available_features(self) -> AvailableFeatures:
+        """Used to access the `AvailableFeatures` Services and metadata.
+
+        ### Returns
+        ---
+        AvailableFeatures:
+            The `AvailableFeatures` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> available_features_service = power_bi_client.available_features()
+        """
+
+        # Grab the AvailableFeatures Object for the session.
+        object = AvailableFeatures(session=self.power_bi_session)
 
         return object

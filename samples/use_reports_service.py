@@ -1,6 +1,7 @@
 from pprint import pprint
 from configparser import ConfigParser
 from powerbi.client import PowerBiClient
+from powerbi.enums import ExportFileFormats
 
 # Initialize the Parser.
 config = ConfigParser()
@@ -136,6 +137,17 @@ with open(file='my_group_report_export.pbix', mode='wb+') as power_bi_file:
 
 pprint(
     reports_service.get_datasources(
-        report_id='cec3fab1-2fc2-424e-8d36-d6180ef05082'
+        report_id='cd5fd3b0-e806-4e38-a02b-ff13ef594c09'
     )
 )
+
+
+my_report_content = reports_service.export_to_file(
+    report_id='cd5fd3b0-e806-4e38-a02b-ff13ef594c09',
+    file_format=ExportFileFormats.Pdf
+)
+
+pprint(my_report_content)
+
+with open(file='my_group_report_export.pdf', mode='wb+') as power_bi_file:
+    power_bi_file.write(my_report_content)

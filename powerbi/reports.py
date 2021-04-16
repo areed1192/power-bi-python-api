@@ -6,6 +6,7 @@ from powerbi.utils import Dataset
 from powerbi.utils import Table
 from powerbi.utils import PowerBiEncoder
 from powerbi.session import PowerBiSession
+from enum import Enum
 
 
 class Reports():
@@ -478,7 +479,7 @@ class Reports():
         )
 
         return content
-    
+
     def get_datasources(self, report_id: str) -> Dict:
         """Returns a list of datasources for the specified RDL 
         report from "My Workspace".
@@ -487,7 +488,7 @@ class Reports():
         ----
         report_id : str
             The report Id.
-        
+
         ### Returns
         ----
             A list of `Datsource` resources.
@@ -507,8 +508,59 @@ class Reports():
 
         return content
 
-    def _export_to_file(self) -> None:
-        pass
+    def export_to_file(
+        self,
+        report_id: str,
+        file_format: Union[str, Enum],
+        paginated_report_configuration: dict = None,
+        power_bi_report_configuration: dict = None
+    ) -> bytes:
+        """Exports the specified report from "My Workspace" to 
+        requested format.
+
+        ### Parameters
+        ----
+        report_id : str
+            The report Id.
+
+        file_format : Union[str, Enum]
+            File format you want the reprot expored to.
+
+        paginated_report_configuration : dict (optional, Default=None)
+            The configuration used to export a paginated report.
+
+        power_bi_report_configuration : dict (optional, Default=None)
+            The configuration used to export a Power BI report.
+
+        ### Returns
+        ----
+            A bytes stream.
+
+        ### Usage
+        ----
+            >>> reports_service = power_bi_client.reports()
+            >>> reports_service.export_to_file(
+                report_id='cec3fab1-2fc2-424e-8d36-d6180ef05082',
+                file_format='CSV'
+            )
+        """
+
+        if isinstance(file_format, Enum):
+            file_format = file_format.value
+
+        params = {
+            'format': file_format,
+            'paginatedReportConfiguration': paginated_report_configuration,
+            'powerBIReportConfiguration': power_bi_report_configuration
+        }
+
+        content = self.power_bi_session.make_request(
+            method='post',
+            endpoint=f'myorg/reports/{report_id}/ExportTo',
+            json_payload=params
+        )
+
+        return content
 
     def _group_export_to_file(self) -> None:
         pass

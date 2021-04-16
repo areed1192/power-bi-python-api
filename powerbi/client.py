@@ -12,6 +12,7 @@ from powerbi.push_datasets import PushDatasets
 from powerbi.imports import Imports
 from powerbi.reports import Reports
 from powerbi.available_features import AvailableFeatures
+from powerbi.capacities import Capacities
 
 
 class PowerBiClient():
@@ -307,5 +308,30 @@ class PowerBiClient():
 
         # Grab the AvailableFeatures Object for the session.
         object = AvailableFeatures(session=self.power_bi_session)
+
+        return object
+
+    def capactities(self) -> Capacities:
+        """Used to access the `Capacities` Services and metadata.
+
+        ### Returns
+        ---
+        Capacities:
+            The `Capacities` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> capacities_service = power_bi_client.capactities()
+        """
+
+        # Grab the Capacities Object for the session.
+        object = Capacities(session=self.power_bi_session)
 
         return object

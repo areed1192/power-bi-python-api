@@ -171,8 +171,6 @@ class PowerBiSession():
 
         # If it's okay and no details.
         if response.ok and len(response.content) > 0 and response.headers['Content-Type'] != 'application/zip':
-
-            print(response.content)
             
             return response.json()
         

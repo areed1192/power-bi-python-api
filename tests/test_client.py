@@ -13,6 +13,9 @@ from powerbi.users import Users
 from powerbi.dataflow_storage_account import DataflowStorageAccount
 from powerbi.push_datasets import PushDatasets
 from powerbi.available_features import AvailableFeatures
+from powerbi.capacities import Capacities
+from powerbi.reports import Reports
+
 
 class TestPowerBiSession(TestCase):
 
@@ -116,6 +119,22 @@ class TestPowerBiSession(TestCase):
         self.assertIsInstance(
             self.power_bi_client.available_features(),
             AvailableFeatures
+        )
+
+    def test_creates_instance_of_capacities(self):
+        """Create an instance and make sure it's a `Capacities` object"""
+
+        self.assertIsInstance(
+            self.power_bi_client.capactities(),
+            Capacities
+        )
+
+    def test_creates_instance_of_reports(self):
+        """Create an instance and make sure it's a `Capacities` object"""
+
+        self.assertIsInstance(
+            self.power_bi_client.reports(),
+            Reports
         )
 
     def tearDown(self) -> None:

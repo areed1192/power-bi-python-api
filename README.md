@@ -54,12 +54,12 @@ pip install .
 This will install all the dependencies listed in the `setup.py` file. Once done
 you can use the library wherever you want.
 
-<!-- **Setup - PyPi Install:**
+**Setup - PyPi Install:**
 
 To **install** the library, run the following command from the terminal.
 
 ```console
-pip install federal-register
+pip install power-bi-api
 ```
 
 **Setup - PyPi Upgrade:**
@@ -67,8 +67,8 @@ pip install federal-register
 To **upgrade** the library, run the following command from the terminal.
 
 ```console
-pip install --upgrade federal-register
-``` -->
+pip install --upgrade power-bi-api
+```
 
 ## Usage
 

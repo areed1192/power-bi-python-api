@@ -61,7 +61,7 @@ you can use the library wherever you want.
 To **install** the library, run the following command from the terminal.
 
 ```console
-pip install power-bi-api
+pip install python-power-bi
 ```
 
 **Setup - PyPi Upgrade:**
@@ -69,7 +69,7 @@ pip install power-bi-api
 To **upgrade** the library, run the following command from the terminal.
 
 ```console
-pip install --upgrade power-bi-api
+pip install --upgrade python-power-bi
 ```
 
 ## Usage

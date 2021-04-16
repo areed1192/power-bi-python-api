@@ -14,7 +14,7 @@ setup(
     author_email='coding.sigma@gmail.com',
 
     # Define Version Info.
-    version='0.1.0',
+    version='0.1.1',
 
     # Define descriptions.
     description='The Unofficial Python API wrapper for the Microsoft Power BI REST API.',

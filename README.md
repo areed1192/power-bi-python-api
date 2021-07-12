@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Overview](#overview)
+- [Resources](#resources)
 - [Setup](#setup)
 - [Usage](#usage)
 - [Support These Projects](#support-these-projects)
@@ -17,6 +18,11 @@ for end users to create their own reports and dashboards. It is part of the Micr
 Power Platform. This library allows you to use the Power BI Rest API from python. Along
 with providing the different endpoints, it will also handle the authentication process
 for you.
+
+## Resources
+
+- [Power BI App Registration Portal](https://dev.powerbi.com/Apps)
+- [Power BI Rest API Documentation](https://docs.microsoft.com/en-us/rest/api/power-bi/)
 
 ## Setup
 

@@ -65,11 +65,11 @@ new_dataset.default_mode = 'Push'
 # Add the Sales table to it.
 new_dataset.add_table(table=table_sales)
 
-# pprint(
-#     push_datasets_service.post_dataset(
-#         dataset=new_dataset
-#     )
-# )
+pprint(
+    push_datasets_service.post_dataset(
+        dataset=new_dataset
+    )
+)
 
 # Define some fake data.
 new_rows = [

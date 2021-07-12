@@ -25,10 +25,10 @@ power_bi_client = PowerBiClient(
 # Initialize the `Imports` service.
 imports_service = power_bi_client.imports()
 
-# # Create a temporary upload location.
-# pprint(
-#     imports_service.create_temporary_upload_location()
-# )
+# Create a temporary upload location.
+pprint(
+    imports_service.create_temporary_upload_location()
+)
 
 
 # Get all the Imports from my workspace.

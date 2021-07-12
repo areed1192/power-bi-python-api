@@ -10,7 +10,7 @@
 
 ## Overview
 
-Version: **0.1.1**
+Version: **0.1.2**
 
 Power BI is a business analytics service by Microsoft. It aims to provide interactive
 visualizations and business intelligence capabilities with an interface simple enough

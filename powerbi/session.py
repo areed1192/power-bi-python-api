@@ -2,6 +2,7 @@ import json
 import requests
 import logging
 import pathlib
+import sys
 
 from typing import Dict
 
@@ -40,13 +41,19 @@ class PowerBiSession():
         if not pathlib.Path('logs').exists():
             pathlib.Path('logs').mkdir()
             pathlib.Path('logs/log_file_custom.log').touch()
-
-        logging.basicConfig(
-            filename="logs/log_file_custom.log",
-            level=logging.INFO,
-            encoding="utf-8",
-            format=log_format
-        )
+        if sys.version_info[1]==8:
+            logging.basicConfig(
+                filename="logs/log_file_custom.log",
+                level=logging.INFO,
+                format=log_format
+            )
+        else:
+            logging.basicConfig(
+                filename="logs/log_file_custom.log",
+                level=logging.INFO,
+                encoding="utf-8",
+                format=log_format
+            )
 
     def build_headers(self) -> Dict:
         """Used to build the headers needed to make the request.

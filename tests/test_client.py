@@ -16,6 +16,7 @@ from powerbi.available_features import AvailableFeatures
 from powerbi.capacities import Capacities
 from powerbi.reports import Reports
 from powerbi.pipelines import Pipelines
+from powerbi.apps import Apps
 
 
 class TestPowerBiSession(TestCase):
@@ -64,6 +65,14 @@ class TestPowerBiSession(TestCase):
         self.assertIsInstance(
             self.power_bi_client.power_bi_auth_client,
             PowerBiAuth
+        )
+
+    def test_creates_instance_of_apps(self):
+        """Create an instance and make sure it's a `Apps` object"""
+
+        self.assertIsInstance(
+            self.power_bi_client.apps(),
+            Apps
         )
 
     def test_creates_instance_of_dashboards(self):

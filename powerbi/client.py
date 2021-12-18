@@ -14,6 +14,7 @@ from powerbi.reports import Reports
 from powerbi.available_features import AvailableFeatures
 from powerbi.capacities import Capacities
 from powerbi.pipelines import Pipelines
+from powerbi.apps import Apps
 
 
 class PowerBiClient():
@@ -86,6 +87,31 @@ class PowerBiClient():
         self.power_bi_session = PowerBiSession(
             client=self.power_bi_auth_client
         )
+
+    def apps(self) -> Apps:
+        """Used to access the `Apps` Services and metadata.
+
+        ### Returns
+        ---
+        Apps :
+            The `Apps` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> apps_service = power_bi_client.apps()
+        """
+
+        # Grab the Groups Object for the session.
+        object = Apps(session=self.power_bi_session)
+
+        return object
 
     def dashboards(self) -> Dashboards:
         """Used to access the `Dashboards` Services and metadata.

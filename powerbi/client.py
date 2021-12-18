@@ -13,6 +13,7 @@ from powerbi.imports import Imports
 from powerbi.reports import Reports
 from powerbi.available_features import AvailableFeatures
 from powerbi.capacities import Capacities
+from powerbi.pipelines import Pipelines
 
 
 class PowerBiClient():
@@ -333,5 +334,30 @@ class PowerBiClient():
 
         # Grab the Capacities Object for the session.
         object = Capacities(session=self.power_bi_session)
+
+        return object
+
+    def pipelines(self) -> Pipelines:
+        """Used to access the `Pipelines` Services and metadata.
+
+        ### Returns
+        ---
+        Pipelines:
+            The `Pipelines` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> pipelines_service = power_bi_client.pipelines()
+        """
+
+        # Grab the Pipelines Object for the session.
+        object = Pipelines(session=self.power_bi_session)
 
         return object

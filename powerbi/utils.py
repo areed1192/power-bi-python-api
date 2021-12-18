@@ -271,6 +271,16 @@ class Column():
         """
         return self.column
 
+    def to_json(self) -> dict:
+        """Returns the column properties as a JSON string.
+
+        ### Returns
+        ----
+        dict
+            A string containing each of the column
+            properties.
+        """
+        return self.column
 
 class Measure():
 
@@ -990,9 +1000,11 @@ class Table():
 
         return self.table.get('rows', [])[index]
     
-    def as_dict(self) -> dict:
-        return self.table
+    def to_dict(self) -> dict:
+        return json.loads(s=json.dumps(obj=self.table, cls=PowerBiEncoder))
 
+    def to_json(self) -> dict:
+        return json.dumps(obj=self.table, cls=PowerBiEncoder)
 
 class Dataset():
 
@@ -1270,7 +1282,12 @@ class Dataset():
             del table['rows']
 
         return copy_push_dataset
+    
+    def to_dict(self) -> dict:
+        return json.loads(s=json.dumps(obj=self.push_dataset, cls=PowerBiEncoder))
 
+    def to_json(self) -> dict:
+        return json.dumps(obj=self.push_dataset, cls=PowerBiEncoder)
 
 class DataSource():
 
@@ -1348,6 +1365,28 @@ class DataSource():
         """
 
         self.data_source.update({'connectionDetails': connection_details})
+    
+    def to_dict(self) -> dict:
+        """Converts the Object to dict.
+
+        ### Returns
+        ----
+        dict: 
+            The resource itself as a dictionary.
+        """
+      
+        return self.data_source
+
+    def to_json(self) -> str:
+        """Converts the Object to JSON string.
+
+        ### Returns
+        ----
+        str: 
+            The resource itself as a JSON string.
+        """
+   
+        return json.dumps(obj=self.data_source, cls=PowerBiEncoder)
 
 
 class ConnectionDetails():

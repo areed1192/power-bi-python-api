@@ -15,6 +15,7 @@ from powerbi.push_datasets import PushDatasets
 from powerbi.available_features import AvailableFeatures
 from powerbi.capacities import Capacities
 from powerbi.reports import Reports
+from powerbi.pipelines import Pipelines
 
 
 class TestPowerBiSession(TestCase):
@@ -135,6 +136,14 @@ class TestPowerBiSession(TestCase):
         self.assertIsInstance(
             self.power_bi_client.reports(),
             Reports
+        )
+
+    def test_creates_instance_of_pipelines(self):
+        """Create an instance and make sure it's a `Pipelines` object"""
+
+        self.assertIsInstance(
+            self.power_bi_client.pipelines(),
+            Pipelines
         )
 
     def tearDown(self) -> None:

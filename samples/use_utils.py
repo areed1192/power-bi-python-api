@@ -24,3 +24,6 @@ new_dataset.add_table(table=table_sales)
 
 # Print the new dataset.
 print(new_dataset)
+print(new_dataset.to_dict())
+print(table_sales.to_dict())
+print(name_column.to_dict())

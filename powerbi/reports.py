@@ -524,7 +524,7 @@ class Reports():
             The report Id.
 
         file_format : Union[str, Enum]
-            File format you want the reprot expored to.
+            File format you want the report exported to.
 
         paginated_report_configuration : dict (optional, Default=None)
             The configuration used to export a paginated report.

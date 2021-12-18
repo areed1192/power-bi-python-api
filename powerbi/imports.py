@@ -190,3 +190,69 @@ class Imports():
 
         return content
 
+    def post_import(self, dataset_display_name: str, name_conflict: Union[str, Enum] = 'Ignore', skip_report: bool = None, file_path: str = None) -> Dict:
+        """Creates new content on "My Workspace" from PBIX (Power BI Desktop),
+        JSON, XLSX (Excel), RDL or file path in OneDrive for Business.
+
+        ### Parameters
+        ----
+        dataset_display_name : str
+            The display name of the dataset, should include file extension.
+            Not supported when importing from OneDrive for Business.
+
+        name_conflict : Union[str, Enum] (optional, Default='Ignore')
+            Determines what to do if a dataset with the same name already
+            exists. Only `Abort` and `Overwrite` are supported with Rdl files.
+
+        skip_report : bool (optional, Default=None)
+            Determines whether to skip report import, if specified value must
+            be `True`. Only supported for PBIX files.
+
+        ### Returns
+        ----
+            A `Import` resource.
+
+        ### Usage
+        ----
+            >>> imports_service = power_bi_client.imports()
+            >>> imports_service.get_group_import(
+                group_id='f78705a2-bead-4a5c-ba57-166794b05c78',
+                import_id='e40f7c73-84d1-4cf5-a696-5850a5ec8ad3'
+            )
+        """
+
+        header_template = f'Content-Disposition: form-data; filename="{0}" Content-Type: application/json'
+
+        content_types = {
+            'file': 'multipart/form-data',
+            'xlsx': 'application/json'
+        }
+
+        if isinstance(name_conflict, Enum):
+            name_conflict = name_conflict.value
+
+        params = {
+            'datasetDisplayName': dataset_display_name,
+            'nameConflict': name_conflict,
+            'skipReport': skip_report
+        }
+
+        request = self.power_bi_session.build_custom_request()
+        request.headers['Content-Type'] = content_types['file']
+        request.data = ''
+
+        content = self.power_bi_session.make_request(
+            method='get',
+            endpoint=f'/myorg/imports',
+            params=params
+        )
+
+        return content
+
+# To import a file, request Headers should include Content-Type: multipart/form-data with the file encoded as form data in the request body.
+# To import an XLSX (Excel) file from OneDrive for Business, request headers should include Content-Type: application/json with ImportInfo in the request body.
+# To import an RDL file, in the DatasetDisplayName property, include .rdl to define the file type.
+# To import large .pbix files, between 1 GB and 10 GB, see Create Temporary Upload Location. This is supported only for workspaces on premium capacity.
+
+# Content-Disposition: form-data; name="file0"; filename="Using Pivot Charts.xlsm"
+# Content-Type: application/vnd.ms-excel.sheet.macroEnabled.12

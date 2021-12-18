@@ -1,4 +1,3 @@
-
 from typing import List
 
 from powerbi.session import PowerBiSession
@@ -17,7 +16,14 @@ from powerbi.pipelines import Pipelines
 from powerbi.apps import Apps
 
 
-class PowerBiClient():
+class PowerBiClient:
+
+    """
+    ### Overview
+    ----
+    Is the main entry point to the other Power BI
+    REST Services.
+    """
 
     def __init__(
         self,
@@ -25,8 +31,8 @@ class PowerBiClient():
         client_secret: str,
         redirect_uri: str,
         scope: List[str],
-        account_type: str = 'common',
-        credentials: str = None
+        account_type: str = "common",
+        credentials: str = None,
     ):
         """Initializes the Graph Client.
 
@@ -79,14 +85,12 @@ class PowerBiClient():
             redirect_uri=self.redirect_uri,
             scope=self.scope,
             account_type=self.account_type,
-            credentials=self.credentials
+            credentials=self.credentials,
         )
 
         self.power_bi_auth_client.login()
 
-        self.power_bi_session = PowerBiSession(
-            client=self.power_bi_auth_client
-        )
+        self.power_bi_session = PowerBiSession(client=self.power_bi_auth_client)
 
     def apps(self) -> Apps:
         """Used to access the `Apps` Services and metadata.
@@ -108,10 +112,7 @@ class PowerBiClient():
             >>> apps_service = power_bi_client.apps()
         """
 
-        # Grab the Groups Object for the session.
-        object = Apps(session=self.power_bi_session)
-
-        return object
+        return Apps(session=self.power_bi_session)
 
     def dashboards(self) -> Dashboards:
         """Used to access the `Dashboards` Services and metadata.
@@ -133,10 +134,7 @@ class PowerBiClient():
             >>> dashboard_service = power_bi_client.dashboards()
         """
 
-        # Grab the Dashboards Object for the session.
-        object = Dashboards(session=self.power_bi_session)
-
-        return object
+        return Dashboards(session=self.power_bi_session)
 
     def groups(self) -> Groups:
         """Used to access the `Groups` Services and metadata.
@@ -158,10 +156,7 @@ class PowerBiClient():
             >>> groups_service = power_bi_client.groups()
         """
 
-        # Grab the Groups Object for the session.
-        object = Groups(session=self.power_bi_session)
-
-        return object
+        return Groups(session=self.power_bi_session)
 
     def users(self) -> Users:
         """Used to access the `Users` Services and metadata.
@@ -183,10 +178,7 @@ class PowerBiClient():
             >>> users_service = power_bi_client.users()
         """
 
-        # Grab the Users Object for the session.
-        object = Users(session=self.power_bi_session)
-
-        return object
+        return Users(session=self.power_bi_session)
 
     def template_apps(self) -> TemplateApps:
         """Used to access the `TemplateApps` Services and metadata.
@@ -208,10 +200,7 @@ class PowerBiClient():
             >>> template_apps_service = power_bi_client.template_apps()
         """
 
-        # Grab the TemplateApps Object for the session.
-        object = TemplateApps(session=self.power_bi_session)
-
-        return object
+        return TemplateApps(session=self.power_bi_session)
 
     def dataflow_storage_account(self) -> DataflowStorageAccount:
         """Used to access the `DataflowStorageAccount` Services and metadata.
@@ -233,10 +222,7 @@ class PowerBiClient():
             >>> dataflow_storage_service = power_bi_client.dataflow_storage_accounts()
         """
 
-        # Grab the DataflowStorageAccount Object for the session.
-        object = DataflowStorageAccount(session=self.power_bi_session)
-
-        return object
+        return DataflowStorageAccount(session=self.power_bi_session)
 
     def push_datasets(self) -> PushDatasets:
         """Used to access the `PushDatasets` Services and metadata.
@@ -258,10 +244,7 @@ class PowerBiClient():
             >>> push_datasets_service = power_bi_client.push_datasets()
         """
 
-        # Grab the PushDatasets Object for the session.
-        object = PushDatasets(session=self.power_bi_session)
-
-        return object
+        return PushDatasets(session=self.power_bi_session)
 
     def imports(self) -> Imports:
         """Used to access the `Imports` Services and metadata.
@@ -283,10 +266,7 @@ class PowerBiClient():
             >>> imports_service = power_bi_client.imports()
         """
 
-        # Grab the Imports Object for the session.
-        object = Imports(session=self.power_bi_session)
-
-        return object
+        return Imports(session=self.power_bi_session)
 
     def reports(self) -> Reports:
         """Used to access the `Reports` Services and metadata.
@@ -308,10 +288,7 @@ class PowerBiClient():
             >>> reports_service = power_bi_client.reports()
         """
 
-        # Grab the Reports Object for the session.
-        object = Reports(session=self.power_bi_session)
-
-        return object
+        return Reports(session=self.power_bi_session)
 
     def available_features(self) -> AvailableFeatures:
         """Used to access the `AvailableFeatures` Services and metadata.
@@ -333,10 +310,7 @@ class PowerBiClient():
             >>> available_features_service = power_bi_client.available_features()
         """
 
-        # Grab the AvailableFeatures Object for the session.
-        object = AvailableFeatures(session=self.power_bi_session)
-
-        return object
+        return AvailableFeatures(session=self.power_bi_session)
 
     def capactities(self) -> Capacities:
         """Used to access the `Capacities` Services and metadata.
@@ -358,10 +332,7 @@ class PowerBiClient():
             >>> capacities_service = power_bi_client.capactities()
         """
 
-        # Grab the Capacities Object for the session.
-        object = Capacities(session=self.power_bi_session)
-
-        return object
+        return Capacities(session=self.power_bi_session)
 
     def pipelines(self) -> Pipelines:
         """Used to access the `Pipelines` Services and metadata.
@@ -383,7 +354,4 @@ class PowerBiClient():
             >>> pipelines_service = power_bi_client.pipelines()
         """
 
-        # Grab the Pipelines Object for the session.
-        object = Pipelines(session=self.power_bi_session)
-
-        return object
+        return Pipelines(session=self.power_bi_session)

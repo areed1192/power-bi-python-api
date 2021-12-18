@@ -1349,7 +1349,7 @@ class DataSource():
 
         ### Returns
         ----
-        str : 
+        str :
             The `connectionDetails` property.
         """
         return self.data_source.get('connectionDetails', None)

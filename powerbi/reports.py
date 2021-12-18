@@ -1,12 +1,10 @@
-import json
-
+from enum import Enum
 from typing import Dict
 from typing import Union
-from powerbi.utils import Dataset
-from powerbi.utils import Table
-from powerbi.utils import PowerBiEncoder
+# from powerbi.utils import Dataset
+# from powerbi.utils import Table
+# from powerbi.utils import PowerBiEncoder
 from powerbi.session import PowerBiSession
-from enum import Enum
 
 
 class Reports():

@@ -314,7 +314,7 @@ class PowerBiClient:
 
         return AvailableFeatures(session=self.power_bi_session)
 
-    def capactities(self) -> Capacities:
+    def capacities(self) -> Capacities:
         """Used to access the `Capacities` Services and metadata.
 
         ### Returns

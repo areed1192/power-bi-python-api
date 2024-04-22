@@ -134,3 +134,4 @@ config/
 api_setup.py
 logs/
 .github/
+*power_bi_state.jsonc

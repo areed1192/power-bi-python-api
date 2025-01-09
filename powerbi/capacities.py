@@ -1,8 +1,13 @@
+""""The `Capacities` service module."""
+
 from typing import Dict
 from powerbi.session import PowerBiSession
 
 
-class Capacities():
+class Capacities:
+
+    """The `Capacities` service provides methods for interacting with the
+    Microsoft Power BI REST API `Capacities` resources."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Capacities` service.
@@ -36,14 +41,13 @@ class Capacities():
 
         # Make the request.
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint='myorg/capacities'
+            method="get", endpoint="myorg/capacities"
         )
 
         return content
 
     def get_workloads(self, capacity_id: str) -> Dict:
-        """Returns the current state of the specified capacity workloads, if a 
+        """Returns the current state of the specified capacity workloads, if a
         workload is enabled also returns the maximum memory percentage that
         the workload can consume.
 
@@ -67,14 +71,13 @@ class Capacities():
 
         # Make the request.
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/capacities/{capacity_id}/Workloads'
+            method="get", endpoint=f"myorg/capacities/{capacity_id}/Workloads"
         )
 
         return content
 
     def get_workload(self, capacity_id: str, workload_name: str) -> Dict:
-        """Returns the current state of the specified capacity workloads, if a 
+        """Returns the current state of the specified capacity workloads, if a
         workload is enabled also returns the maximum memory percentage that
         the workload can consume.
 
@@ -102,13 +105,15 @@ class Capacities():
 
         # Make the request.
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/capacities/{capacity_id}/Workloads/{workload_name}'
+            method="get",
+            endpoint=f"myorg/capacities/{capacity_id}/Workloads/{workload_name}",
         )
 
         return content
 
-    def get_refreshables(self, top: int = 10, expand: str = None, filter: str = None, skip: int = None) -> Dict:
+    def get_refreshables(
+        self, top: int = 10, expand: str = None, filter: str = None, skip: int = None
+    ) -> Dict:
         """Returns a list of refreshables for all capacities of which the user has access to.
 
         ### Parameters
@@ -140,23 +145,23 @@ class Capacities():
             )
         """
 
-        params = {
-            '$expand': expand,
-            '$filter': filter,
-            '$top': top,
-            '$skip': skip
-        }
+        params = {"$expand": expand, "$filter": filter, "$top": top, "$skip": skip}
 
         # Make the request.
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/capacities/refreshables',
-            params=params
+            method="get", endpoint="myorg/capacities/refreshables", params=params
         )
 
         return content
 
-    def get_refreshables_for_capacity(self, capacity_id: str, top: int = 10, expand: str = None, filter: str = None, skip: int = None) -> Dict:
+    def get_refreshables_for_capacity(
+        self,
+        capacity_id: str,
+        top: int = 10,
+        expand: str = None,
+        filter: str = None,
+        skip: int = None,
+    ) -> Dict:
         """Returns a list of refreshables for the specified capacity the user has access to.
 
         ### Parameters
@@ -192,18 +197,13 @@ class Capacities():
             )
         """
 
-        params = {
-            '$expand': expand,
-            '$filter': filter,
-            '$top': top,
-            '$skip': skip
-        }
+        params = {"$expand": expand, "$filter": filter, "$top": top, "$skip": skip}
 
         # Make the request.
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/capacities/{capacity_id}/refreshables',
-            params=params
+            method="get",
+            endpoint=f"myorg/capacities/{capacity_id}/refreshables",
+            params=params,
         )
 
         return content

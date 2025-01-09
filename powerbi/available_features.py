@@ -1,8 +1,13 @@
+"""Handles all the requests made to the Microsoft Power Bi API Available Features endpoint."""
+
 from typing import Dict
 from powerbi.session import PowerBiSession
 
 
-class AvailableFeatures():
+class AvailableFeatures:
+
+    """Handles all the requests made to the Microsoft Power Bi API Available
+    Features endpoint."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `AvailableFeatures` service.
@@ -36,8 +41,7 @@ class AvailableFeatures():
 
         # Make the request.
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint='myorg/availableFeatures'
+            method="get", endpoint="myorg/availableFeatures"
         )
 
         return content
@@ -65,9 +69,8 @@ class AvailableFeatures():
 
         # Make the request.
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint="myorg/availableFeatures(featureName='" +
-            feature_name + "')"
+            method="get",
+            endpoint="myorg/availableFeatures(featureName='" + feature_name + "')",
         )
 
         return content

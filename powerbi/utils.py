@@ -1,49 +1,67 @@
-import json
-from datetime import datetime
-from datetime import date
-from powerbi.enums import DataSourceType
-from typing import Union
-from enum import Enum
+"""This module contains helper functions and classes"""
 
-# https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/entity-data-model-primitive-data-types
-# https://docs.microsoft.com/en-us/power-bi/developer/automation/api-dataset-properties#data-type-restrictions
-# https://docs.microsoft.com/en-us/analysis-services/multidimensional-models/mdx/mdx-cell-properties-format-string-contents?view=asallproducts-allversions
+import json
+
+from dataclasses import dataclass
+from dataclasses import field
+from dataclasses import asdict
+
+# from datetime import date
+# from datetime import datetime
+
+from enum import Enum
+from typing import Union
+
+# from powerbi.enums import DataSourceType
+
+
+# Helper function to convert Enums
+def enum_to_value(value: Union[str, Enum]) -> str:
+    """Converts an Enum to its value.
+
+    ### Parameters
+    ----
+    value : Union[str, Enum]
+        The value of the Enum.
+    """
+    return value.value if isinstance(value, Enum) else value
 
 
 class PowerBiEncoder(json.JSONEncoder):
+    """Custom JSON Encoder for PowerBi objects."""
 
     def __init__(self, *args, **kwargs):
         json.JSONEncoder.__init__(self, *args, **kwargs)
 
-    def default(self, obj):
-        if isinstance(obj, Columns):
-            return obj.columns
-        elif isinstance(obj, Measures):
-            return obj.measures
-        if isinstance(obj, Column):
-            return obj.column
-        elif isinstance(obj, Measure):
-            return obj.measure
-        elif isinstance(obj, Dataset):
-            return obj.push_dataset
-        elif isinstance(obj, Tables):
-            return obj.tables
-        elif isinstance(obj, Table):
-            return obj.table
-        elif isinstance(obj, Relationships):
-            return obj.relationships
-        elif isinstance(obj, Relationship):
-            return obj.relationship
-        elif isinstance(obj, DataSources):
-            return obj.datasources
-        elif isinstance(obj, DataSource):
-            return obj.data_source
-        elif isinstance(obj, Dataset):
-            return obj.push_dataset
+    def default(self, o):
+        if isinstance(o, Columns):
+            return o.columns
+        if isinstance(o, Measures):
+            return o.measures
+        if isinstance(o, Column):
+            return o.column
+        if isinstance(o, Measure):
+            return o.measure
+        if isinstance(o, Dataset):
+            return o.push_dataset
+        if isinstance(o, Tables):
+            return o.tables
+        if isinstance(o, Table):
+            return o.table
+        if isinstance(o, Relationships):
+            return o.relationships
+        if isinstance(o, Relationship):
+            return o.relationship
+        if isinstance(o, DataSources):
+            return o.datasources
+        if isinstance(o, DataSource):
+            return o.data_source
+        if isinstance(o, Dataset):
+            return o.push_dataset
+        else:
+            return super().default(o)
 
-
-class Column():
-
+class Column:
     """
     ### Overview
     ----
@@ -67,13 +85,13 @@ class Column():
             data_type = data_type.value
 
         self.column = {
-            'name': name,
-            'dataType': data_type,
-            'dataCategory': '',
-            'formatString': '',
-            'isHidden': False,
-            'sortByColumn': None,
-            'summarizeBy': None
+            "name": name,
+            "dataType": data_type,
+            "dataCategory": "",
+            "formatString": "",
+            "isHidden": False,
+            "sortByColumn": None,
+            "summarizeBy": None,
         }
 
     @property
@@ -85,7 +103,7 @@ class Column():
         str :
             The column name.
         """
-        return self.column.get('name', None)
+        return self.column.get("name", None)
 
     @name.setter
     def name(self, name: str) -> None:
@@ -97,7 +115,7 @@ class Column():
             The name you want the column to be.
         """
 
-        self.column.update({'name': name})
+        self.column.update({"name": name})
 
     @property
     def data_type(self) -> str:
@@ -108,7 +126,7 @@ class Column():
         str :
             One of the allowed data types.
         """
-        return self.column.get('dataType', None)
+        return self.column.get("dataType", None)
 
     @data_type.setter
     def data_type(self, data_type: Union[str, Enum]) -> None:
@@ -123,7 +141,7 @@ class Column():
         if isinstance(data_type, Enum):
             data_type = data_type.value
 
-        self.column.update({'dataType': data_type})
+        self.column.update({"dataType": data_type})
 
     @property
     def format_string(self) -> str:
@@ -135,7 +153,7 @@ class Column():
             The format of the column as specified in
             FORMAT_STRING.
         """
-        return self.column.get('formatString', None)
+        return self.column.get("formatString", None)
 
     @format_string.setter
     def format_string(self, format_string: str) -> None:
@@ -147,7 +165,7 @@ class Column():
             The format of the column as specified in FORMAT_STRING.
         """
 
-        self.column.update({'formatString': format_string})
+        self.column.update({"formatString": format_string})
 
     @property
     def data_category(self) -> str:
@@ -160,7 +178,7 @@ class Column():
             String value to be used for the data category
             which describes the data within this column.
         """
-        return self.column.get('dataCategory', None)
+        return self.column.get("dataCategory", None)
 
     @data_category.setter
     def data_category(self, data_category: str) -> None:
@@ -177,7 +195,7 @@ class Column():
             WebUrl]`
         """
 
-        self.column.update({'dataCategory': data_category})
+        self.column.update({"dataCategory": data_category})
 
     @property
     def is_hidden(self) -> bool:
@@ -190,7 +208,7 @@ class Column():
             If `True` the column is hidden, `False`
             otherwise.
         """
-        return self.column.get('isHidden', None)
+        return self.column.get("isHidden", None)
 
     @is_hidden.setter
     def is_hidden(self, is_hidden: bool) -> None:
@@ -203,7 +221,7 @@ class Column():
             Default is `False`.
         """
 
-        self.column.update({'isHidden': is_hidden})
+        self.column.update({"isHidden": is_hidden})
 
     @property
     def sort_by_column(self) -> str:
@@ -216,7 +234,7 @@ class Column():
             String name of a column in the same table to be
             used to order the current column.
         """
-        return self.column.get('sortByColumn', None)
+        return self.column.get("sortByColumn", None)
 
     @sort_by_column.setter
     def sort_by_column(self, sort_by_column: str) -> None:
@@ -229,7 +247,7 @@ class Column():
             used to order the current column.
         """
 
-        self.column.update({'sortByColumn': sort_by_column})
+        self.column.update({"sortByColumn": sort_by_column})
 
     @property
     def summarize_by(self) -> str:
@@ -242,7 +260,7 @@ class Column():
             Aggregate Function to use for summarizing this
             column.
         """
-        return self.column.get('summarizeBy', None)
+        return self.column.get("summarizeBy", None)
 
     @summarize_by.setter
     def summarize_by(self, summarize_by: Union[str, Enum]) -> None:
@@ -258,7 +276,7 @@ class Column():
         if isinstance(summarize_by, Enum):
             summarize_by = summarize_by.value
 
-        self.column.update({'summarizeBy': summarize_by})
+        self.column.update({"summarizeBy": summarize_by})
 
     def to_dict(self) -> dict:
         """Returns the column properties.
@@ -282,8 +300,8 @@ class Column():
         """
         return self.column
 
-class Measure():
 
+class Measure:
     """
     ### Overview
     ----
@@ -304,10 +322,10 @@ class Measure():
         """
 
         self.measure = {
-            'name': name,
-            'expression': expression,
-            'formatString': '',
-            'isHidden': False,
+            "name": name,
+            "expression": expression,
+            "formatString": "",
+            "isHidden": False,
         }
 
     @property
@@ -319,7 +337,7 @@ class Measure():
         str :
             The measure name.
         """
-        return self.measure.get('name', None)
+        return self.measure.get("name", None)
 
     @name.setter
     def name(self, name: str) -> None:
@@ -331,7 +349,7 @@ class Measure():
             The name you want the measure to be.
         """
 
-        self.measure.update({'name': name})
+        self.measure.update({"name": name})
 
     @property
     def expression(self) -> str:
@@ -342,7 +360,7 @@ class Measure():
         str :
             A valid DAX expression.
         """
-        return self.measure.get('dataType', None)
+        return self.measure.get("dataType", None)
 
     @expression.setter
     def expression(self, expression: str) -> None:
@@ -354,7 +372,7 @@ class Measure():
             A valid DAX expression.
         """
 
-        self.measure.update({'expression': expression})
+        self.measure.update({"expression": expression})
 
     @property
     def format_string(self) -> str:
@@ -366,7 +384,7 @@ class Measure():
             The format of the measure as specified in
             FORMAT_STRING.
         """
-        return self.measure.get('formatString', None)
+        return self.measure.get("formatString", None)
 
     @format_string.setter
     def format_string(self, format_string: str) -> None:
@@ -379,7 +397,7 @@ class Measure():
             FORMAT_STRING.
         """
 
-        self.measure.update({'formatString': format_string})
+        self.measure.update({"formatString": format_string})
 
     @property
     def is_hidden(self) -> bool:
@@ -392,7 +410,7 @@ class Measure():
             If `True` the measure is hidden, `False`
             otherwise.
         """
-        return self.measure.get('isHidden', None)
+        return self.measure.get("isHidden", None)
 
     @is_hidden.setter
     def is_hidden(self, is_hidden: bool) -> None:
@@ -405,7 +423,7 @@ class Measure():
             client tools. Default is `False`.
         """
 
-        self.measure.update({'isHidden': is_hidden})
+        self.measure.update({"isHidden": is_hidden})
 
     def to_dict(self) -> dict:
         """Returns the measure properties.
@@ -432,8 +450,7 @@ class Measure():
         return json.dumps(obj=self.measure, indent=4)
 
 
-class Relationship():
-
+class Relationship:
     """
     ### Overview
     ----
@@ -441,7 +458,14 @@ class Relationship():
     object.
     """
 
-    def __init__(self, name: str, from_table: str, to_table: str, from_column: str, to_column: str) -> None:
+    def __init__(
+        self,
+        name: str,
+        from_table: str,
+        to_table: str,
+        from_column: str,
+        to_column: str,
+    ) -> None:
         """Initializes a new `Relationship` object.
 
         ### Parameters
@@ -454,12 +478,12 @@ class Relationship():
         """
 
         self.relationship = {
-            'name': name,
-            'fromColumn': from_column,
-            'toColumn': to_column,
-            'fromTable': from_table,
-            'toTable': to_table,
-            'crossFilteringBehavior': 'OneDirection'
+            "name": name,
+            "fromColumn": from_column,
+            "toColumn": to_column,
+            "fromTable": from_table,
+            "toTable": to_table,
+            "crossFilteringBehavior": "OneDirection",
         }
 
     @property
@@ -471,7 +495,7 @@ class Relationship():
         str :
             The relationship name.
         """
-        return self.relationship.get('name', None)
+        return self.relationship.get("name", None)
 
     @name.setter
     def name(self, name: str) -> None:
@@ -484,7 +508,7 @@ class Relationship():
             to be.
         """
 
-        self.relationship.update({'name': name})
+        self.relationship.update({"name": name})
 
     @property
     def from_table(self) -> str:
@@ -495,7 +519,7 @@ class Relationship():
         str :
             Name of the foreign key table.
         """
-        return self.relationship.get('fromTable', None)
+        return self.relationship.get("fromTable", None)
 
     @from_table.setter
     def from_table(self, from_table: str) -> None:
@@ -507,7 +531,7 @@ class Relationship():
             Name of the foreign key table.
         """
 
-        self.relationship.update({'fromTable': from_table})
+        self.relationship.update({"fromTable": from_table})
 
     @property
     def to_table(self) -> str:
@@ -518,7 +542,7 @@ class Relationship():
         str :
             Name of the primary key table.
         """
-        return self.relationship.get('toTable', None)
+        return self.relationship.get("toTable", None)
 
     @to_table.setter
     def to_table(self, to_table: str) -> None:
@@ -530,7 +554,7 @@ class Relationship():
             Name of the primary key table.
         """
 
-        self.relationship.update({'toTable': to_table})
+        self.relationship.update({"toTable": to_table})
 
     @property
     def from_column(self) -> str:
@@ -541,7 +565,7 @@ class Relationship():
         str :
             Name of the foreign key column.
         """
-        return self.relationship.get('fromColumn', None)
+        return self.relationship.get("fromColumn", None)
 
     @from_column.setter
     def from_column(self, from_column: str) -> None:
@@ -553,7 +577,7 @@ class Relationship():
             Name of the foreign key column.
         """
 
-        self.relationship.update({'fromColumn': from_column})
+        self.relationship.update({"fromColumn": from_column})
 
     @property
     def to_column(self) -> str:
@@ -564,7 +588,7 @@ class Relationship():
         str :
             Name of the primary key column.
         """
-        return self.relationship.get('toColumn', None)
+        return self.relationship.get("toColumn", None)
 
     @to_column.setter
     def to_column(self, to_column: str) -> None:
@@ -576,7 +600,7 @@ class Relationship():
             Name of the primary key column.
         """
 
-        self.relationship.update({'toColumn': to_column})
+        self.relationship.update({"toColumn": to_column})
 
     @property
     def cross_filtering_behavior(self) -> str:
@@ -588,10 +612,12 @@ class Relationship():
             The filter direction of the relationship: [`OneDirection`,
             `BothDirections`, `Automatic`].
         """
-        return self.relationship.get('crossFilteringBehavior', None)
+        return self.relationship.get("crossFilteringBehavior", None)
 
     @cross_filtering_behavior.setter
-    def cross_filtering_behavior(self, cross_filtering_behavior: str = 'OneDirection') -> None:
+    def cross_filtering_behavior(
+        self, cross_filtering_behavior: str = "OneDirection"
+    ) -> None:
         """Sets the `crossFilteringBehavior` propery.
 
         ### Parameters
@@ -601,8 +627,7 @@ class Relationship():
             `BothDirections`, `Automatic`].
         """
 
-        self.relationship.update(
-            {'crossFilteringBehavior': cross_filtering_behavior})
+        self.relationship.update({"crossFilteringBehavior": cross_filtering_behavior})
 
     def to_dict(self) -> dict:
         """Returns the relationship properties.
@@ -617,8 +642,7 @@ class Relationship():
         return self.relationship
 
 
-class Columns():
-
+class Columns:
     """
     ### Overview
     ----
@@ -645,8 +669,7 @@ class Columns():
         return iter(self.columns)
 
 
-class Measures():
-
+class Measures:
     """
     ### Overview
     ----
@@ -673,8 +696,7 @@ class Measures():
         return iter(self.measures)
 
 
-class Relationships():
-
+class Relationships:
     """
     ### Overview
     ----
@@ -701,8 +723,7 @@ class Relationships():
         return iter(self.relationships)
 
 
-class Tables():
-
+class Tables:
     """
     ### Overview
     ----
@@ -730,8 +751,7 @@ class Tables():
         return iter(self.tables)
 
 
-class DataSources():
-
+class DataSources:
     """
     ### Overview
     ----
@@ -759,8 +779,7 @@ class DataSources():
         return iter(self.datasources)
 
 
-class Table():
-
+class Table:
     """
     ### Overview
     ----
@@ -783,10 +802,10 @@ class Table():
         self._measures = Measures()
 
         self.table = {
-            'name': name,
-            'columns': self._columns,
-            'measures': self._measures,
-            'rows': []
+            "name": name,
+            "columns": self._columns,
+            "measures": self._measures,
+            "rows": [],
         }
 
     def __repr__(self) -> str:
@@ -816,12 +835,12 @@ class Table():
 
         ### Returns
         ----
-        str : 
+        str :
             User defined name of the table.
             It is also used as the identifier
             of the table.
         """
-        return self.table.get('name', None)
+        return self.table.get("name", None)
 
     @name.setter
     def name(self, name: str) -> None:
@@ -835,7 +854,7 @@ class Table():
             of the table.
         """
 
-        self.table.update({'name': name})
+        self.table.update({"name": name})
 
     @property
     def columns(self) -> str:
@@ -843,7 +862,7 @@ class Table():
 
         ### Returns
         ----
-        str : 
+        str :
             Collection of `Column` objects.
         """
 
@@ -899,7 +918,7 @@ class Table():
 
         ### Returns
         ----
-        str : 
+        str :
             Collection of `measure` objects.
         """
 
@@ -911,12 +930,12 @@ class Table():
 
         ### Parameters
         ----
-        measure : measure 
+        measure : measure
             A `Measure` object with the properties
             set.
         """
 
-        measures = self.table.get('measures', [])
+        measures = self.table.get("measures", [])
         measures.append(measure)
 
     def del_measure(self, index: int = 0) -> None:
@@ -924,12 +943,12 @@ class Table():
 
         ### Parameters
         ----
-        index : int (optional=, Default=0) 
+        index : int (optional=, Default=0)
             The index of the `Measure` object
             that you wish to delete.
         """
 
-        measures = self.table.get('measures', [])
+        measures = self.table.get("measures", [])
         measures.pop(index)
 
     def get_measure(self, index: int = 0) -> Column:
@@ -938,12 +957,12 @@ class Table():
 
         ### Parameters
         ----
-        index : int (optional=, Default=0) 
+        index : int (optional=, Default=0)
             The index of the `Measure` object
             that you wish to get.
         """
 
-        return self.table.get('measures', [])[index]
+        return self.table.get("measures", [])[index]
 
     @property
     def rows(self) -> str:
@@ -955,7 +974,7 @@ class Table():
             Collection of `row` objects.
         """
 
-        return self.table.get('rows', [])
+        return self.table.get("rows", [])
 
     def add_row(self, row: Union[list, dict]) -> None:
         """Adds a `Row` object to the `rows` collection.
@@ -967,7 +986,7 @@ class Table():
             set.
         """
 
-        rows = self.table.get('rows', [])
+        rows = self.table.get("rows", [])
 
         if isinstance(row, dict):
             rows.append(row)
@@ -984,7 +1003,7 @@ class Table():
             that you wish to delete.
         """
 
-        rows = self.table.get('rows', [])
+        rows = self.table.get("rows", [])
         rows.pop(index)
 
     def get_row(self, index: int = 0) -> dict:
@@ -998,16 +1017,18 @@ class Table():
             that you wish to get.
         """
 
-        return self.table.get('rows', [])[index]
-    
+        return self.table.get("rows", [])[index]
+
     def to_dict(self) -> dict:
+        """Returns the table properties as a dictionary."""
         return json.loads(s=json.dumps(obj=self.table, cls=PowerBiEncoder))
 
     def to_json(self) -> dict:
+        """Returns the table properties as a JSON formatted string."""
         return json.dumps(obj=self.table, cls=PowerBiEncoder)
 
-class Dataset():
 
+class Dataset:
     """
     ### Overview
     ----
@@ -1016,7 +1037,7 @@ class Dataset():
     sources.
     """
 
-    def __init__(self, name: str, tables: Tables = []) -> None:
+    def __init__(self, name: str, tables: Tables) -> None:
         """Initializes the `Dataset` object.
 
         ### Parameters
@@ -1026,7 +1047,7 @@ class Dataset():
             It is also used as the identifier
             of the dataset.
 
-        tables : Tables (optional, Default=[])
+        tables : Tables
             A collection of `Table` objects
             you want to be part of the dataset.
         """
@@ -1040,11 +1061,11 @@ class Dataset():
         self._data_sources = DataSources()
 
         self.push_dataset = {
-            'name': name,
-            'tables': self._tables,
-            'datasources': self._data_sources,
-            'defaultMode': '',
-            'relationships': self._relationships
+            "name": name,
+            "tables": self._tables,
+            "datasources": self._data_sources,
+            "defaultMode": "",
+            "relationships": self._relationships,
         }
 
     def __repr__(self) -> str:
@@ -1071,10 +1092,10 @@ class Dataset():
 
         ### Returns
         ----
-        str : 
+        str :
             The dataset name.
         """
-        return self.push_dataset.get('name', None)
+        return self.push_dataset.get("name", None)
 
     @name.setter
     def name(self, name: str) -> None:
@@ -1086,7 +1107,7 @@ class Dataset():
             The name you want the dataset to be.
         """
 
-        self.push_dataset.update({'name': name})
+        self.push_dataset.update({"name": name})
 
     @property
     def default_mode(self) -> str:
@@ -1094,10 +1115,10 @@ class Dataset():
 
         ### Returns
         ----
-        str : 
+        str :
             The dataset mode or type.
         """
-        return self.push_dataset.get('defaultMode', None)
+        return self.push_dataset.get("defaultMode", None)
 
     @default_mode.setter
     def default_mode(self, default_mode: str) -> None:
@@ -1109,7 +1130,7 @@ class Dataset():
             The dataset mode or type.
         """
 
-        self.push_dataset.update({'defaultMode': default_mode})
+        self.push_dataset.update({"defaultMode": default_mode})
 
     @property
     def tables(self) -> Tables:
@@ -1276,21 +1297,23 @@ class Dataset():
         """
 
         copy_push_dataset = self.push_dataset.copy()
-        del copy_push_dataset['datasources']
+        del copy_push_dataset["datasources"]
 
-        for table in copy_push_dataset['tables']:
-            del table['rows']
+        for table in copy_push_dataset["tables"]:
+            del table["rows"]
 
         return copy_push_dataset
-    
+
     def to_dict(self) -> dict:
+        """Converts the Object to dict."""
         return json.loads(s=json.dumps(obj=self.push_dataset, cls=PowerBiEncoder))
 
     def to_json(self) -> dict:
+        """Converts the Object to JSON string."""
         return json.dumps(obj=self.push_dataset, cls=PowerBiEncoder)
 
-class DataSource():
 
+class DataSource:
     """
     ### Overview
     ----
@@ -1314,10 +1337,10 @@ class DataSource():
         self.data_source_type = data_source_type
 
         self.data_source = {
-            'datasourceType': self.data_source_type,
-            'connectionDetails': {},
-            'dataSourceId': '',
-            'gatewayId': ''
+            "datasourceType": self.data_source_type,
+            "connectionDetails": {},
+            "dataSourceId": "",
+            "gatewayId": "",
         }
 
     @property
@@ -1326,10 +1349,10 @@ class DataSource():
 
         ### Returns
         ----
-        str : 
+        str :
             The `dataSourceType` property.
         """
-        return self.data_source.get('datasourceType', None)
+        return self.data_source.get("datasourceType", None)
 
     @data_source_type.setter
     def data_source_type(self, data_source_type: str) -> None:
@@ -1341,7 +1364,7 @@ class DataSource():
             The `dataSourceType` with the properties set.
         """
 
-        self.data_source.update({'datasourceType': data_source_type})
+        self.data_source.update({"datasourceType": data_source_type})
 
     @property
     def connection_details(self) -> str:
@@ -1352,7 +1375,7 @@ class DataSource():
         str :
             The `connectionDetails` property.
         """
-        return self.data_source.get('connectionDetails', None)
+        return self.data_source.get("connectionDetails", None)
 
     @connection_details.setter
     def connection_details(self, connection_details: str) -> None:
@@ -1364,17 +1387,17 @@ class DataSource():
             The `connectionDetails` with the properties set.
         """
 
-        self.data_source.update({'connectionDetails': connection_details})
-    
+        self.data_source.update({"connectionDetails": connection_details})
+
     def to_dict(self) -> dict:
         """Converts the Object to dict.
 
         ### Returns
         ----
-        dict: 
+        dict:
             The resource itself as a dictionary.
         """
-      
+
         return self.data_source
 
     def to_json(self) -> str:
@@ -1382,14 +1405,117 @@ class DataSource():
 
         ### Returns
         ----
-        str: 
+        str:
             The resource itself as a JSON string.
         """
-   
+
         return json.dumps(obj=self.data_source, cls=PowerBiEncoder)
 
 
-class ConnectionDetails():
+class ConnectionDetails:
+
+    """Used to set the `connection_details` property of a
+    API object.
+    """
 
     def __init__(self) -> None:
         pass
+
+
+@dataclass
+class CredentialDetails:
+    """Used to set the `credential_details` property of a
+    API object.
+
+    ### Parameters
+    ----
+    credential_type : Union[str, Enum]
+        The `credentialType` with the properties set.
+
+    credentials : str
+        The credentials, which depend on the 'credentialType'
+        value. For more information, see Update
+        Datasource examples.
+
+    encrypted_connection : Union[str, Enum]
+        Whether to encrypt the data source connection. The API call
+        will fail if you select encryption and Power BI is unable
+        to establish an encrypted connection with the data source.
+
+    encryption_algorithm : Union[str, Enum]
+        The encryption algorithm. For a cloud data source, specify
+        None. For an on-premises data source, specify RSA-OAEP and
+        use the gateway public key to encrypt the credentials.
+
+    privacy_level : Union[str, Enum]
+        The privacy level, which is relevant when combining data
+        from multiple sources.
+
+    use_caller_aad_identity : bool
+        Whether the Azure AD identity (OAuth 2.0 credentials) of the
+        API caller (which must be the data source owner) will be used
+        to configure data source credentials (the owner OAuth access token).
+        Typically, you would either use this flag or
+        useEndUserOAuth2Credentials.
+
+    use_end_user_oauth2_credentials : bool
+        Whether the end-user Azure AD identity (OAuth 2.0 credentials) is
+        used when connecting to the data source in DirectQuery mode. Use
+        with data sources that support single sign-on (SSO). Typically,
+        you would either use this flag or useCallerAADIdentity.
+    """
+
+    credential_type: Union[str, Enum]
+    credentials: str
+    encrypted_connection: Union[str, Enum]
+    encryption_algorithm: Union[str, Enum]
+    privacy_level: Union[str, Enum]
+    use_caller_aad_identity: bool
+    use_end_user_oauth2_credentials: bool
+    credential_details: dict = field(init=False)
+
+    def __post_init__(self):
+
+        # Initialize credential_details dictionary
+        self.credential_details = {
+            "credentialType": enum_to_value(self.credential_type),
+            "credentials": self.credentials,
+            "encryptedConnection": enum_to_value(self.encrypted_connection),
+            "encryptionAlgorithm": enum_to_value(self.encryption_algorithm),
+            "privacyLevel": enum_to_value(self.privacy_level),
+            "useCallerAADIdentity": self.use_caller_aad_identity,
+            "useEndUserOAuth2Credentials": self.use_end_user_oauth2_credentials,
+        }
+
+    # Dynamic property methods
+    def __getattr__(self, name):
+        if name in self.credential_details:
+            return self.credential_details[name]
+        raise AttributeError(
+            f"'{type(self).__name__}' object has no attribute '{name}'"
+        )
+
+    def __setattr__(self, name, value):
+        if name in {
+            "credential_type",
+            "encrypted_connection",
+            "encryption_algorithm",
+            "privacy_level",
+        }:
+            value = enum_to_value(value)
+        if name in self.__annotations__:
+            super().__setattr__(name, value)
+        elif "credential_details" in self.__dict__:
+            self.credential_details[name] = value
+        else:
+            raise AttributeError(
+                f"'{type(self).__name__}' object has no attribute '{name}'"
+            )
+
+    def to_dict(self) -> dict:
+        """Converts the Object to dict."""
+        return asdict(self)
+
+    def to_json(self) -> str:
+        """Converts the Object to JSON string."""
+        return json.dumps(self.to_dict())

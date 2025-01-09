@@ -1,3 +1,5 @@
+"""Demonstrates how to use the Groups service."""
+
 from pprint import pprint
 from configparser import ConfigParser
 from powerbi.client import PowerBiClient
@@ -6,20 +8,20 @@ from powerbi.client import PowerBiClient
 config = ConfigParser()
 
 # Read the file.
-config.read('config/config.ini')
+config.read("config/config.ini")
 
 # Get the specified credentials.
-client_id = config.get('power_bi_api', 'client_id')
-redirect_uri = config.get('power_bi_api', 'redirect_uri')
-client_secret = config.get('power_bi_api', 'client_secret')
+client_id = config.get("power_bi_api", "client_id")
+redirect_uri = config.get("power_bi_api", "redirect_uri")
+client_secret = config.get("power_bi_api", "client_secret")
 
 # Initialize the Client.
 power_bi_client = PowerBiClient(
     client_id=client_id,
     client_secret=client_secret,
-    scope=['https://analysis.windows.net/powerbi/api/.default'],
+    scope=["https://analysis.windows.net/powerbi/api/.default"],
     redirect_uri=redirect_uri,
-    credentials='config/power_bi_state.jsonc'
+    credentials="config/power_bi_state.jsonc",
 )
 
 # Initialize the `Groups` service.
@@ -29,12 +31,10 @@ groups_service = power_bi_client.groups()
 all_groups = groups_service.get_groups()
 
 # List all the groups.
-pprint(
-    groups_service.get_groups()
-)
+pprint(groups_service.get_groups())
 
 # Loop through the Groups.
-for group in all_groups['value']:
+for group in all_groups["value"]:
 
     group_id = group.get("id", None)
     group_name = group.get("name", None)

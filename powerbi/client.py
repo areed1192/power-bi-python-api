@@ -18,6 +18,7 @@ from powerbi.available_features import AvailableFeatures
 from powerbi.capacities import Capacities
 from powerbi.pipelines import Pipelines
 from powerbi.apps import Apps
+from powerbi.gateways import Gateways
 
 
 class PowerBiClient:
@@ -402,3 +403,25 @@ class PowerBiClient:
         """
 
         return Datasets(session=self.power_bi_session)
+
+    def gateways(self) -> Gateways:
+        """Used to access the `Gateways` Services and metadata.
+
+        ### Returns
+        ---
+        Gateways:
+            The `Gateways` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> gateways_service = power_bi_client.gateways()
+        """
+
+        return Gateways(session=self.power_bi_session)

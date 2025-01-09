@@ -1,10 +1,13 @@
+"""Module for the PowerBi `Groups` service."""
+
 from enum import Enum
 from typing import Union
 from typing import Dict
 from powerbi.session import PowerBiSession
 
 
-class Groups():
+class Groups:
+    """Class for the `Groups` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Groups` service.
@@ -23,7 +26,7 @@ class Groups():
         self.power_bi_session: PowerBiSession = session
 
         # Set the endpoint.
-        self.endpoint = 'myorg/groups'
+        self.endpoint = "myorg/groups"
 
     def get_groups(self) -> Dict:
         """Returns a list of workspaces the user has access to.
@@ -40,8 +43,7 @@ class Groups():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=self.endpoint
+            method="get", endpoint=self.endpoint
         )
 
         return content
@@ -68,8 +70,7 @@ class Groups():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/groups/{group_id}/users'
+            method="get", endpoint=f"myorg/groups/{group_id}/users"
         )
 
         return content
@@ -100,14 +101,12 @@ class Groups():
             )
         """
 
-        params = {
-            'name': name
-        }
+        params = {"name": name}
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/groups?workspaceV2={workspace_v2}',
-            json_payload=params
+            method="post",
+            endpoint=f"myorg/groups?workspaceV2={workspace_v2}",
+            json_payload=params,
         )
 
         return content
@@ -129,8 +128,7 @@ class Groups():
         """
 
         content = self.power_bi_session.make_request(
-            method='delete',
-            endpoint=f'myorg/groups/{group_id}'
+            method="delete", endpoint=f"myorg/groups/{group_id}"
         )
 
         return content
@@ -142,7 +140,7 @@ class Groups():
         display_name: str = None,
         email_address: str = None,
         identifier: str = None,
-        principal_type: Union[str, Enum] = None
+        principal_type: Union[str, Enum] = None,
     ) -> None:
         """Grants the specified user permissions to the specified workspace.
 
@@ -158,7 +156,7 @@ class Groups():
             Display name of the principal.
 
         email_address : str (optional, Default=None)
-            Email address of the user.  
+            Email address of the user.
 
         identifier : str (optional, Default=None)
             Object ID of the principal
@@ -183,25 +181,21 @@ class Groups():
             principal_type = principal_type.value
 
         params = {}
-        params['groupUserAccessRight'] = group_user_access_rights
-        params['displayName'] = display_name
-        params['emailAddress'] = email_address
-        params['identifier'] = identifier
-        params['principalType'] = principal_type
+        params["groupUserAccessRight"] = group_user_access_rights
+        params["displayName"] = display_name
+        params["emailAddress"] = email_address
+        params["identifier"] = identifier
+        params["principalType"] = principal_type
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/groups/{group_id}/users',
-            json_payload=params
+            method="post",
+            endpoint=f"myorg/groups/{group_id}/users",
+            json_payload=params,
         )
 
         return content
 
-    def delete_group_user(
-        self,
-        group_id: str,
-        email_address: str
-    ) -> None:
+    def delete_group_user(self, group_id: str, email_address: str) -> None:
         """Deletes the specified user permissions from the specified workspace.
 
         ### Parameters
@@ -210,7 +204,7 @@ class Groups():
             The workspace ID.
 
         email_address : str
-            Email address of the user.  
+            Email address of the user.
 
         ### Usage
         ----
@@ -222,8 +216,7 @@ class Groups():
         """
 
         content = self.power_bi_session.make_request(
-            method='delete',
-            endpoint=f'myorg/groups/{group_id}/users/{email_address}'
+            method="delete", endpoint=f"myorg/groups/{group_id}/users/{email_address}"
         )
 
         return content
@@ -235,7 +228,7 @@ class Groups():
         display_name: str = None,
         email_address: str = None,
         identifier: str = None,
-        principal_type: Union[str, Enum] = None
+        principal_type: Union[str, Enum] = None,
     ) -> None:
         """Update the specified user permissions to the specified workspace.
 
@@ -251,7 +244,7 @@ class Groups():
             Display name of the principal.
 
         email_address : str (optional, Default=None)
-            Email address of the user.  
+            Email address of the user.
 
         identifier : str (optional, Default=None)
             Object ID of the principal
@@ -276,16 +269,16 @@ class Groups():
             principal_type = principal_type.value
 
         params = {}
-        params['groupUserAccessRight'] = group_user_access_rights
-        params['displayName'] = display_name
-        params['emailAddress'] = email_address
-        params['identifier'] = identifier
-        params['principalType'] = principal_type
+        params["groupUserAccessRight"] = group_user_access_rights
+        params["displayName"] = display_name
+        params["emailAddress"] = email_address
+        params["identifier"] = identifier
+        params["principalType"] = principal_type
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/groups/{group_id}/users',
-            json_payload=params
+            method="post",
+            endpoint=f"myorg/groups/{group_id}/users",
+            json_payload=params,
         )
 
         return content

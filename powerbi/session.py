@@ -31,7 +31,9 @@ class PowerBiSession:
             >>> power_bi_session = PowerBiSession()
         """
 
-        from powerbi.client import PowerBiClient #pylint: disable=import-outside-toplevel
+        from powerbi.client import ( # pylint: disable=import-outside-toplevel
+            PowerBiClient,
+        )
 
         # We can also add custom formatting to our log messages.
         log_format = "%(asctime)-15s|%(filename)s|%(message)s"

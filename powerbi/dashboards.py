@@ -5,7 +5,6 @@ from powerbi.session import PowerBiSession
 
 
 class Dashboards:
-
     """The `Dashboards` service allows you to manage dashboards
     in Microsoft PowerBi."""
 

@@ -1,8 +1,10 @@
-from typing import Dict
+"""Module for the `Users` service."""
+
 from powerbi.session import PowerBiSession
 
 
-class Users():
+class Users:
+    """Class for the `Users` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Users` service.
@@ -21,7 +23,7 @@ class Users():
         self.power_bi_session: PowerBiSession = session
 
         # Set the endpoint.
-        self.endpoint = 'myorg/RefreshUserPermissions'
+        self.endpoint = "myorg/RefreshUserPermissions"
 
     def refresh_user_permissions(self) -> None:
         """Refreshes user permissions in Power BI.
@@ -33,7 +35,7 @@ class Users():
         calls. This operation refreshes user permissions and makes
         sure the user permissions are fully updated. Make the refresh
         user permissions call, before any other API calls. It takes
-        about two minutes for the permissions to get refreshed. 
+        about two minutes for the permissions to get refreshed.
         Before calling other APIs, wait for two minutes.
 
         ### Usage
@@ -43,8 +45,7 @@ class Users():
         """
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=self.endpoint
+            method="post", endpoint=self.endpoint
         )
 
         return content

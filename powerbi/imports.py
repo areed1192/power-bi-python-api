@@ -1,10 +1,13 @@
+"""Module for the `Imports` service."""
+
 from enum import Enum
 from typing import Union
 from typing import Dict
 from powerbi.session import PowerBiSession
 
 
-class Imports():
+class Imports:
+    """Class for the `Imports` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Imports` service.
@@ -44,8 +47,7 @@ class Imports():
         """
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint='myorg/imports/createTemporaryUploadLocation'
+            method="post", endpoint="myorg/imports/createTemporaryUploadLocation"
         )
 
         return content
@@ -79,8 +81,8 @@ class Imports():
         """
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'/myorg/groups/{group_id}/imports/createTemporaryUploadLocation'
+            method="post",
+            endpoint=f"/myorg/groups/{group_id}/imports/createTemporaryUploadLocation",
         )
 
         return content
@@ -99,8 +101,7 @@ class Imports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'/myorg/imports'
+            method="get", endpoint="/myorg/imports"
         )
 
         return content
@@ -126,8 +127,7 @@ class Imports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'/myorg/groups/{group_id}/imports'
+            method="get", endpoint=f"/myorg/groups/{group_id}/imports"
         )
 
         return content
@@ -153,8 +153,7 @@ class Imports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'/myorg/imports/{import_id}'
+            method="get", endpoint=f"/myorg/imports/{import_id}"
         )
 
         return content
@@ -184,13 +183,17 @@ class Imports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'/myorg/groups/{group_id}/imports/{import_id}'
+            method="get", endpoint=f"/myorg/groups/{group_id}/imports/{import_id}"
         )
 
         return content
 
-    def post_import(self, dataset_display_name: str, name_conflict: Union[str, Enum] = 'Ignore', skip_report: bool = None, file_path: str = None) -> Dict:
+    def post_import(
+        self,
+        dataset_display_name: str,
+        name_conflict: Union[str, Enum] = "Ignore",
+        skip_report: bool = None,
+    ) -> Dict:
         """Creates new content on "My Workspace" from PBIX (Power BI Desktop),
         JSON, XLSX (Excel), RDL or file path in OneDrive for Business.
 
@@ -221,38 +224,23 @@ class Imports():
             )
         """
 
-        header_template = f'Content-Disposition: form-data; filename="{0}" Content-Type: application/json'
-
-        content_types = {
-            'file': 'multipart/form-data',
-            'xlsx': 'application/json'
-        }
+        content_types = {"file": "multipart/form-data", "xlsx": "application/json"}
 
         if isinstance(name_conflict, Enum):
             name_conflict = name_conflict.value
 
         params = {
-            'datasetDisplayName': dataset_display_name,
-            'nameConflict': name_conflict,
-            'skipReport': skip_report
+            "datasetDisplayName": dataset_display_name,
+            "nameConflict": name_conflict,
+            "skipReport": skip_report,
         }
 
         request = self.power_bi_session.build_custom_request()
-        request.headers['Content-Type'] = content_types['file']
-        request.data = ''
+        request.headers["Content-Type"] = content_types["file"]
+        request.data = ""
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'/myorg/imports',
-            params=params
+            method="get", endpoint="/myorg/imports", params=params
         )
 
         return content
-
-# To import a file, request Headers should include Content-Type: multipart/form-data with the file encoded as form data in the request body.
-# To import an XLSX (Excel) file from OneDrive for Business, request headers should include Content-Type: application/json with ImportInfo in the request body.
-# To import an RDL file, in the DatasetDisplayName property, include .rdl to define the file type.
-# To import large .pbix files, between 1 GB and 10 GB, see Create Temporary Upload Location. This is supported only for workspaces on premium capacity.
-
-# Content-Disposition: form-data; name="file0"; filename="Using Pivot Charts.xlsm"
-# Content-Type: application/vnd.ms-excel.sheet.macroEnabled.12

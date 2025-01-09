@@ -1,17 +1,14 @@
-"""Module for interacting with the Reports Service."""
+"""Module for interacting with the `Reports` Service."""
 
 from enum import Enum
 from typing import Dict
 from typing import Union
 
-# from powerbi.utils import Dataset
-# from powerbi.utils import Table
-# from powerbi.utils import PowerBiEncoder
 from powerbi.session import PowerBiSession
 
 
 class Reports:
-    """A class for interacting with the Reports API."""
+    """A class for interacting with the Reports Service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Reports` service.

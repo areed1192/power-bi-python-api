@@ -283,3 +283,33 @@ class WorkloadStates(Enum):
     ENABLED = "Enabled"
     DISABLED = "Disabled"
     UNSUPPORTED = "Unsupported"
+
+
+class NotifyOption(Enum):
+    """Represents all the Mail notification options you
+    can use when refreshing a Dataflow.
+
+    ### Usage:
+    ----
+        >>> from powerbi.enums import WorkloadStates
+        >>> NotifyOption.MAIL_ON_COMPLETION.value
+    """
+
+    MAIL_ON_COMPLETION = "MailOnCompletion"
+    MAIL_ON_FAILURE = "MailOnFailure"
+    NO_NOTIFICATION = "NoNotification"
+
+
+class ComputeEngineBehavior(Enum):
+    """Represents all the Compute Engine Behavior you
+    can use when creating a new `PowerBiDataflow`.
+
+    ### Usage:
+    ----
+        >>> from powerbi.enums import computeEngineBehavior
+        >>> computeEngineBehavior.COMPUTE_OPTIMIZED.value
+    """
+
+    COMPUTE_OPTIMIZED = "computeOptimized"
+    COMPUTE_ON = "computeOn"
+    COMPUTE_DISABLED = "computeDisabled"

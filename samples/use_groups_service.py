@@ -1,4 +1,4 @@
-"""Demonstrates how to use the Groups service."""
+"""Demonstrates how to use the `Groups` service."""
 
 from pprint import pprint
 from configparser import ConfigParser
@@ -38,7 +38,6 @@ for group in all_groups["value"]:
 
     group_id = group.get("id", None)
     group_name = group.get("name", None)
-    default_data_storage_format = group.get("defaultDatasetStorageFormat", None)
 
     # Print the Group ID and Name.
     print(f"Group ID: {group_id}")

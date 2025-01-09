@@ -130,10 +130,10 @@ dmypy.json
 
 # Alex Folder.
 config/
-.config/
 logs/
 .github/
 *power_bi_state.jsonc
 power_bi_state.jsonc
 
 .powerbi_venv/
+.eastridge/

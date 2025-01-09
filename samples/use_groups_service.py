@@ -25,7 +25,22 @@ power_bi_client = PowerBiClient(
 # Initialize the `Groups` service.
 groups_service = power_bi_client.groups()
 
+# Grab all the Groups.
+all_groups = groups_service.get_groups()
+
 # List all the groups.
 pprint(
     groups_service.get_groups()
 )
+
+# Loop through the Groups.
+for group in all_groups['value']:
+
+    group_id = group.get("id", None)
+    group_name = group.get("name", None)
+    default_data_storage_format = group.get("defaultDatasetStorageFormat", None)
+
+    # Print the Group ID and Name.
+    print(f"Group ID: {group_id}")
+    print(f"Group Name: {group_name}")
+    print("*" * 50)

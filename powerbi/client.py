@@ -1,3 +1,5 @@
+"""Module for the `PowerBiClient` class."""
+
 from typing import List
 
 from powerbi.session import PowerBiSession
@@ -19,7 +21,6 @@ from powerbi.apps import Apps
 
 
 class PowerBiClient:
-
     """
     ### Overview
     ----

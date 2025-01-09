@@ -268,3 +268,18 @@ class PrivacyLevels(Enum):
     ORGANIZATIONAL = "Organizational"
     PRIVATE = "Private"
     NONE = "None"
+
+
+class WorkloadStates(Enum):
+    """Represents all the Workload States you can
+    use when patching a workload in a capacity.
+
+    ### Usage:
+    ----
+        >>> from powerbi.enums import WorkloadStates
+        >>> WorkloadStates.ENABLED.value
+    """
+
+    ENABLED = "Enabled"
+    DISABLED = "Disabled"
+    UNSUPPORTED = "Unsupported"

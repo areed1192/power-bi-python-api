@@ -1,13 +1,11 @@
-""""The `Capacities` service module."""
+""""Module for the PowerBi `Capacities` service."""
 
 from typing import Dict
 from powerbi.session import PowerBiSession
 
 
 class Capacities:
-
-    """The `Capacities` service provides methods for interacting with the
-    Microsoft Power BI REST API `Capacities` resources."""
+    """Class for the `Capacities` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Capacities` service.

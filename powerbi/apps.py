@@ -1,11 +1,11 @@
-""""Handles all the requests made to the Microsoft Power Bi API Apps endpoint."""
+""""Module for the `Apps` service."""
 
 from typing import Dict
 from powerbi.session import PowerBiSession
 
 
 class Apps:
-    """Handles all the requests made to the Microsoft Power Bi API Apps endpoint."""
+    """Class for the `Apps` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Apps` service.

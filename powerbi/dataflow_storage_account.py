@@ -1,8 +1,11 @@
+"""Module for the `DataflowStorageAccount` service."""
+
 from typing import Dict
 from powerbi.session import PowerBiSession
 
 
-class DataflowStorageAccount():
+class DataflowStorageAccount:
+    """Class for the `DataflowStorageAccount` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `DataflowStorageAccount` service.
@@ -21,7 +24,7 @@ class DataflowStorageAccount():
         self.power_bi_session: PowerBiSession = session
 
         # Set the endpoint.
-        self.endpoint = 'myorg/dataflowStorageAccounts'
+        self.endpoint = "myorg/dataflowStorageAccounts"
 
     def get_dataflow_storage_accounts(self) -> Dict:
         """Returns a list of dataflow storage accounts the user
@@ -39,13 +42,14 @@ class DataflowStorageAccount():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint='myorg/dataflowStorageAccounts'
+            method="get", endpoint="myorg/dataflowStorageAccounts"
         )
 
         return content
 
-    def assign_to_dataflow_storage_account(self, group_id: str, dataflow_storage_id: str) -> Dict:
+    def assign_to_dataflow_storage_account(
+        self, group_id: str, dataflow_storage_id: str
+    ) -> Dict:
         """Assigns the specified workspace to the specified dataflow storage
         account.
 
@@ -55,8 +59,9 @@ class DataflowStorageAccount():
             The workspace id.
 
         dataflow_storage_id : str
-            The Power BI dataflow storage account id. To unassign the specified workspace
-            from a Power BI dataflow storage account, an empty GUID (00000000-0000-0000-0000-000000000000)
+            The Power BI dataflow storage account id. To unassign
+            the specified workspace from a Power BI dataflow storage
+            account, an empty GUID (00000000-0000-0000-0000-000000000000)
             should be provided as dataflowStorageId.
 
         ### Returns
@@ -73,14 +78,12 @@ class DataflowStorageAccount():
             )
         """
 
-        payload = {
-            'dataflowStorageId': dataflow_storage_id
-        }
+        payload = {"dataflowStorageId": dataflow_storage_id}
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/groups/{group_id}/AssignToDataflowStorage',
-            json_payload=payload
+            method="post",
+            endpoint=f"myorg/groups/{group_id}/AssignToDataflowStorage",
+            json_payload=payload,
         )
 
         return content

@@ -1,4 +1,4 @@
-"""PowerBi Authentication Module."""
+"""Module for handling authentication with the Microsoft Power Bi API."""
 
 from typing import List
 from typing import Dict

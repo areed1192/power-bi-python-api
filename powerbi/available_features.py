@@ -1,4 +1,4 @@
-"""Handles all the requests made to the Microsoft Power Bi API Available Features endpoint."""
+"""Module for the `AvailableFeatures` service."""
 
 from typing import Dict
 from powerbi.session import PowerBiSession
@@ -6,8 +6,7 @@ from powerbi.session import PowerBiSession
 
 class AvailableFeatures:
 
-    """Handles all the requests made to the Microsoft Power Bi API Available
-    Features endpoint."""
+    """Class for the `AvailableFeatures` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `AvailableFeatures` service.

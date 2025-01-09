@@ -5,8 +5,7 @@ from powerbi.session import PowerBiSession
 
 
 class Dashboards:
-    """The `Dashboards` service allows you to manage dashboards
-    in Microsoft PowerBi."""
+    """Class for the `Dashboards` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Dashboards` service.

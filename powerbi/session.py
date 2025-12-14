@@ -1,14 +1,16 @@
+"""Handles all the requests made to the Microsoft Power Bi API."""
+
+import sys
 import json
-import requests
 import logging
 import pathlib
-import sys
 
 from typing import Dict
 
+import requests
 
-class PowerBiSession():
 
+class PowerBiSession:
     """Serves as the Session for the Current Microsoft
     Power Bi API."""
 
@@ -29,30 +31,32 @@ class PowerBiSession():
             >>> power_bi_session = PowerBiSession()
         """
 
-        from powerbi.client import PowerBiClient
+        from powerbi.client import ( # pylint: disable=import-outside-toplevel
+            PowerBiClient,
+        )
 
         # We can also add custom formatting to our log messages.
-        log_format = '%(asctime)-15s|%(filename)s|%(message)s'
+        log_format = "%(asctime)-15s|%(filename)s|%(message)s"
 
         self.client: PowerBiClient = client
-        self.resource_url = 'https://api.powerbi.com/'
-        self.version = 'v1.0/'
+        self.resource_url = "https://api.powerbi.com/"
+        self.version = "v1.0/"
 
-        if not pathlib.Path('logs').exists():
-            pathlib.Path('logs').mkdir()
-            pathlib.Path('logs/log_file_custom.log').touch()
-        if sys.version_info[1]==8:
+        if not pathlib.Path("logs").exists():
+            pathlib.Path("logs").mkdir()
+            pathlib.Path("logs/log_file_custom.log").touch()
+        if sys.version_info[1] == 8:
             logging.basicConfig(
                 filename="logs/log_file_custom.log",
                 level=logging.INFO,
-                format=log_format
+                format=log_format,
             )
         else:
             logging.basicConfig(
                 filename="logs/log_file_custom.log",
                 level=logging.INFO,
                 encoding="utf-8",
-                format=log_format
+                format=log_format,
             )
 
     def build_headers(self) -> Dict:
@@ -71,8 +75,8 @@ class PowerBiSession():
 
         # Fake the headers.
         headers = {
-            "Authorization": "Bearer {access_token}".format(access_token=self.client.access_token),
-            "Content-Type": "application/json"
+            "Authorization": f"Bearer {self.client.access_token}",
+            "Content-Type": "application/json",
         }
 
         return headers
@@ -91,21 +95,17 @@ class PowerBiSession():
             The full URL with the endpoint needed.
         """
 
-        url = self.resource_url + self.version  + endpoint
+        url = self.resource_url + self.version + endpoint
 
         return url
-
-    def build_custom_request(self) -> requests.Request:
-
-        return requests.Request
 
     def make_request(
         self,
         method: str,
         endpoint: str,
-        params: dict = {},
-        data: dict = {},
-        json_payload: dict = {}
+        params: dict = None,
+        data: dict = None,
+        json_payload: dict = None,
     ) -> Dict:
         """Handles all the requests in the library.
 
@@ -118,8 +118,8 @@ class PowerBiSession():
 
         ### Arguments:
         ----
-        method : str 
-            The Request method, can be one of the following: 
+        method : str
+            The Request method, can be one of the following:
             ['get','post','put','delete','patch']
 
         endpoint : str
@@ -140,7 +140,7 @@ class PowerBiSession():
 
         ### Returns:
         ----
-            A Dictionary object containing the 
+            A Dictionary object containing the
             JSON values.
         """
 
@@ -150,9 +150,7 @@ class PowerBiSession():
         # Define the headers.
         headers = self.build_headers()
 
-        logging.info(
-            "URL: {url}".format(url=url)
-        )
+        logging.info("URL: %s", url)
 
         # Define a new session.
         request_session = requests.Session()
@@ -165,52 +163,56 @@ class PowerBiSession():
             url=url,
             params=params,
             data=data,
-            json=json_payload
+            json=json_payload,
         ).prepare()
 
         # Send the request.
-        response: requests.Response = request_session.send(
-            request=request_request
-        )
+        response: requests.Response = request_session.send(request=request_request)
 
         # Close the session.
         request_session.close()
 
         # If it's okay and no details.
-        if response.ok and len(response.content) > 0 and response.headers['Content-Type'] != 'application/zip':
-            
+        if (
+            response.ok
+            and len(response.content) > 0
+            and response.headers["Content-Type"] != "application/zip"
+        ):
+
             return response.json()
-        
-        elif response.ok and len(response.content) > 0 and response.headers['Content-Type'] == 'application/zip':
+
+        elif (
+            response.ok
+            and len(response.content) > 0
+            and response.headers["Content-Type"] == "application/zip"
+        ):
 
             return response.content
 
         elif len(response.content) > 0 and response.ok:
             return {
-                'message': 'response successful',
-                'status_code': response.status_code
+                "message": "response successful",
+                "status_code": response.status_code,
             }
         elif not response.ok:
 
             if len(response.content) == 0:
-                response_data = ''
+                response_data = ""
             else:
                 response_data = response.json()
 
-            response.request.headers['Authorization'] = 'Bearer XXXXXXX'
+            response.request.headers["Authorization"] = "Bearer XXXXXXX"
 
             # Define the error dict.
             error_dict = {
-                'error_code': response.status_code,
-                'response_url': response.url,
-                'response_body': response_data,
-                'response_request': dict(response.request.headers),
-                'response_method': response.request.method,
+                "error_code": response.status_code,
+                "response_url": response.url,
+                "response_body": response_data,
+                "response_request": dict(response.request.headers),
+                "response_method": response.request.method,
             }
 
             # Log the error.
-            logging.error(
-                msg=json.dumps(obj=error_dict, indent=4)
-            )
+            logging.error(msg=json.dumps(obj=error_dict, indent=4))
 
             raise requests.HTTPError()

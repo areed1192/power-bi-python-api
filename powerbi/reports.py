@@ -1,13 +1,14 @@
+"""Module for interacting with the `Reports` Service."""
+
 from enum import Enum
 from typing import Dict
 from typing import Union
-# from powerbi.utils import Dataset
-# from powerbi.utils import Table
-# from powerbi.utils import PowerBiEncoder
+
 from powerbi.session import PowerBiSession
 
 
-class Reports():
+class Reports:
+    """A class for interacting with the Reports Service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Reports` service.
@@ -40,8 +41,8 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/reports',
+            method="get",
+            endpoint="myorg/reports",
         )
 
         return content
@@ -68,8 +69,8 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/groups/{group_id}/reports',
+            method="get",
+            endpoint=f"myorg/groups/{group_id}/reports",
         )
 
         return content
@@ -96,8 +97,8 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/reports/{report_id}',
+            method="get",
+            endpoint=f"myorg/reports/{report_id}",
         )
 
         return content
@@ -128,8 +129,8 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/groups/{group_id}/reports/{report_id}',
+            method="get",
+            endpoint=f"myorg/groups/{group_id}/reports/{report_id}",
         )
 
         return content
@@ -156,14 +157,14 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/reports/{report_id}/pages',
+            method="get",
+            endpoint=f"myorg/reports/{report_id}/pages",
         )
 
         return content
 
     def get_group_pages(self, group_id: str, report_id: str) -> Dict:
-        """Returns a list of pages within the specified report from the 
+        """Returns a list of pages within the specified report from the
         specified workspace.
 
         ### Parameters
@@ -189,14 +190,14 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/groups/{group_id}/reports/{report_id}/pages',
+            method="get",
+            endpoint=f"myorg/groups/{group_id}/reports/{report_id}/pages",
         )
 
         return content
 
     def get_page(self, report_id: str, page_name: str) -> Dict:
-        """Returns the specified page within the specified report from the 
+        """Returns the specified page within the specified report from the
         specified workspace.
 
         ### Parameters
@@ -222,14 +223,14 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/reports/{report_id}/pages/{page_name}',
+            method="get",
+            endpoint=f"myorg/reports/{report_id}/pages/{page_name}",
         )
 
         return content
 
     def get_group_page(self, group_id: str, report_id: str, page_name: str) -> Dict:
-        """Returns a list of pages within the specified report from the 
+        """Returns a list of pages within the specified report from the
         specified workspace.
 
         ### Parameters
@@ -259,13 +260,19 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/groups/{group_id}/reports/{report_id}/pages/{page_name}',
+            method="get",
+            endpoint=f"myorg/groups/{group_id}/reports/{report_id}/pages/{page_name}",
         )
 
         return content
 
-    def clone_report(self, report_id: str, name: str, target_model_id: str = None, target_workspace_id: str = None) -> Dict:
+    def clone_report(
+        self,
+        report_id: str,
+        name: str,
+        target_model_id: str = None,
+        target_workspace_id: str = None,
+    ) -> Dict:
         """Clones the specified report from "My Workspace".
 
         ### Parameters
@@ -278,11 +285,11 @@ class Reports():
 
         target_model_id : str (optional, Default=None)
             Optional parameter for specifying the target associated dataset id.
-            If not provided, the new report will be associated with the same 
+            If not provided, the new report will be associated with the same
             dataset as the source report
 
         target_workspace_id : str (optional, Default=None)
-            Optional parameter for specifying the target workspace id. Empty 
+            Optional parameter for specifying the target workspace id. Empty
             Guid (00000000-0000-0000-0000-000000000000) indicates 'My Workspace'.
             If not provided, the new report will be cloned within the same workspace
             as the source report.
@@ -302,15 +309,15 @@ class Reports():
         """
 
         params = {
-            'name': name,
-            'targetModelId': target_model_id,
-            'targetWorkspaceId': target_workspace_id
+            "name": name,
+            "targetModelId": target_model_id,
+            "targetWorkspaceId": target_workspace_id,
         }
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/reports/{report_id}/Clone',
-            json_payload=params
+            method="post",
+            endpoint=f"myorg/reports/{report_id}/Clone",
+            json_payload=params,
         )
 
         return content
@@ -321,7 +328,7 @@ class Reports():
         report_id: str,
         name: str,
         target_model_id: str = None,
-        target_workspace_id: str = None
+        target_workspace_id: str = None,
     ) -> Dict:
         """Clones the specified report from "My Workspace".
 
@@ -338,11 +345,11 @@ class Reports():
 
         target_model_id : str (optional, Default=None)
             Optional parameter for specifying the target associated dataset id.
-            If not provided, the new report will be associated with the same 
+            If not provided, the new report will be associated with the same
             dataset as the source report
 
         target_workspace_id : str (optional, Default=None)
-            Optional parameter for specifying the target workspace id. Empty 
+            Optional parameter for specifying the target workspace id. Empty
             Guid (00000000-0000-0000-0000-000000000000) indicates 'My Workspace'.
             If not provided, the new report will be cloned within the same workspace
             as the source report.
@@ -363,15 +370,15 @@ class Reports():
         """
 
         params = {
-            'name': name,
-            'targetModelId': target_model_id,
-            'targetWorkspaceId': target_workspace_id
+            "name": name,
+            "targetModelId": target_model_id,
+            "targetWorkspaceId": target_workspace_id,
         }
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/groups/{group_id}/reports/{report_id}/Clone',
-            json_payload=params
+            method="post",
+            endpoint=f"myorg/groups/{group_id}/reports/{report_id}/Clone",
+            json_payload=params,
         )
 
         return content
@@ -393,8 +400,7 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='delete',
-            endpoint=f'myorg/reports/{report_id}'
+            method="delete", endpoint=f"myorg/reports/{report_id}"
         )
 
         return content
@@ -420,14 +426,13 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='delete',
-            endpoint=f'myorg/groups/{group_id}/reports/{report_id}'
+            method="delete", endpoint=f"myorg/groups/{group_id}/reports/{report_id}"
         )
 
         return content
 
     def export_report(self, report_id: str) -> None:
-        """Exports the specified report from "My Workspace" to 
+        """Exports the specified report from "My Workspace" to
         a .pbix file.
 
         ### Parameters
@@ -444,14 +449,13 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/reports/{report_id}/export'
+            method="get", endpoint=f"myorg/reports/{report_id}/export"
         )
 
         return content
 
     def export_group_report(self, group_id: str, report_id: str) -> None:
-        """Exports the specified report from "My Workspace" to 
+        """Exports the specified report from "My Workspace" to
         a .pbix file.
 
         ### Parameters
@@ -472,14 +476,13 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/groups/{group_id}/reports/{report_id}/export'
+            method="get", endpoint=f"myorg/groups/{group_id}/reports/{report_id}/export"
         )
 
         return content
 
     def get_datasources(self, report_id: str) -> Dict:
-        """Returns a list of datasources for the specified RDL 
+        """Returns a list of datasources for the specified RDL
         report from "My Workspace".
 
         ### Parameters
@@ -500,8 +503,7 @@ class Reports():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/reports/{report_id}/datasources'
+            method="get", endpoint=f"myorg/reports/{report_id}/datasources"
         )
 
         return content
@@ -511,9 +513,9 @@ class Reports():
         report_id: str,
         file_format: Union[str, Enum],
         paginated_report_configuration: dict = None,
-        power_bi_report_configuration: dict = None
+        power_bi_report_configuration: dict = None,
     ) -> bytes:
-        """Exports the specified report from "My Workspace" to 
+        """Exports the specified report from "My Workspace" to
         requested format.
 
         ### Parameters
@@ -547,15 +549,56 @@ class Reports():
             file_format = file_format.value
 
         params = {
-            'format': file_format,
-            'paginatedReportConfiguration': paginated_report_configuration,
-            'powerBIReportConfiguration': power_bi_report_configuration
+            "format": file_format,
+            "paginatedReportConfiguration": paginated_report_configuration,
+            "powerBIReportConfiguration": power_bi_report_configuration,
         }
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/reports/{report_id}/ExportTo',
-            json_payload=params
+            method="post",
+            endpoint=f"myorg/reports/{report_id}/ExportTo",
+            json_payload=params,
+        )
+
+        return content
+
+    def update_report_content_in_group(
+        self, group_id: str, report_id: str, request_body: dict
+    ) -> None:
+        """Updates the content of the specified report from the specified workspace
+        with the content of a specified source report.
+
+        ### Parameters
+        ----
+        group_id : str
+            The workspace Id.
+
+        report_id : str
+            The report Id.
+
+        request_body : dict
+            The request body.
+
+        ### Usage
+        ----
+            >>> reports_service = power_bi_client.reports()
+            >>> reports_service.update_report_content_in_group(
+                group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+                report_id="f0ca06d0-4a40-4329-823d-6184d9a3f468",
+                request_body={
+                    "sourceReport": {
+                        "sourceReportId": "8e4d5880-81d6-4804-ab97-054665050799",
+                        "sourceWorkspaceId": "2f42a406-a075-4a15-bbf2-97ef958c94cb"
+                    },
+                    "sourceType": "ExistingReport"
+                }
+            )
+        """
+
+        content = self.power_bi_session.make_request(
+            method="post",
+            endpoint=f"/myorg/groups/{group_id}/reports/{report_id}/UpdateReportContent",
+            json_payload=request_body,
         )
 
         return content

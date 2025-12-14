@@ -1,3 +1,5 @@
+"""Microsoft PowerBi `PushDatasets` Service."""
+
 import json
 
 from typing import Dict
@@ -8,7 +10,9 @@ from powerbi.utils import PowerBiEncoder
 from powerbi.session import PowerBiSession
 
 
-class PushDatasets():
+class PushDatasets:
+
+    """Microsoft PowerBi `PushDatasets` Service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `PushDatasets` service.
@@ -49,8 +53,8 @@ class PushDatasets():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/datasets/{dataset_id}/tables',
+            method="get",
+            endpoint=f"myorg/datasets/{dataset_id}/tables",
         )
 
         return content
@@ -82,13 +86,15 @@ class PushDatasets():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables',
+            method="get",
+            endpoint=f"myorg/groups/{group_id}/datasets/{dataset_id}/tables",
         )
 
         return content
 
-    def post_dataset(self, dataset: Union[dict, Dataset], default_retention_policy: str = None) -> Dict:
+    def post_dataset(
+        self, dataset: Union[dict, Dataset], default_retention_policy: str = None
+    ) -> Dict:
         """Creates a new dataset on "My Workspace".
 
         ### Parameters
@@ -116,20 +122,23 @@ class PushDatasets():
         if isinstance(dataset, Dataset):
 
             dataset = json.dumps(
-                obj=dataset._prep_for_post(),
-                indent=4,
-                cls=PowerBiEncoder
+                obj=dataset._prep_for_post(), indent=4, cls=PowerBiEncoder
             )
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/datasets?defaultRetentionPolicy={default_retention_policy}',
-            data=dataset
+            method="post",
+            endpoint=f"myorg/datasets?defaultRetentionPolicy={default_retention_policy}",
+            data=dataset,
         )
 
         return content
 
-    def post_group_dataset(self, group_id: str, dataset: Union[dict, Dataset], default_retention_policy: str = None) -> Dict:
+    def post_group_dataset(
+        self,
+        group_id: str,
+        dataset: Union[dict, Dataset],
+        default_retention_policy: str = None,
+    ) -> Dict:
         """Creates a new dataset in the specified workspace.
 
         ### Parameters
@@ -161,15 +170,13 @@ class PushDatasets():
         if isinstance(dataset, Dataset):
 
             dataset = json.dumps(
-                obj=dataset._prep_for_post(),
-                indent=4,
-                cls=PowerBiEncoder
+                obj=dataset._prep_for_post(), indent=4, cls=PowerBiEncoder
             )
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/groups/{group_id}/datasets?defaultRetentionPolicy={default_retention_policy}',
-            data=dataset
+            method="post",
+            endpoint=f"myorg/groups/{group_id}/datasets?defaultRetentionPolicy={default_retention_policy}",
+            data=dataset,
         )
 
         return content
@@ -214,15 +221,17 @@ class PushDatasets():
         """
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/datasets/{dataset_id}/tables/{table_name}/rows',
-            json_payload=rows
+            method="post",
+            endpoint=f"myorg/datasets/{dataset_id}/tables/{table_name}/rows",
+            json_payload=rows,
         )
 
         return content
 
-    def post_group_dataset_rows(self, group_id: str, dataset_id: str, table_name: str, rows: list) -> None:
-        """Adds new data rows to the specified table, within the specified dataset, 
+    def post_group_dataset_rows(
+        self, group_id: str, dataset_id: str, table_name: str, rows: list
+    ) -> None:
+        """Adds new data rows to the specified table, within the specified dataset,
         from the specified workspace.
 
         ### Parameters
@@ -265,14 +274,16 @@ class PushDatasets():
         """
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}/rows',
-            json_payload=rows
+            method="post",
+            endpoint=f"myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}/rows",
+            json_payload=rows,
         )
 
         return content
 
-    def put_dataset(self, dataset_id: str, table_name: str, table: Union[Table, dict]) -> Dict:
+    def put_dataset(
+        self, dataset_id: str, table_name: str, table: Union[Table, dict]
+    ) -> Dict:
         """Updates the metadata and schema for the specified table within the
         specified dataset from "My Workspace".
 
@@ -305,23 +316,21 @@ class PushDatasets():
 
         if isinstance(table, Table):
 
-            del table['rows']
+            del table["rows"]
 
-            table = json.dumps(
-                obj=table,
-                indent=4,
-                cls=PowerBiEncoder
-            )
+            table = json.dumps(obj=table, indent=4, cls=PowerBiEncoder)
 
         content = self.power_bi_session.make_request(
-            method='put',
-            endpoint=f'myorg/datasets/{dataset_id}/tables/{table_name}',
-            data=table
+            method="put",
+            endpoint=f"myorg/datasets/{dataset_id}/tables/{table_name}",
+            data=table,
         )
 
         return content
 
-    def put_group_dataset(self, group_id: str, dataset_id: str, table_name: str, table: Union[Table, dict]) -> Dict:
+    def put_group_dataset(
+        self, group_id: str, dataset_id: str, table_name: str, table: Union[Table, dict]
+    ) -> Dict:
         """Updates the metadata and schema for the specified table within the
         specified dataset from the specified workspace.
 
@@ -358,18 +367,14 @@ class PushDatasets():
 
         if isinstance(table, Table):
 
-            del table['rows']
+            del table["rows"]
 
-            table = json.dumps(
-                obj=table,
-                indent=4,
-                cls=PowerBiEncoder
-            )
+            table = json.dumps(obj=table, indent=4, cls=PowerBiEncoder)
 
         content = self.power_bi_session.make_request(
-            method='put',
-            endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}',
-            data=table
+            method="put",
+            endpoint=f"myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}",
+            data=table,
         )
 
         return content
@@ -397,14 +402,16 @@ class PushDatasets():
         """
 
         content = self.power_bi_session.make_request(
-            method='delete',
-            endpoint=f'myorg/datasets/{dataset_id}/tables/{table_name}/rows'
+            method="delete",
+            endpoint=f"myorg/datasets/{dataset_id}/tables/{table_name}/rows",
         )
 
         return content
 
-    def delete_group_dataset_rows(self, group_id: str, dataset_id: str, table_name: str) -> None:
-        """Deletes all the data rows from the specified table, within the specified dataset, 
+    def delete_group_dataset_rows(
+        self, group_id: str, dataset_id: str, table_name: str
+    ) -> None:
+        """Deletes all the data rows from the specified table, within the specified dataset,
         from the specified workspace.
 
         ### Parameters
@@ -430,8 +437,8 @@ class PushDatasets():
         """
 
         content = self.power_bi_session.make_request(
-            method='delete',
-            endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}/rows'
+            method="delete",
+            endpoint=f"myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}/rows",
         )
 
         return content

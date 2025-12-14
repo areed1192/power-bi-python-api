@@ -1,8 +1,11 @@
+"""Module for `TemplateApps` service."""
+
 from typing import Dict
 from powerbi.session import PowerBiSession
 
 
-class TemplateApps():
+class TemplateApps:
+    """Class for `TemplateApps` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `TemplateApps` service.
@@ -21,9 +24,11 @@ class TemplateApps():
         self.power_bi_session: PowerBiSession = session
 
         # Set the endpoint.
-        self.endpoint = 'myorg/CreateTemplateAppInstallTicket'
+        self.endpoint = "myorg/CreateTemplateAppInstallTicket"
 
-    def create_install_ticket(self, app_id: str, owner_tenant_id: str, package_key: str, config: Dict) -> Dict:
+    def create_install_ticket(
+        self, app_id: str, owner_tenant_id: str, package_key: str, config: Dict
+    ) -> Dict:
         """Generates an installation ticket for Template Apps automated install flow.
 
         ### Overview
@@ -36,13 +41,13 @@ class TemplateApps():
         ----
         app_id : str
             Unique application Id.
-        
+
         owner_tenant_id : str
             Application owner's tenant object Id.
-        
+
         package_key : str
             Application version secure key.
-        
+
         config : Dict
             Automated install configuration.
 
@@ -63,21 +68,19 @@ class TemplateApps():
                             'param1': 'value1',
                             'param2': 'value2'
                         }
-                    }                
+                    }
                 )
         """
 
         payload = {
-            'appId': app_id,
-            'packageKey': package_key,
-            'ownerTenantId': owner_tenant_id,
-            'config': config
+            "appId": app_id,
+            "packageKey": package_key,
+            "ownerTenantId": owner_tenant_id,
+            "config": config,
         }
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=self.endpoint,
-            json_payload=payload
+            method="post", endpoint=self.endpoint, json_payload=payload
         )
 
         return content

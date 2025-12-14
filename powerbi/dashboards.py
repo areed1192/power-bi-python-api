@@ -1,8 +1,11 @@
+"""Module for the `Dashboards` service."""
+
 from typing import Dict
 from powerbi.session import PowerBiSession
 
 
-class Dashboards():
+class Dashboards:
+    """Class for the `Dashboards` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Dashboards` service.
@@ -21,8 +24,8 @@ class Dashboards():
         self.power_bi_session: PowerBiSession = session
 
         # Set the endpoint.
-        self.endpoint = 'myorg/dashboards'
-        self.group_endpoint = 'myorg/groups/{group_id}/dashboards'
+        self.endpoint = "myorg/dashboards"
+        self.group_endpoint = "myorg/groups/{group_id}/dashboards"
 
     def add_dashboard(self, name: str) -> Dict:
         """Creates a new empty dashboard on `My Workspace`.
@@ -44,15 +47,11 @@ class Dashboards():
         """
 
         # Define the payload.
-        payload = {
-            'name': name
-        }
+        payload = {"name": name}
 
         # Make the request.
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=self.endpoint,
-            json_payload=payload
+            method="post", endpoint=self.endpoint, json_payload=payload
         )
 
         return content
@@ -83,15 +82,13 @@ class Dashboards():
         """
 
         # Define the payload.
-        payload = {
-            'name': name
-        }
+        payload = {"name": name}
 
         # Make the request.
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/groups/{group_id}/dashboards',
-            json_payload=payload
+            method="post",
+            endpoint=f"myorg/groups/{group_id}/dashboards",
+            json_payload=payload,
         )
 
         return content
@@ -111,8 +108,7 @@ class Dashboards():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=self.endpoint
+            method="get", endpoint=self.endpoint
         )
 
         return content
@@ -139,8 +135,7 @@ class Dashboards():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/dashboards/{dashboard_id}'
+            method="get", endpoint=f"myorg/dashboards/{dashboard_id}"
         )
 
         return content
@@ -167,8 +162,7 @@ class Dashboards():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=self.group_endpoint.format(group_id=group_id)
+            method="get", endpoint=self.group_endpoint.format(group_id=group_id)
         )
 
         return content
@@ -199,8 +193,7 @@ class Dashboards():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/groups/{group_id}/dashboards/{dashboard_id}'
+            method="get", endpoint=f"myorg/groups/{group_id}/dashboards/{dashboard_id}"
         )
 
         return content
@@ -210,7 +203,7 @@ class Dashboards():
 
         ### Overview
         ----
-        Note: All tile types are supported except for "model tiles", which include 
+        Note: All tile types are supported except for "model tiles", which include
         datasets and live tiles that contain an entire report page.
 
         ### Parameters
@@ -232,8 +225,7 @@ class Dashboards():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/dashboards/{dashboard_id}/tiles'
+            method="get", endpoint=f"myorg/dashboards/{dashboard_id}/tiles"
         )
 
         return content
@@ -243,7 +235,7 @@ class Dashboards():
 
         ### Overview
         ----
-        Note: All tile types are supported except for "model tiles", which include 
+        Note: All tile types are supported except for "model tiles", which include
         datasets and live tiles that contain an entire report page.
 
         ### Parameters
@@ -269,8 +261,8 @@ class Dashboards():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/groups/{group_id}/dashboards/{dashboard_id}/tiles'
+            method="get",
+            endpoint=f"myorg/groups/{group_id}/dashboards/{dashboard_id}/tiles",
         )
 
         return content
@@ -280,7 +272,7 @@ class Dashboards():
 
         ### Overview
         ----
-        Note: All tile types are supported except for "model tiles", which include 
+        Note: All tile types are supported except for "model tiles", which include
         datasets and live tiles that contain an entire report page.
 
         ### Parameters
@@ -306,8 +298,7 @@ class Dashboards():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/dashboards/{dashboard_id}/tiles/{tile_id}'
+            method="get", endpoint=f"myorg/dashboards/{dashboard_id}/tiles/{tile_id}"
         )
 
         return content
@@ -317,7 +308,7 @@ class Dashboards():
 
         ### Overview
         ----
-        Note: All tile types are supported except for "model tiles", which include 
+        Note: All tile types are supported except for "model tiles", which include
         datasets and live tiles that contain an entire report page.
 
         ### Parameters
@@ -347,8 +338,8 @@ class Dashboards():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/groups/{group_id}/dashboards/{dashboard_id}/tiles/{tile_id}'
+            method="get",
+            endpoint=f"myorg/groups/{group_id}/dashboards/{dashboard_id}/tiles/{tile_id}",
         )
 
         return content
@@ -358,18 +349,18 @@ class Dashboards():
         dashboard_id: str,
         tile_id: str,
         target_dashboard_id: str,
-        position_conflict_action: str = 'tail',
+        position_conflict_action: str = "tail",
         target_model_id: str = None,
         target_report_id: str = None,
-        target_workspace_id: str = None
+        target_workspace_id: str = None,
     ) -> Dict:
         """Clones the specified tile from "My Workspace".
 
         ### Overview
         ----
         If target report id and target dataset are not specified, the following can occur:
-        When a tile clone is performed within the same workspace, the report and dataset 
-        links will be cloned from the source tile. When cloning a tile within a different 
+        When a tile clone is performed within the same workspace, the report and dataset
+        links will be cloned from the source tile. When cloning a tile within a different
         workspace, report and dataset links will be rested, and the tile will be broken.
 
         ### Parameters
@@ -384,7 +375,7 @@ class Dashboards():
             The target dashboard id.
 
         position_conflict_action : str (optional, Default='tail')
-            Optional parameter for specifying the action in case of 
+            Optional parameter for specifying the action in case of
             position conflict.
 
         target_model_id : str (optional, Default=None)
@@ -396,7 +387,7 @@ class Dashboards():
             report id to rebind the new tile to a different report.
 
         target_workspace_id : str (optional, Default=None)
-            Specifices the target workspace id. Empty Guid 
+            Specifices the target workspace id. Empty Guid
             (00000000-0000-0000-0000-000000000000) indicates 'My Workspace'.
             If not provided, tile will be cloned within the same workspace
             as the source tile.
@@ -417,17 +408,17 @@ class Dashboards():
         """
 
         payload = {
-            'targetDashboardId': target_dashboard_id,
-            'positionConflictAction': position_conflict_action,
-            'targetModelId': target_model_id,
-            'targetReportId': target_report_id,
-            'targetWorkspaceId': target_workspace_id
+            "targetDashboardId": target_dashboard_id,
+            "positionConflictAction": position_conflict_action,
+            "targetModelId": target_model_id,
+            "targetReportId": target_report_id,
+            "targetWorkspaceId": target_workspace_id,
         }
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/dashboards/{dashboard_id}/tiles/{tile_id}/Clone',
-            json_payload=payload
+            method="post",
+            endpoint=f"myorg/dashboards/{dashboard_id}/tiles/{tile_id}/Clone",
+            json_payload=payload,
         )
 
         return content
@@ -438,18 +429,18 @@ class Dashboards():
         dashboard_id: str,
         tile_id: str,
         target_dashboard_id: str,
-        position_conflict_action: str = 'tail',
+        position_conflict_action: str = "tail",
         target_model_id: str = None,
         target_report_id: str = None,
-        target_workspace_id: str = None
+        target_workspace_id: str = None,
     ) -> Dict:
         """Clones the specified tile from the specified workspace.
 
         ### Overview
         ----
         If target report id and target dataset are not specified, the following can occur:
-        When a tile clone is performed within the same workspace, the report and dataset 
-        links will be cloned from the source tile. When cloning a tile within a different 
+        When a tile clone is performed within the same workspace, the report and dataset
+        links will be cloned from the source tile. When cloning a tile within a different
         workspace, report and dataset links will be rested, and the tile will be broken.
 
         ### Parameters
@@ -467,7 +458,7 @@ class Dashboards():
             The target dashboard id.
 
         position_conflict_action : str (optional, Default='tail')
-            Optional parameter for specifying the action in case of 
+            Optional parameter for specifying the action in case of
             position conflict.
 
         target_model_id : str (optional, Default=None)
@@ -479,7 +470,7 @@ class Dashboards():
             report id to rebind the new tile to a different report.
 
         target_workspace_id : str (optional, Default=None)
-            Specifices the target workspace id. Empty Guid 
+            Specifices the target workspace id. Empty Guid
             (00000000-0000-0000-0000-000000000000) indicates 'My Workspace'.
             If not provided, tile will be cloned within the same workspace
             as the source tile.
@@ -501,17 +492,17 @@ class Dashboards():
         """
 
         payload = {
-            'targetDashboardId': target_dashboard_id,
-            'positionConflictAction': position_conflict_action,
-            'targetModelId': target_model_id,
-            'targetReportId': target_report_id,
-            'targetWorkspaceId': target_workspace_id
+            "targetDashboardId": target_dashboard_id,
+            "positionConflictAction": position_conflict_action,
+            "targetModelId": target_model_id,
+            "targetReportId": target_report_id,
+            "targetWorkspaceId": target_workspace_id,
         }
 
         content = self.power_bi_session.make_request(
-            method='post',
-            endpoint=f'myorg/groups/{group_id}/dashboards/{dashboard_id}/tiles/{tile_id}/Clone',
-            json_payload=payload
+            method="post",
+            endpoint=f"myorg/groups/{group_id}/dashboards/{dashboard_id}/tiles/{tile_id}/Clone",
+            json_payload=payload,
         )
 
         return content

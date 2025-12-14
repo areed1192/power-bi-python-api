@@ -1,3 +1,5 @@
+"""Module for the `PowerBiClient` class."""
+
 from typing import List
 
 from powerbi.session import PowerBiSession
@@ -8,16 +10,18 @@ from powerbi.users import Users
 from powerbi.template_apps import TemplateApps
 from powerbi.dataflow_storage_account import DataflowStorageAccount
 from powerbi.push_datasets import PushDatasets
+from powerbi.dataflows import Dataflows
+from powerbi.datasets import Datasets
 from powerbi.imports import Imports
 from powerbi.reports import Reports
 from powerbi.available_features import AvailableFeatures
 from powerbi.capacities import Capacities
 from powerbi.pipelines import Pipelines
 from powerbi.apps import Apps
+from powerbi.gateways import Gateways
 
 
 class PowerBiClient:
-
     """
     ### Overview
     ----
@@ -355,3 +359,69 @@ class PowerBiClient:
         """
 
         return Pipelines(session=self.power_bi_session)
+
+    def dataflows(self) -> Dataflows:
+        """Used to access the `Dataflows` Services and metadata.
+
+        ### Returns
+        ---
+        Dataflows:
+            The `Dataflows` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> dataflows_service = power_bi_client.dataflows()
+        """
+
+        return Dataflows(session=self.power_bi_session)
+
+    def datasets(self) -> Datasets:
+        """Used to access the `Datasets` Services and metadata.
+
+        ### Returns
+        ---
+        Datasets:
+            The `Datasets` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> datasets_service = power_bi_client.datasets()
+        """
+
+        return Datasets(session=self.power_bi_session)
+
+    def gateways(self) -> Gateways:
+        """Used to access the `Gateways` Services and metadata.
+
+        ### Returns
+        ---
+        Gateways:
+            The `Gateways` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> gateways_service = power_bi_client.gateways()
+        """
+
+        return Gateways(session=self.power_bi_session)

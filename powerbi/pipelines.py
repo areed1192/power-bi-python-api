@@ -1,15 +1,11 @@
-import json
+"""Microsoft PowerBi `Pipeline` Service."""
 
 from typing import Dict
-from typing import Union
-from powerbi.utils import Dataset
-from powerbi.utils import Table
-from powerbi.utils import PowerBiEncoder
 from powerbi.session import PowerBiSession
-from enum import Enum
 
 
-class Pipelines():
+class Pipelines:
+    """Class for the `Pipelines` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Pipelines` service.
@@ -42,8 +38,8 @@ class Pipelines():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/pipelines',
+            method="get",
+            endpoint="myorg/pipelines",
         )
 
         return content
@@ -74,12 +70,12 @@ class Pipelines():
         """
 
         if expand_stages:
-            url = f'myorg/pipelines/{pipeline_id}?$expand=stages'
+            url = f"myorg/pipelines/{pipeline_id}?$expand=stages"
         else:
-            url = f'myorg/pipelines/{pipeline_id}',
+            url = (f"myorg/pipelines/{pipeline_id}",)
 
         content = self.power_bi_session.make_request(
-            method='get',
+            method="get",
             endpoint=url,
         )
 
@@ -108,8 +104,8 @@ class Pipelines():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/pipelines/{pipeline_id}/operations',
+            method="get",
+            endpoint=f"myorg/pipelines/{pipeline_id}/operations",
         )
 
         return content
@@ -142,8 +138,8 @@ class Pipelines():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/pipelines/{pipeline_id}/operations/{operation_id}',
+            method="get",
+            endpoint=f"myorg/pipelines/{pipeline_id}/operations/{operation_id}",
         )
 
         return content
@@ -176,8 +172,8 @@ class Pipelines():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/pipelines/{pipeline_id}/stages/{stage_order}/artifacts',
+            method="get",
+            endpoint=f"myorg/pipelines/{pipeline_id}/stages/{stage_order}/artifacts",
         )
 
         return content

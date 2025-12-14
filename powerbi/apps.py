@@ -1,8 +1,11 @@
+""""Module for the `Apps` service."""
+
 from typing import Dict
 from powerbi.session import PowerBiSession
 
 
-class Apps():
+class Apps:
+    """Class for the `Apps` service."""
 
     def __init__(self, session: object) -> None:
         """Initializes the `Apps` service.
@@ -21,8 +24,8 @@ class Apps():
         self.power_bi_session: PowerBiSession = session
 
         # Set the endpoint.
-        self.endpoint = 'myorg/apps'
-    
+        self.endpoint = "myorg/apps"
+
     def get_app(self, app_id: str) -> Dict:
         """Returns the specified installed app.
 
@@ -38,12 +41,10 @@ class Apps():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/apps/{app_id}'
+            method="get", endpoint=f"myorg/apps/{app_id}"
         )
 
         return content
-
 
     def get_apps(self) -> Dict:
         """Returns a list of installed apps.
@@ -60,8 +61,7 @@ class Apps():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=self.endpoint
+            method="get", endpoint=self.endpoint
         )
 
         return content
@@ -84,8 +84,7 @@ class Apps():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/apps/{app_id}/dashboards/{dashboard_id}'
+            method="get", endpoint=f"myorg/apps/{app_id}/dashboards/{dashboard_id}"
         )
 
         return content
@@ -107,8 +106,7 @@ class Apps():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/apps/{app_id}/dashboards'
+            method="get", endpoint=f"myorg/apps/{app_id}/dashboards"
         )
 
         return content
@@ -131,8 +129,7 @@ class Apps():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/apps/{app_id}/reports/{report_id}'
+            method="get", endpoint=f"myorg/apps/{app_id}/reports/{report_id}"
         )
 
         return content
@@ -154,15 +151,14 @@ class Apps():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/apps/{app_id}/reports'
+            method="get", endpoint=f"myorg/apps/{app_id}/reports"
         )
 
         return content
 
     def get_tile(self, app_id: str, dashboard_id: str, tile_id: str) -> Dict:
         """Returns the specified tile within the specified dashboard from the specified app.
-        
+
         Supported tiles include datasets and live tiles that contain an entire report page.
 
         ### Returns
@@ -181,8 +177,8 @@ class Apps():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/apps/{app_id}/dashboards/{dashboard_id}/tiles/{tile_id}'
+            method="get",
+            endpoint=f"myorg/apps/{app_id}/dashboards/{dashboard_id}/tiles/{tile_id}",
         )
 
         return content
@@ -205,8 +201,8 @@ class Apps():
         """
 
         content = self.power_bi_session.make_request(
-            method='get',
-            endpoint=f'myorg/apps/{app_id}/dashboards/{dashboard_id}/tiles'
+            method="get",
+            endpoint=f"myorg/apps/{app_id}/dashboards/{dashboard_id}/tiles",
         )
 
         return content

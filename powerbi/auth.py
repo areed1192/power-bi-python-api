@@ -228,7 +228,7 @@ class PowerBiAuth:
             return True
 
         # if the current access token is expired then try and refresh access token.
-        elif self.refresh_token and self.grab_refresh_token():
+        if self.refresh_token and self.grab_refresh_token():
             return True
 
         # More than likely a first time login, so can't do silent authenticaiton.

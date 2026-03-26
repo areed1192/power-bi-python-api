@@ -257,77 +257,53 @@ class Capacities:
 
         return content
 
-    def groups_assign_my_workspace_to_capacity(
-        self,
-        capacity_id: str,
-    ) -> None:
-        """Assigns My workspace to the specified capacity.
-
-        ### Parameters
-        ----
-        capacity_id: str
-            The capacity id.
-
-        ### Usage
-        ----
-            >>> capacities_service = power_bi_client.capacities()
-            >>> capacities_service.groups_assign_my_workspace_to_capacity(
-                capacity_id='890D018E-4B64-4BB1-97E5-BD5490373413'
-            )
-        """
-
-        body = {"capacityId": capacity_id}
-
-        # Make the request.
-        content = self.power_bi_session.make_request(
-            method="post", endpoint="/myorg/AssignToCapacity", json_payload=body
-        )
-
-        return content
-
     def groups_assign_to_capacity(
         self,
-        group_id: str,
         capacity_id: str,
+        group_id: str = None,
     ) -> None:
-        """Assigns the specified workspace to the specified capacity.
+        """Assigns a workspace to the specified capacity.
 
         ### Parameters
         ----
-        group_id: str
-            The workspace id.
-
         capacity_id: str
             The capacity id.
+
+        group_id : str (optional, Default=None)
+            The workspace id. If not provided, assigns "My Workspace".
 
         ### Usage
         ----
             >>> capacities_service = power_bi_client.capacities()
             >>> capacities_service.groups_assign_to_capacity(
-                group_id='f78705a2-bead-4a5c-ba57-166794b05c78',
                 capacity_id='890D018E-4B64-4BB1-97E5-BD5490373413'
+            )
+            >>> capacities_service.groups_assign_to_capacity(
+                capacity_id='890D018E-4B64-4BB1-97E5-BD5490373413',
+                group_id='f78705a2-bead-4a5c-ba57-166794b05c78'
             )
         """
 
         body = {"capacityId": capacity_id}
 
-        # Make the request.
+        if group_id:
+            endpoint = f"/myorg/groups/{group_id}/AssignToCapacity"
+        else:
+            endpoint = "/myorg/AssignToCapacity"
+
         content = self.power_bi_session.make_request(
-            method="post",
-            endpoint=f"/myorg/groups/{group_id}/AssignToCapacity",
-            json_payload=body,
+            method="post", endpoint=endpoint, json_payload=body
         )
 
         return content
 
-    def groups_capacity_assignment_status(self, group_id: str) -> dict:
-        """Gets the status of the assignment-to-capacity operation for the
-        specified workspace.
+    def groups_capacity_assignment_status(self, group_id: str = None) -> dict:
+        """Gets the status of the assignment-to-capacity operation for a workspace.
 
         ### Parameters
         ----
-        group_id: str
-            The workspace id.
+        group_id : str (optional, Default=None)
+            The workspace id. If not provided, uses "My Workspace".
 
         ### Returns
         ----
@@ -338,39 +314,20 @@ class Capacities:
         ### Usage
         ----
             >>> capacities_service = power_bi_client.capacities()
+            >>> capacities_service.groups_capacity_assignment_status()
             >>> capacities_service.groups_capacity_assignment_status(
-                group_id='f78705a2-bead-4a5c-ba57-166794b05c78',
+                group_id='f78705a2-bead-4a5c-ba57-166794b05c78'
             )
         """
 
-        # Make the request.
+        if group_id:
+            endpoint = f"/myorg/groups/{group_id}/CapacityAssignmentStatus"
+        else:
+            endpoint = "/myorg/CapacityAssignmentStatus"
+
         content = self.power_bi_session.make_request(
             method="get",
-            endpoint=f"/myorg/groups/{group_id}/CapacityAssignmentStatus",
-        )
-
-        return content
-
-    def groups_capacity_assignment_status_my_workspace(self) -> dict:
-        """Gets the status of the My workspace assignment-to-capacity
-        operation.
-
-        ### Returns
-        ----
-        dict
-            A collection of `CapacityAssignmentStatus`
-            resources.
-
-        ### Usage
-        ----
-            >>> capacities_service = power_bi_client.capacities()
-            >>> capacities_service.groups_capacity_assignment_status_my_workspace()
-        """
-
-        # Make the request.
-        content = self.power_bi_session.make_request(
-            method="get",
-            endpoint="/myorg/CapacityAssignmentStatus",
+            endpoint=endpoint,
         )
 
         return content

@@ -39,9 +39,9 @@ pprint(
 
 # Grab the tables from a Dataset.
 pprint(
-    push_datasets_service.get_group_tables(
-        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    push_datasets_service.get_tables(
         dataset_id="8ea21119-fb8f-4592-b2b8-141b824a2b7e",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
     )
 )
 

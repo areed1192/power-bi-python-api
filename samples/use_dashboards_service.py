@@ -40,23 +40,23 @@ pprint(
 
 # Add a dashboard to a specific workspace.
 pprint(
-    dashboard_service.add_dashboard_in_group(
+    dashboard_service.add_dashboard(
         name="my_new_dashboard", group_id="f78705a2-bead-4a5c-ba57-166794b05c78"
     )
 )
 
 # Grab all the dashboards for a specific workspace.
 pprint(
-    dashboard_service.get_group_dashboards(
+    dashboard_service.get_dashboards(
         group_id="f78705a2-bead-4a5c-ba57-166794b05c78"
     )
 )
 
 # Grab a specific dashboard from a specific workspace.
 pprint(
-    dashboard_service.get_group_dashboard(
-        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    dashboard_service.get_dashboard(
         dashboard_id="1a0a15d9-67d1-4e97-b7bd-4f0ed4ec8358",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
     )
 )
 
@@ -65,9 +65,9 @@ pprint(dashboard_service.get_tiles(dashboard_id="1a0a15d9-67d1-4e97-b7bd-4f0ed4e
 
 # Grab all the tiles from a specific dashboard from a specific workspace.
 pprint(
-    dashboard_service.get_group_tiles(
-        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    dashboard_service.get_tiles(
         dashboard_id="1a0a15d9-67d1-4e97-b7bd-4f0ed4ec8358",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
     )
 )
 
@@ -81,10 +81,10 @@ pprint(
 
 # Grab a specific tile from a specific workspace and a specific workspace..
 pprint(
-    dashboard_service.get_group_tile(
-        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    dashboard_service.get_tile(
         dashboard_id="1a0a15d9-67d1-4e97-b7bd-4f0ed4ec8358",
         tile_id="093bfb85-828e-4705-bcf8-0126dd2d5d70",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
     )
 )
 
@@ -99,10 +99,10 @@ pprint(
 
 # Clone a specific tile from a specific workspace.
 pprint(
-    dashboard_service.clone_group_tile(
-        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    dashboard_service.clone_tile(
         dashboard_id="1a0a15d9-67d1-4e97-b7bd-4f0ed4ec8358",
         tile_id="093bfb85-828e-4705-bcf8-0126dd2d5d70",
         target_dashboard_id="86cb0a0e-612d-4822-9a29-d83478e21199",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
     )
 )

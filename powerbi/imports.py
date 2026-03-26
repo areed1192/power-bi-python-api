@@ -25,7 +25,12 @@ class Imports:
         # Set the session.
         self.power_bi_session: PowerBiSession = session
 
-    def create_temporary_upload_location(self) -> Dict:
+    def _build_endpoint(self, path: str, group_id: str = None) -> str:
+        if group_id:
+            return f"/myorg/groups/{group_id}/{path}"
+        return f"/myorg/{path}"
+
+    def create_temporary_upload_location(self, group_id: str = None) -> Dict:
         """Creates a temporary blob storage to be used to import large .pbix
         files larger than 1 GB and up to 10 GB.
 
@@ -35,6 +40,11 @@ class Imports:
         upload the .pbix file using the shared access signature (SAS) url from
         the response, and then call Post Import and specify 'fileUrl' to be the
         SAS url in the Request Body
+
+        ### Parameters
+        ----
+        group_id : str (optional, Default=None)
+            The workspace id. If not provided, uses "My Workspace".
 
         ### Returns
         ----
@@ -44,51 +54,27 @@ class Imports:
         ----
             >>> imports_service = power_bi_client.imports()
             >>> imports_service.create_temporary_upload_location()
-        """
-
-        content = self.power_bi_session.make_request(
-            method="post", endpoint="myorg/imports/createTemporaryUploadLocation"
-        )
-
-        return content
-
-    def create_group_temporary_upload_location(self, group_id: str) -> Dict:
-        """Creates a temporary blob storage to be used to import large .pbix
-        files larger than 1 GB and up to 10 GB.
-
-        ### Overview
-        ----
-        To import large .pbix files, create a temporary upload location and
-        upload the .pbix file using the shared access signature (SAS) url from
-        the response, and then call Post Import and specify 'fileUrl' to be the
-        SAS url in the Request Body
-
-        ### Parameters
-        ----
-        group_id : str
-            The Workspace ID.
-
-        ### Returns
-        ----
-            A `TemporaryUploadLocation` resource.
-
-        ### Usage
-        ----
-            >>> imports_service = power_bi_client.imports()
-            >>> imports_service.create_group_temporary_upload_location(
+            >>> imports_service.create_temporary_upload_location(
                 group_id='f78705a2-bead-4a5c-ba57-166794b05c78'
             )
         """
 
         content = self.power_bi_session.make_request(
             method="post",
-            endpoint=f"/myorg/groups/{group_id}/imports/createTemporaryUploadLocation",
+            endpoint=self._build_endpoint(
+                "imports/createTemporaryUploadLocation", group_id
+            ),
         )
 
         return content
 
-    def get_imports(self) -> Dict:
-        """Returns a list of imports from "My Workspace".
+    def get_imports(self, group_id: str = None) -> Dict:
+        """Returns a list of imports.
+
+        ### Parameters
+        ----
+        group_id : str (optional, Default=None)
+            The workspace id. If not provided, uses "My Workspace".
 
         ### Returns
         ----
@@ -98,47 +84,28 @@ class Imports:
         ----
             >>> imports_service = power_bi_client.imports()
             >>> imports_service.get_imports()
-        """
-
-        content = self.power_bi_session.make_request(
-            method="get", endpoint="/myorg/imports"
-        )
-
-        return content
-
-    def get_group_imports(self, group_id: str) -> Dict:
-        """Returns a list of imports from the specified workspace.
-
-        ### parameters
-        ----
-        group_id : str
-            The workspace ID.
-
-        ### Returns
-        ----
-            A collection `Import` resource.
-
-        ### Usage
-        ----
-            >>> imports_service = power_bi_client.imports()
-            >>> imports_service.get_group_imports(
+            >>> imports_service.get_imports(
                 group_id='f78705a2-bead-4a5c-ba57-166794b05c78'
             )
         """
 
         content = self.power_bi_session.make_request(
-            method="get", endpoint=f"/myorg/groups/{group_id}/imports"
+            method="get",
+            endpoint=self._build_endpoint("imports", group_id),
         )
 
         return content
 
-    def get_import(self, import_id: str) -> Dict:
-        """Returns the specified import from "My Workspace".
+    def get_import(self, import_id: str, group_id: str = None) -> Dict:
+        """Returns the specified import.
 
         ### Parameters
         ----
         import_id : str
             The import ID you want to query.
+
+        group_id : str (optional, Default=None)
+            The workspace id. If not provided, uses "My Workspace".
 
         ### Returns
         ----
@@ -150,40 +117,15 @@ class Imports:
             >>> imports_service.get_import(
                 import_id='e40f7c73-84d1-4cf5-a696-5850a5ec8ad3'
             )
-        """
-
-        content = self.power_bi_session.make_request(
-            method="get", endpoint=f"/myorg/imports/{import_id}"
-        )
-
-        return content
-
-    def get_group_import(self, group_id: str, import_id: str) -> Dict:
-        """Returns the specified import from the specified workspace.
-
-        ### Parameters
-        ----
-        group_id : str
-            The workspace ID.
-
-        import_id : str
-            The import ID you want to query.
-
-        ### Returns
-        ----
-            A `Import` resource.
-
-        ### Usage
-        ----
-            >>> imports_service = power_bi_client.imports()
-            >>> imports_service.get_group_import(
-                group_id='f78705a2-bead-4a5c-ba57-166794b05c78',
-                import_id='e40f7c73-84d1-4cf5-a696-5850a5ec8ad3'
+            >>> imports_service.get_import(
+                import_id='e40f7c73-84d1-4cf5-a696-5850a5ec8ad3',
+                group_id='f78705a2-bead-4a5c-ba57-166794b05c78'
             )
         """
 
         content = self.power_bi_session.make_request(
-            method="get", endpoint=f"/myorg/groups/{group_id}/imports/{import_id}"
+            method="get",
+            endpoint=self._build_endpoint(f"imports/{import_id}", group_id),
         )
 
         return content
@@ -218,9 +160,9 @@ class Imports:
         ### Usage
         ----
             >>> imports_service = power_bi_client.imports()
-            >>> imports_service.get_group_import(
-                group_id='f78705a2-bead-4a5c-ba57-166794b05c78',
-                import_id='e40f7c73-84d1-4cf5-a696-5850a5ec8ad3'
+            >>> imports_service.post_import(
+                dataset_display_name='my_dataset.pbix',
+                name_conflict='Ignore'
             )
         """
 

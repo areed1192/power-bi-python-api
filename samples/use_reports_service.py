@@ -33,7 +33,7 @@ pprint(reports_service.get_reports())
 
 # Grab all the reports from a specific workspace.
 pprint(
-    reports_service.get_group_reports(group_id="f78705a2-bead-4a5c-ba57-166794b05c78")
+    reports_service.get_reports(group_id="f78705a2-bead-4a5c-ba57-166794b05c78")
 )
 
 # Grab a specific report from our workspace.
@@ -41,9 +41,9 @@ pprint(reports_service.get_report(report_id="cec3fab1-2fc2-424e-8d36-d6180ef0508
 
 # Grab a specific report from a specific workspace.
 pprint(
-    reports_service.get_group_report(
-        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    reports_service.get_report(
         report_id="cec3fab1-2fc2-424e-8d36-d6180ef05082",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
     )
 )
 
@@ -52,9 +52,9 @@ pprint(reports_service.get_pages(report_id="cec3fab1-2fc2-424e-8d36-d6180ef05082
 
 # Grab the pages from a specific report in a specific workspace.
 pprint(
-    reports_service.get_group_pages(
-        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    reports_service.get_pages(
         report_id="cec3fab1-2fc2-424e-8d36-d6180ef05082",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
     )
 )
 
@@ -67,10 +67,10 @@ pprint(
 
 # Grab a specific page from a specific report in a specific workspace.
 pprint(
-    reports_service.get_group_page(
-        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    reports_service.get_page(
         report_id="cec3fab1-2fc2-424e-8d36-d6180ef05082",
         page_name="ReportSection",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
     )
 )
 
@@ -83,10 +83,10 @@ pprint(
 
 # Clone the same report but this time from a specific workspace.
 pprint(
-    reports_service.clone_group_report(
-        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    reports_service.clone_report(
         report_id="cec3fab1-2fc2-424e-8d36-d6180ef05082",
         name="MyOtherNewReport",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
     )
 )
 
@@ -96,9 +96,9 @@ pprint(reports_service.delete_report(report_id="c19c7599-7f92-4d11-b384-c9ae3336
 
 # Delete a specific report from a specific workspace.
 pprint(
-    reports_service.delete_group_report(
-        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    reports_service.delete_report(
         report_id="f0ca06d0-4a40-4329-823d-6184d9a3f468",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
     )
 )
 
@@ -112,9 +112,9 @@ with open(file="my_report_export.pbix", mode="wb+") as power_bi_file:
 
 
 # Export a report from a specific workspace.
-my_report_content = reports_service.export_group_report(
-    group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+my_report_content = reports_service.export_report(
     report_id="cec3fab1-2fc2-424e-8d36-d6180ef05082",
+    group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
 )
 
 

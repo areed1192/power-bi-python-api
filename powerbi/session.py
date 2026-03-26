@@ -1,13 +1,13 @@
 """Handles all the requests made to the Microsoft Power Bi API."""
 
-import sys
 import json
 import logging
-import pathlib
 
 from typing import Dict
 
 import requests
+
+logger = logging.getLogger(__name__)
 
 
 class PowerBiSession:
@@ -35,32 +35,12 @@ class PowerBiSession:
             PowerBiClient,
         )
 
-        # We can also add custom formatting to our log messages.
-        log_format = "%(asctime)-15s|%(filename)s|%(message)s"
-
         self.client: PowerBiClient = client
         self.resource_url = "https://api.powerbi.com/"
         self.version = "v1.0/"
 
         self._session = requests.Session()
         self._session.verify = True
-
-        if not pathlib.Path("logs").exists():
-            pathlib.Path("logs").mkdir()
-            pathlib.Path("logs/log_file_custom.log").touch()
-        if sys.version_info[1] == 8:
-            logging.basicConfig(
-                filename="logs/log_file_custom.log",
-                level=logging.INFO,
-                format=log_format,
-            )
-        else:
-            logging.basicConfig(
-                filename="logs/log_file_custom.log",
-                level=logging.INFO,
-                encoding="utf-8",
-                format=log_format,
-            )
 
     def build_headers(self) -> Dict:
         """Used to build the headers needed to make the request.
@@ -146,7 +126,7 @@ class PowerBiSession:
         url = self.build_url(endpoint=endpoint)
         headers = self.build_headers()
 
-        logging.info("URL: %s", url)
+        logger.info("URL: %s", url)
 
         prepared = requests.Request(
             method=method.upper(),
@@ -178,7 +158,7 @@ class PowerBiSession:
                 "response_method": response.request.method,
             }
 
-            logging.error(msg=json.dumps(obj=error_dict, indent=4))
+            logger.error(msg=json.dumps(obj=error_dict, indent=4))
 
             raise requests.HTTPError(
                 f"""

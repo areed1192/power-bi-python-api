@@ -122,7 +122,7 @@ class PushDatasets:
         if isinstance(dataset, Dataset):
 
             dataset = json.dumps(
-                obj=dataset._prep_for_post(), indent=4, cls=PowerBiEncoder
+                obj=dataset.prep_for_post(), indent=4, cls=PowerBiEncoder
             )
 
         content = self.power_bi_session.make_request(
@@ -170,7 +170,7 @@ class PushDatasets:
         if isinstance(dataset, Dataset):
 
             dataset = json.dumps(
-                obj=dataset._prep_for_post(), indent=4, cls=PowerBiEncoder
+                obj=dataset.prep_for_post(), indent=4, cls=PowerBiEncoder
             )
 
         content = self.power_bi_session.make_request(

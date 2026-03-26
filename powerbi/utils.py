@@ -1286,7 +1286,7 @@ class Dataset:
 
         return self._data_sources[index]
 
-    def _prep_for_post(self) -> dict:
+    def prep_for_post(self) -> dict:
         """Preps the `Dataset` object so it's
         valid JSON for the PostDataset endpoint.
 

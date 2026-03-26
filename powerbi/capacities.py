@@ -111,7 +111,7 @@ class Capacities:
         return content
 
     def get_refreshables(
-        self, top: int = 10, expand: str = None, filter: str = None, skip: int = None
+        self, top: int = 10, expand: str = None, filter_by: str = None, skip: int = None
     ) -> Dict:
         """Returns a list of refreshables for all capacities of which the user has access to.
 
@@ -124,7 +124,7 @@ class Capacities:
             Expands related entities inline, receives a comma-separated list of
             data types. Supported: capacities and groups.
 
-        filter: str (optional, Default=None)
+        filter_by: str (optional, Default=None)
             Filters the results based on a boolean condition.
 
         skip: int (optional, Default=None)
@@ -144,7 +144,7 @@ class Capacities:
             )
         """
 
-        params = {"$expand": expand, "$filter": filter, "$top": top, "$skip": skip}
+        params = {"$expand": expand, "$filter": filter_by, "$top": top, "$skip": skip}
 
         # Make the request.
         content = self.power_bi_session.make_request(
@@ -158,7 +158,7 @@ class Capacities:
         capacity_id: str,
         top: int = 10,
         expand: str = None,
-        filter: str = None,
+        filter_by: str = None,
         skip: int = None,
     ) -> Dict:
         """Returns a list of refreshables for the specified capacity the user has access to.
@@ -175,7 +175,7 @@ class Capacities:
             Expands related entities inline, receives a comma-separated list of
             data types. Supported: capacities and groups.
 
-        filter: str (optional, Default=None)
+        filter_by: str (optional, Default=None)
             Filters the results based on a boolean condition.
 
         skip: int (optional, Default=None)
@@ -196,7 +196,7 @@ class Capacities:
             )
         """
 
-        params = {"$expand": expand, "$filter": filter, "$top": top, "$skip": skip}
+        params = {"$expand": expand, "$filter": filter_by, "$top": top, "$skip": skip}
 
         # Make the request.
         content = self.power_bi_session.make_request(

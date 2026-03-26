@@ -1,8 +1,17 @@
 """Demonstrates how to use the `Groups` service."""
 
+import logging
+
 from pprint import pprint
 from configparser import ConfigParser
 from powerbi.client import PowerBiClient
+
+logger = logging.getLogger("powerbi")
+logger.setLevel(logging.INFO)
+
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter("%(asctime)s | %(name)s | %(message)s"))
+logger.addHandler(handler)
 
 # Initialize the Parser.
 config = ConfigParser()

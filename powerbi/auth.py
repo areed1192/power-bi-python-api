@@ -6,21 +6,16 @@ from typing import Dict
 import json
 import time
 import urllib
-import random
-import string
+import secrets
 import pathlib
 
 import msal
-
-from powerbi.session import PowerBiSession
 
 
 class PowerBiAuth:
     """Handles all the authentication for the Microsoft Power Bi API."""
 
     AUTHORITY_URL = "https://login.microsoftonline.com/"
-    AUTH_ENDPOINT = "/oauth2/v2.0/authorize?"
-    TOKEN_ENDPOINT = "/oauth2/v2.0/token"
 
     def __init__(
         self,
@@ -59,30 +54,21 @@ class PowerBiAuth:
             The file path to your local credential file.
         """
 
-        # printing lowercase
-        letters = string.ascii_lowercase
-
         self.credentials = credentials
         self.token_dict = None
 
         self.client_id = client_id
         self.client_secret = client_secret
-        self.api_version = "v1.0"
         self.account_type = account_type
         self.redirect_uri = redirect_uri
 
         self.scope = scope
-        self.state = "".join(random.choice(letters) for i in range(10))
+        self.state = secrets.token_urlsafe(16)
 
         self.access_token = None
         self.refresh_token = None
-        self.graph_session = None
-        self.id_token = None
 
         self._redirect_code = None
-        self._power_bi_session: PowerBiSession = None
-
-        self.graph_url = self.AUTHORITY_URL + self.account_type + self.AUTH_ENDPOINT
 
         # Initialize the Credential App.
         self.client_app = msal.ConfidentialClientApplication(
@@ -91,8 +77,8 @@ class PowerBiAuth:
             client_credential=self.client_secret,
         )
 
-    def _state(self, action: str, token_dict: dict = None) -> bool:
-        """Sets the session state for the Client Library.
+    def _load_or_save_credentials(self, action: str, token_dict: dict = None) -> bool:
+        """Loads or saves the credential state for the Client Library.
 
         ### Parameters
         ----
@@ -126,7 +112,6 @@ class PowerBiAuth:
 
                 self.refresh_token = credentials["refresh_token"]
                 self.access_token = credentials["access_token"]
-                self.id_token = credentials["id_token"]
                 self.token_dict = credentials
 
                 return True
@@ -144,7 +129,6 @@ class PowerBiAuth:
 
             self.refresh_token = token_dict["refresh_token"]
             self.access_token = token_dict["access_token"]
-            self.id_token = token_dict["id_token"]
             self.token_dict = token_dict
 
             with open(file=self.credentials, mode="w+", encoding="utf-8") as state_file:
@@ -238,37 +222,28 @@ class PowerBiAuth:
         """Logs the user into the session."""
 
         # Load the State.
-        self._state(action="load")
+        self._load_or_save_credentials(action="load")
 
         # Try a Silent SSO First.
         if self._silent_sso():
+            return
 
-            # Set the Session.
-            self.graph_session = PowerBiSession(client=self)
+        # Build the URL.
+        url = self.authorization_url()
 
-            return True
+        # Ask the user to go to the URL provided, they will be
+        # prompted to authenticate themselves.
+        print(f"Please go to URL provided authorize your account: {url}")
 
-        else:
+        # Ask the user to take the final URL after authentication
+        # and paste here so we can parse.
+        my_response = input("Paste the full URL redirect here: ")
 
-            # Build the URL.
-            url = self.authorization_url()
+        # Store the redirect URL.
+        self._redirect_code = my_response
 
-            # aks the user to go to the URL provided, they will be
-            # prompted to authenticate themsevles.
-            print(f"Please go to URL provided authorize your account: {url}")
-
-            # ask the user to take the final URL after authentication
-            # and paste here so we can parse.
-            my_response = input("Paste the full URL redirect here: ")
-
-            # store the redirect URL
-            self._redirect_code = my_response
-
-            # this will complete the final part of the authentication process.
-            self.grab_access_token()
-
-            # Set the session.
-            self._power_bi_session = PowerBiSession(client=self)
+        # This will complete the final part of the authentication process.
+        self.grab_access_token()
 
     def authorization_url(self) -> str:
         """Builds the authorization URL used to get an Authorization Code.
@@ -279,14 +254,6 @@ class PowerBiAuth:
             The full authorization url.
         """
 
-        auth_url = {
-            "response_type": "code",
-            "client_id": self.client_id,
-            "redirect_uri": self.redirect_uri,
-            "resource": "https://analysis.windows.net/powerbi/api",
-        }
-
-        # Build the Auth URL.
         auth_url = self.client_app.get_authorization_request_url(
             scopes=self.scope, state=self.state, redirect_uri=self.redirect_uri
         )
@@ -314,7 +281,7 @@ class PowerBiAuth:
         )
 
         # Save the token dict.
-        self._state(action="save", token_dict=token_dict)
+        self._load_or_save_credentials(action="save", token_dict=token_dict)
 
         return token_dict
 
@@ -339,11 +306,6 @@ class PowerBiAuth:
             )
 
         # Save the Token.
-        self._state(action="save", token_dict=token_dict)
+        self._load_or_save_credentials(action="save", token_dict=token_dict)
 
         return token_dict
-
-    @property
-    def power_bi_session(self) -> PowerBiSession:
-        """Returns the current Power Bi"""
-        return self._power_bi_session

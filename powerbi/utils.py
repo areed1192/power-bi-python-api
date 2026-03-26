@@ -4,15 +4,9 @@ import json
 
 from dataclasses import dataclass
 from dataclasses import field
-from dataclasses import asdict
-
-# from datetime import date
-# from datetime import datetime
 
 from enum import Enum
 from typing import Union
-
-# from powerbi.enums import DataSourceType
 
 
 # Helper function to convert Enums
@@ -31,7 +25,7 @@ class PowerBiEncoder(json.JSONEncoder):
     """Custom JSON Encoder for PowerBi objects."""
 
     def __init__(self, *args, **kwargs):
-        json.JSONEncoder.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def default(self, o):
         if isinstance(o, Columns):
@@ -56,8 +50,6 @@ class PowerBiEncoder(json.JSONEncoder):
             return o.datasources
         if isinstance(o, DataSource):
             return o.data_source
-        if isinstance(o, Dataset):
-            return o.push_dataset
         else:
             return super().default(o)
 
@@ -289,16 +281,16 @@ class Column:
         """
         return self.column
 
-    def to_json(self) -> dict:
+    def to_json(self) -> str:
         """Returns the column properties as a JSON string.
 
         ### Returns
         ----
-        dict
-            A string containing each of the column
+        str
+            A JSON string containing each of the column
             properties.
         """
-        return self.column
+        return json.dumps(obj=self.column, indent=4)
 
 
 class Measure:
@@ -360,7 +352,7 @@ class Measure:
         str :
             A valid DAX expression.
         """
-        return self.measure.get("dataType", None)
+        return self.measure.get("expression", None)
 
     @expression.setter
     def expression(self, expression: str) -> None:
@@ -471,10 +463,19 @@ class Relationship:
         ### Parameters
         -----
         name : str
-            The measure name.
+            The relationship name.
 
-        expression : str
-            A valid DAX expression.
+        from_table : str
+            Name of the foreign key table.
+
+        to_table : str
+            Name of the primary key table.
+
+        from_column : str
+            Name of the foreign key column.
+
+        to_column : str
+            Name of the primary key column.
         """
 
         self.relationship = {
@@ -680,10 +681,10 @@ class Measures:
     def __init__(self) -> None:
         self.measures = []
 
-    def __setitem__(self, index: int, data: Column) -> None:
-        self.measures[index] = data
+    def __setitem__(self, index: int, data: Measure) -> None:
+        self.measures.append(data)
 
-    def __getitem__(self, index: int) -> Column:
+    def __getitem__(self, index: int) -> Measure:
         return self.measures[index]
 
     def __delitem__(self, index: int) -> None:
@@ -707,10 +708,10 @@ class Relationships:
     def __init__(self) -> None:
         self.relationships = []
 
-    def __setitem__(self, index: int, data: Column) -> None:
-        self.relationships[index] = data
+    def __setitem__(self, index: int, data: Relationship) -> None:
+        self.relationships.append(data)
 
-    def __getitem__(self, index: int) -> Column:
+    def __getitem__(self, index: int) -> Relationship:
         return self.relationships[index]
 
     def __delitem__(self, index: int) -> None:
@@ -735,10 +736,10 @@ class Tables:
     def __init__(self) -> None:
         self.tables = []
 
-    def __setitem__(self, index: int, data: Column) -> None:
+    def __setitem__(self, index: int, data: "Table") -> None:
         self.tables.append(data)
 
-    def __getitem__(self, index: int) -> Column:
+    def __getitem__(self, index: int) -> "Table":
         return self.tables[index]
 
     def __delitem__(self, index: int) -> None:
@@ -857,12 +858,12 @@ class Table:
         self.table.update({"name": name})
 
     @property
-    def columns(self) -> str:
+    def columns(self) -> Columns:
         """Gets the `columns` property.
 
         ### Returns
         ----
-        str :
+        Columns :
             Collection of `Column` objects.
         """
 
@@ -913,30 +914,28 @@ class Table:
         del self._columns[index]
 
     @property
-    def measures(self) -> str:
+    def measures(self) -> Measures:
         """Gets the `measures` property.
 
         ### Returns
         ----
-        str :
-            Collection of `measure` objects.
+        Measures :
+            Collection of `Measure` objects.
         """
 
         return self._measures
 
-    @property
     def add_measure(self, measure: Measure) -> None:
-        """Adds a column to the `measures` collection.
+        """Adds a `Measure` to the `Measures` collection.
 
         ### Parameters
         ----
-        measure : measure
+        measure : Measure
             A `Measure` object with the properties
             set.
         """
 
-        measures = self.table.get("measures", [])
-        measures.append(measure)
+        self._measures[len(self._measures)] = measure
 
     def del_measure(self, index: int = 0) -> None:
         """Deletes a `Measure` in the `measures` collection.
@@ -965,13 +964,13 @@ class Table:
         return self.table.get("measures", [])[index]
 
     @property
-    def rows(self) -> str:
+    def rows(self) -> list:
         """Gets the `rows` property.
 
         ### Returns
         ----
-        str :
-            Collection of `row` objects.
+        list :
+            Collection of row dicts.
         """
 
         return self.table.get("rows", [])
@@ -1023,7 +1022,7 @@ class Table:
         """Returns the table properties as a dictionary."""
         return json.loads(s=json.dumps(obj=self.table, cls=PowerBiEncoder))
 
-    def to_json(self) -> dict:
+    def to_json(self) -> str:
         """Returns the table properties as a JSON formatted string."""
         return json.dumps(obj=self.table, cls=PowerBiEncoder)
 
@@ -1308,7 +1307,7 @@ class Dataset:
         """Converts the Object to dict."""
         return json.loads(s=json.dumps(obj=self.push_dataset, cls=PowerBiEncoder))
 
-    def to_json(self) -> dict:
+    def to_json(self) -> str:
         """Converts the Object to JSON string."""
         return json.dumps(obj=self.push_dataset, cls=PowerBiEncoder)
 
@@ -1334,10 +1333,8 @@ class DataSource:
         if isinstance(data_source_type, Enum):
             data_source_type = data_source_type.value
 
-        self.data_source_type = data_source_type
-
         self.data_source = {
-            "datasourceType": self.data_source_type,
+            "datasourceType": data_source_type,
             "connectionDetails": {},
             "dataSourceId": "",
             "gatewayId": "",
@@ -1410,16 +1407,6 @@ class DataSource:
         """
 
         return json.dumps(obj=self.data_source, cls=PowerBiEncoder)
-
-
-class ConnectionDetails:
-
-    """Used to set the `connection_details` property of a
-    API object.
-    """
-
-    def __init__(self) -> None:
-        pass
 
 
 @dataclass
@@ -1514,8 +1501,8 @@ class CredentialDetails:
 
     def to_dict(self) -> dict:
         """Converts the Object to dict."""
-        return asdict(self)
+        return self.credential_details
 
     def to_json(self) -> str:
         """Converts the Object to JSON string."""
-        return json.dumps(self.to_dict())
+        return json.dumps(self.credential_details)

@@ -172,13 +172,14 @@ class PowerBiSession:
 
             logger.error(msg=json.dumps(obj=error_dict, indent=4))
 
-            raise requests.HTTPError(
-                f"""
-                {response.status_code} {response.reason}
-                for url: {response.url} | {response_data}
-                """,
-                response=response,
+            message = (
+                f"\033[91m{response.status_code} {response.reason}\033[0m\n"
+                f"\033[93mURL:\033[0m {response.url}"
             )
+            if response_data:
+                message += f"\n\033[93mResponse:\033[0m {response_data}"
+
+            raise requests.HTTPError(message, response=response)
 
         # --- success path ---
         if not response.content:

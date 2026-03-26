@@ -89,6 +89,7 @@ class PowerBiSession:
         params: dict = None,
         data: dict = None,
         json_payload: dict = None,
+        files: dict = None,
     ) -> Dict:
         """Handles all the requests in the library.
 
@@ -117,6 +118,11 @@ class PowerBiSession:
         json_payload : dict
             A json data payload for a request
 
+        files : dict
+            A files payload for multipart/form-data uploads.
+            When provided, Content-Type is omitted so requests
+            can set the multipart boundary automatically.
+
         ### Returns:
         ----
             A Dictionary object containing the
@@ -125,6 +131,11 @@ class PowerBiSession:
 
         url = self.build_url(endpoint=endpoint)
         headers = self.build_headers()
+
+        # For multipart file uploads, remove Content-Type so requests
+        # can set the multipart boundary automatically.
+        if files:
+            headers.pop("Content-Type", None)
 
         logger.info("URL: %s", url)
 
@@ -135,6 +146,7 @@ class PowerBiSession:
             params=params,
             data=data,
             json=json_payload,
+            files=files,
         ).prepare()
 
         response: requests.Response = self._session.send(request=prepared)

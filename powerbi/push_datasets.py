@@ -1,17 +1,13 @@
 """Microsoft PowerBi `PushDatasets` Service."""
 
-import json
-
 from typing import Dict
 from typing import Union
 from powerbi.utils import Dataset
 from powerbi.utils import Table
-from powerbi.utils import PowerBiEncoder
 from powerbi.session import PowerBiSession
 
 
 class PushDatasets:
-
     """Microsoft PowerBi `PushDatasets` Service."""
 
     def __init__(self, session: PowerBiSession) -> None:
@@ -65,9 +61,7 @@ class PushDatasets:
 
         content = self.power_bi_session.make_request(
             method="get",
-            endpoint=self._build_endpoint(
-                f"datasets/{dataset_id}/tables", group_id
-            ),
+            endpoint=self._build_endpoint(f"datasets/{dataset_id}/tables", group_id),
         )
 
         return content
@@ -83,10 +77,13 @@ class PushDatasets:
         ### Parameters
         ----
         dataset : Union[dict, Dataset]
-            The dataset you want to post.
+            The dataset you want to post. If a `Dataset`
+            object is provided, it will be prepped for post
+            using `Dataset.prep_for_post()`.
 
         default_retention_policy : str (optional, Default=None)
-            The default retention policy.
+            The default retention policy. Valid values are
+            `None` and `basicFIFO`.
 
         group_id : str (optional, Default=None)
             The workspace id. If not provided, uses "My Workspace".
@@ -94,35 +91,34 @@ class PushDatasets:
         ### Returns
         ----
         Dict
-            A datset resource with the id.
+            A dataset resource with the id.
 
         ### Usage
         ----
             >>> push_datasets_service = power_bi_client.push_datasets()
             >>> push_datasets_service.post_dataset(
-                dataset={},
+                dataset=my_dataset,
                 default_retention_policy='basicFIFO'
             )
             >>> push_datasets_service.post_dataset(
-                dataset={},
+                dataset=my_dataset,
                 default_retention_policy='basicFIFO',
                 group_id='f78705a2-bead-4a5c-ba57-166794b05c78'
             )
         """
 
         if isinstance(dataset, Dataset):
+            dataset = dataset.prep_for_post()
 
-            dataset = json.dumps(
-                obj=dataset.prep_for_post(), indent=4, cls=PowerBiEncoder
-            )
+        params = None
+        if default_retention_policy is not None:
+            params = {"defaultRetentionPolicy": default_retention_policy}
 
         content = self.power_bi_session.make_request(
             method="post",
-            endpoint=self._build_endpoint(
-                f"datasets?defaultRetentionPolicy={default_retention_policy}",
-                group_id,
-            ),
-            data=dataset,
+            endpoint=self._build_endpoint("datasets", group_id),
+            params=params,
+            json_payload=dataset,
         )
 
         return content
@@ -135,13 +131,15 @@ class PushDatasets:
         ### Parameters
         ----
         dataset_id : str
-            The dataset id
+            The dataset id.
 
-        table_name: str
+        table_name : str
             The dataset table name you want to post rows to.
 
         rows : list
             An array of data rows pushed to a dataset table.
+            Each element is a collection of properties
+            represented using key-value format.
 
         group_id : str (optional, Default=None)
             The workspace id. If not provided, uses "My Workspace".
@@ -169,15 +167,13 @@ class PushDatasets:
             )
         """
 
-        content = self.power_bi_session.make_request(
+        self.power_bi_session.make_request(
             method="post",
             endpoint=self._build_endpoint(
                 f"datasets/{dataset_id}/tables/{table_name}/rows", group_id
             ),
-            json_payload=rows,
+            json_payload={"rows": rows},
         )
-
-        return content
 
     def put_dataset(
         self,
@@ -220,17 +216,15 @@ class PushDatasets:
         """
 
         if isinstance(table, Table):
-
-            del table["rows"]
-
-            table = json.dumps(obj=table, indent=4, cls=PowerBiEncoder)
+            table = table.to_dict()
+            table.pop("rows", None)
 
         content = self.power_bi_session.make_request(
             method="put",
             endpoint=self._build_endpoint(
                 f"datasets/{dataset_id}/tables/{table_name}", group_id
             ),
-            data=table,
+            json_payload=table,
         )
 
         return content
@@ -243,9 +237,9 @@ class PushDatasets:
         ### Parameters
         ----
         dataset_id : str
-            The dataset id
+            The dataset id.
 
-        table_name: str
+        table_name : str
             The dataset table name you want to delete rows from.
 
         group_id : str (optional, Default=None)
@@ -265,11 +259,9 @@ class PushDatasets:
             )
         """
 
-        content = self.power_bi_session.make_request(
+        self.power_bi_session.make_request(
             method="delete",
             endpoint=self._build_endpoint(
                 f"datasets/{dataset_id}/tables/{table_name}/rows", group_id
             ),
         )
-
-        return content

@@ -25,7 +25,7 @@ power_bi_client = PowerBiClient(
 )
 
 # Initialize the `Capacities` service.
-capacities_service = power_bi_client.capactities()
+capacities_service = power_bi_client.capacities()
 
 # Get a list of the User's available capacities.
 pprint(capacities_service.get_capacities())

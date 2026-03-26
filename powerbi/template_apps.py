@@ -7,7 +7,7 @@ from powerbi.session import PowerBiSession
 class TemplateApps:
     """Class for `TemplateApps` service."""
 
-    def __init__(self, session: object) -> None:
+    def __init__(self, session: PowerBiSession) -> None:
         """Initializes the `TemplateApps` service.
 
         ### Parameters

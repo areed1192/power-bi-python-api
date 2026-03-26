@@ -42,6 +42,9 @@ class PowerBiSession:
         self.resource_url = "https://api.powerbi.com/"
         self.version = "v1.0/"
 
+        self._session = requests.Session()
+        self._session.verify = True
+
         if not pathlib.Path("logs").exists():
             pathlib.Path("logs").mkdir()
             pathlib.Path("logs/log_file_custom.log").touch()
@@ -125,15 +128,11 @@ class PowerBiSession:
         endpoint : str
             The API URL endpoint, example is 'quotes'
 
-        mode : str
-            The content-type mode, can be one of the
-            following: ['form','json']
-
         params : dict
             The URL params for the request.
 
         data : dict
-        A data payload for a request.
+            A data payload for a request.
 
         json_payload : dict
             A json data payload for a request
@@ -144,20 +143,12 @@ class PowerBiSession:
             JSON values.
         """
 
-        # Build the URL.
         url = self.build_url(endpoint=endpoint)
-
-        # Define the headers.
         headers = self.build_headers()
 
         logging.info("URL: %s", url)
 
-        # Define a new session.
-        request_session = requests.Session()
-        request_session.verify = True
-
-        # Define a new request.
-        request_request = requests.Request(
+        prepared = requests.Request(
             method=method.upper(),
             headers=headers,
             url=url,
@@ -166,53 +157,51 @@ class PowerBiSession:
             json=json_payload,
         ).prepare()
 
-        # Send the request.
-        response: requests.Response = request_session.send(request=request_request)
+        response: requests.Response = self._session.send(request=prepared)
 
-        # Close the session.
-        request_session.close()
+        # --- error path ---
+        if not response.ok:
+            try:
+                response_data = response.json() if response.content else ""
+            except ValueError:
+                response_data = response.text
 
-        # If it's okay and no details.
-        if (
-            response.ok
-            and len(response.content) > 0
-            and response.headers["Content-Type"] != "application/zip"
-        ):
+            # Log with the auth header redacted (copy to avoid mutating the original).
+            redacted_headers = dict(response.request.headers)
+            redacted_headers["Authorization"] = "Bearer XXXXXXX"
 
-            return response.json()
-
-        elif (
-            response.ok
-            and len(response.content) > 0
-            and response.headers["Content-Type"] == "application/zip"
-        ):
-
-            return response.content
-
-        elif len(response.content) > 0 and response.ok:
-            return {
-                "message": "response successful",
-                "status_code": response.status_code,
-            }
-        elif not response.ok:
-
-            if len(response.content) == 0:
-                response_data = ""
-            else:
-                response_data = response.json()
-
-            response.request.headers["Authorization"] = "Bearer XXXXXXX"
-
-            # Define the error dict.
             error_dict = {
                 "error_code": response.status_code,
                 "response_url": response.url,
                 "response_body": response_data,
-                "response_request": dict(response.request.headers),
+                "response_request": redacted_headers,
                 "response_method": response.request.method,
             }
 
-            # Log the error.
             logging.error(msg=json.dumps(obj=error_dict, indent=4))
 
-            raise requests.HTTPError()
+            raise requests.HTTPError(
+                f"""
+                {response.status_code} {response.reason}
+                for url: {response.url} | {response_data}
+                """,
+                response=response,
+            )
+
+        # --- success path ---
+        if not response.content:
+            return {
+                "message": "response successful",
+                "status_code": response.status_code,
+            }
+
+        content_type = response.headers.get("Content-Type", "")
+        if content_type == "application/zip":
+            return response.content
+
+        return response.json()
+
+    def close(self) -> None:
+        """Close the underlying requests session."""
+
+        self._session.close()

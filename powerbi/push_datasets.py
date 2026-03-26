@@ -14,7 +14,7 @@ class PushDatasets:
 
     """Microsoft PowerBi `PushDatasets` Service."""
 
-    def __init__(self, session: object) -> None:
+    def __init__(self, session: PowerBiSession) -> None:
         """Initializes the `PushDatasets` service.
 
         ### Parameters

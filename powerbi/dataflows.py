@@ -8,7 +8,7 @@ from powerbi.session import PowerBiSession
 class Dataflows:
     """Class for the `Dataflows` service."""
 
-    def __init__(self, session: object) -> None:
+    def __init__(self, session: PowerBiSession) -> None:
         """Initializes the `Dataflows` service.
 
         ### Parameters

@@ -1,14 +1,12 @@
 """Module for the Power BI `EmbedTokens` service."""
 
-from enum import Enum
-
 from powerbi.session import PowerBiSession
 
 
 class EmbedTokens:
     """Class for the `EmbedTokens` service."""
 
-    def __init__(self, session: object) -> None:
+    def __init__(self, session: PowerBiSession) -> None:
         """Initializes the `EmbedTokens` service.
 
         ### Parameters
@@ -27,12 +25,7 @@ class EmbedTokens:
     def dashboards_generate_token_in_group(
         self,
         group_id: str,
-        dashboard_id: str,
-        access_level: str | Enum,
-        dataset_id: str,
-        identities: list,
-        lifetime_in_minutes: int,
-        allow_save_as: bool = False,
+        dashboard_id: str
     ) -> dict:
         """Returns a list of datasets in a group.
 

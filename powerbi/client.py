@@ -1,6 +1,6 @@
 """Module for the `PowerBiClient` class."""
 
-from typing import List
+from typing import List, Optional
 
 from powerbi.session import PowerBiSession
 from powerbi.auth import PowerBiAuth
@@ -95,6 +95,32 @@ class PowerBiClient:
         self.power_bi_auth_client.login()
 
         self.power_bi_session = PowerBiSession(client=self.power_bi_auth_client)
+        self._apps: Optional[Apps] = None
+        self._dashboards: Optional[Dashboards] = None
+        self._groups: Optional[Groups] = None
+        self._users: Optional[Users] = None
+        self._template_apps: Optional[TemplateApps] = None
+        self._dataflow_storage_account: Optional[DataflowStorageAccount] = None
+        self._push_datasets: Optional[PushDatasets] = None
+        self._dataflows: Optional[Dataflows] = None
+        self._datasets: Optional[Datasets] = None
+        self._imports: Optional[Imports] = None
+        self._reports: Optional[Reports] = None
+        self._available_features: Optional[AvailableFeatures] = None
+        self._capacities: Optional[Capacities] = None
+        self._pipelines: Optional[Pipelines] = None
+        self._gateways: Optional[Gateways] = None
+
+    def close(self) -> None:
+        """Close the underlying HTTP session."""
+
+        self.power_bi_session.close()
+
+    def __enter__(self) -> "PowerBiClient":
+        return self
+
+    def __exit__(self, *args) -> None:
+        self.close()
 
     def apps(self) -> Apps:
         """Used to access the `Apps` Services and metadata.
@@ -116,7 +142,9 @@ class PowerBiClient:
             >>> apps_service = power_bi_client.apps()
         """
 
-        return Apps(session=self.power_bi_session)
+        if self._apps is None:
+            self._apps = Apps(session=self.power_bi_session)
+        return self._apps
 
     def dashboards(self) -> Dashboards:
         """Used to access the `Dashboards` Services and metadata.
@@ -138,7 +166,9 @@ class PowerBiClient:
             >>> dashboard_service = power_bi_client.dashboards()
         """
 
-        return Dashboards(session=self.power_bi_session)
+        if self._dashboards is None:
+            self._dashboards = Dashboards(session=self.power_bi_session)
+        return self._dashboards
 
     def groups(self) -> Groups:
         """Used to access the `Groups` Services and metadata.
@@ -160,7 +190,9 @@ class PowerBiClient:
             >>> groups_service = power_bi_client.groups()
         """
 
-        return Groups(session=self.power_bi_session)
+        if self._groups is None:
+            self._groups = Groups(session=self.power_bi_session)
+        return self._groups
 
     def users(self) -> Users:
         """Used to access the `Users` Services and metadata.
@@ -182,7 +214,9 @@ class PowerBiClient:
             >>> users_service = power_bi_client.users()
         """
 
-        return Users(session=self.power_bi_session)
+        if self._users is None:
+            self._users = Users(session=self.power_bi_session)
+        return self._users
 
     def template_apps(self) -> TemplateApps:
         """Used to access the `TemplateApps` Services and metadata.
@@ -204,7 +238,9 @@ class PowerBiClient:
             >>> template_apps_service = power_bi_client.template_apps()
         """
 
-        return TemplateApps(session=self.power_bi_session)
+        if self._template_apps is None:
+            self._template_apps = TemplateApps(session=self.power_bi_session)
+        return self._template_apps
 
     def dataflow_storage_account(self) -> DataflowStorageAccount:
         """Used to access the `DataflowStorageAccount` Services and metadata.
@@ -226,7 +262,9 @@ class PowerBiClient:
             >>> dataflow_storage_service = power_bi_client.dataflow_storage_accounts()
         """
 
-        return DataflowStorageAccount(session=self.power_bi_session)
+        if self._dataflow_storage_account is None:
+            self._dataflow_storage_account = DataflowStorageAccount(session=self.power_bi_session)
+        return self._dataflow_storage_account
 
     def push_datasets(self) -> PushDatasets:
         """Used to access the `PushDatasets` Services and metadata.
@@ -248,7 +286,9 @@ class PowerBiClient:
             >>> push_datasets_service = power_bi_client.push_datasets()
         """
 
-        return PushDatasets(session=self.power_bi_session)
+        if self._push_datasets is None:
+            self._push_datasets = PushDatasets(session=self.power_bi_session)
+        return self._push_datasets
 
     def imports(self) -> Imports:
         """Used to access the `Imports` Services and metadata.
@@ -270,7 +310,9 @@ class PowerBiClient:
             >>> imports_service = power_bi_client.imports()
         """
 
-        return Imports(session=self.power_bi_session)
+        if self._imports is None:
+            self._imports = Imports(session=self.power_bi_session)
+        return self._imports
 
     def reports(self) -> Reports:
         """Used to access the `Reports` Services and metadata.
@@ -292,7 +334,9 @@ class PowerBiClient:
             >>> reports_service = power_bi_client.reports()
         """
 
-        return Reports(session=self.power_bi_session)
+        if self._reports is None:
+            self._reports = Reports(session=self.power_bi_session)
+        return self._reports
 
     def available_features(self) -> AvailableFeatures:
         """Used to access the `AvailableFeatures` Services and metadata.
@@ -314,7 +358,9 @@ class PowerBiClient:
             >>> available_features_service = power_bi_client.available_features()
         """
 
-        return AvailableFeatures(session=self.power_bi_session)
+        if self._available_features is None:
+            self._available_features = AvailableFeatures(session=self.power_bi_session)
+        return self._available_features
 
     def capacities(self) -> Capacities:
         """Used to access the `Capacities` Services and metadata.
@@ -336,7 +382,9 @@ class PowerBiClient:
             >>> capacities_service = power_bi_client.capactities()
         """
 
-        return Capacities(session=self.power_bi_session)
+        if self._capacities is None:
+            self._capacities = Capacities(session=self.power_bi_session)
+        return self._capacities
 
     def pipelines(self) -> Pipelines:
         """Used to access the `Pipelines` Services and metadata.
@@ -358,7 +406,9 @@ class PowerBiClient:
             >>> pipelines_service = power_bi_client.pipelines()
         """
 
-        return Pipelines(session=self.power_bi_session)
+        if self._pipelines is None:
+            self._pipelines = Pipelines(session=self.power_bi_session)
+        return self._pipelines
 
     def dataflows(self) -> Dataflows:
         """Used to access the `Dataflows` Services and metadata.
@@ -380,7 +430,9 @@ class PowerBiClient:
             >>> dataflows_service = power_bi_client.dataflows()
         """
 
-        return Dataflows(session=self.power_bi_session)
+        if self._dataflows is None:
+            self._dataflows = Dataflows(session=self.power_bi_session)
+        return self._dataflows
 
     def datasets(self) -> Datasets:
         """Used to access the `Datasets` Services and metadata.
@@ -402,7 +454,9 @@ class PowerBiClient:
             >>> datasets_service = power_bi_client.datasets()
         """
 
-        return Datasets(session=self.power_bi_session)
+        if self._datasets is None:
+            self._datasets = Datasets(session=self.power_bi_session)
+        return self._datasets
 
     def gateways(self) -> Gateways:
         """Used to access the `Gateways` Services and metadata.
@@ -424,4 +478,6 @@ class PowerBiClient:
             >>> gateways_service = power_bi_client.gateways()
         """
 
-        return Gateways(session=self.power_bi_session)
+        if self._gateways is None:
+            self._gateways = Gateways(session=self.power_bi_session)
+        return self._gateways

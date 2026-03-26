@@ -8,7 +8,7 @@ from powerbi.session import PowerBiSession
 class Capacities:
     """Class for the `Capacities` service."""
 
-    def __init__(self, session: object) -> None:
+    def __init__(self, session: PowerBiSession) -> None:
         """Initializes the `Capacities` service.
 
         ### Parameters

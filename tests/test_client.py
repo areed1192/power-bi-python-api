@@ -106,11 +106,6 @@ class TestPowerBiSession(TestCase):
             self.power_bi_client.available_features(), AvailableFeatures
         )
 
-    def test_creates_instance_of_capacities(self):
-        """Create an instance and make sure it's a `Capacities` object"""
-
-        self.assertIsInstance(self.power_bi_client.capactities(), Capacities)
-
     def test_creates_instance_of_reports(self):
         """Create an instance and make sure it's a `Capacities` object"""
 
@@ -120,6 +115,11 @@ class TestPowerBiSession(TestCase):
         """Create an instance and make sure it's a `Pipelines` object"""
 
         self.assertIsInstance(self.power_bi_client.pipelines(), Pipelines)
+
+    def test_creates_instance_of_capacities(self):
+        """Create an instance and make sure it's a `Capacities` object"""
+
+        self.assertIsInstance(self.power_bi_client.capacities(), Capacities)
 
     def tearDown(self) -> None:
         """Teardown the `PowerBiClient` object."""

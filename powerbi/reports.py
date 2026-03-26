@@ -10,7 +10,7 @@ from powerbi.session import PowerBiSession
 class Reports:
     """A class for interacting with the Reports Service."""
 
-    def __init__(self, session: object) -> None:
+    def __init__(self, session: PowerBiSession) -> None:
         """Initializes the `Reports` service.
 
         ### Parameters

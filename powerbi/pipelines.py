@@ -7,7 +7,7 @@ from powerbi.session import PowerBiSession
 class Pipelines:
     """Class for the `Pipelines` service."""
 
-    def __init__(self, session: object) -> None:
+    def __init__(self, session: PowerBiSession) -> None:
         """Initializes the `Pipelines` service.
 
         ### Parameters

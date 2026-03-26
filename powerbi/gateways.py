@@ -10,7 +10,7 @@ class Gateways:
     """The `Gateways` service allows you to manage Gateways
     in Microsoft PowerBi."""
 
-    def __init__(self, session: object) -> None:
+    def __init__(self, session: PowerBiSession) -> None:
         """Initializes the `Gateways` service.
 
         ### Parameters

@@ -7,7 +7,7 @@ from powerbi.session import PowerBiSession
 class Datasets:
     """Class for the `Datasets` service."""
 
-    def __init__(self, session: object) -> None:
+    def __init__(self, session: PowerBiSession) -> None:
         """Initializes the `Datasets` service.
 
         ### Parameters

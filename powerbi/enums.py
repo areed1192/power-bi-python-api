@@ -83,7 +83,7 @@ class GroupUserAccessRights(Enum):
     use when creating a new `PowerBiGroupUser`.
 
     For more info, go to:
-    https://docs.microsoft.com/en-us/rest/api/power-bi/groups/addgroupuser#groupuseraccessright
+    https://learn.microsoft.com/en-us/rest/api/power-bi/groups/addgroupuser#groupuseraccessright
 
     ### Usage:
     ----
@@ -103,7 +103,7 @@ class PrincipalType(Enum):
     use when creating a new `PowerBiGroupUser`.
 
     For more info, go to:
-    https://docs.microsoft.com/en-us/rest/api/power-bi/groups/addgroupuser#principaltype
+    https://learn.microsoft.com/en-us/rest/api/power-bi/groups/addgroupuser#principaltype
 
     ### Usage:
     ----
@@ -291,7 +291,7 @@ class NotifyOption(Enum):
 
     ### Usage:
     ----
-        >>> from powerbi.enums import WorkloadStates
+        >>> from powerbi.enums import NotifyOption
         >>> NotifyOption.MAIL_ON_COMPLETION.value
     """
 
@@ -306,8 +306,8 @@ class ComputeEngineBehavior(Enum):
 
     ### Usage:
     ----
-        >>> from powerbi.enums import computeEngineBehavior
-        >>> computeEngineBehavior.COMPUTE_OPTIMIZED.value
+        >>> from powerbi.enums import ComputeEngineBehavior
+        >>> ComputeEngineBehavior.COMPUTE_OPTIMIZED.value
     """
 
     COMPUTE_OPTIMIZED = "computeOptimized"

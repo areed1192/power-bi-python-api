@@ -22,7 +22,7 @@ for you.
 ## Resources
 
 - [Power BI App Registration Portal](https://dev.powerbi.com/Apps)
-- [Power BI Rest API Documentation](https://docs.microsoft.com/en-us/rest/api/power-bi/)
+- [Power BI Rest API Documentation](https://learn.microsoft.com/en-us/rest/api/power-bi/)
 
 ## Setup
 

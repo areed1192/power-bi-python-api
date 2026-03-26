@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python-power-bi"
+version = "0.1.2"
+description = "The Unofficial Python API wrapper for the Microsoft Power BI REST API."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [
+    { name = "Alex Reed", email = "coding.sigma@gmail.com" },
+]
+keywords = ["power-bi", "microsoft", "rest-api", "python", "analytics"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business",
+]
+dependencies = [
+    "msal>=1.35.1",
+    "requests>=2.33.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/areed1192/power-bi-python-api"
+"Bug Tracker" = "https://github.com/areed1192/power-bi-python-api/issues"
+"Source Code" = "https://github.com/areed1192/power-bi-python-api"
+
+[tool.setuptools.packages.find]
+include = ["powerbi", "powerbi.*"]

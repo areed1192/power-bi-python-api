@@ -32,26 +32,29 @@ power_bi_client = PowerBiClient(
 # Initialize the `PushDatasets` service.
 push_datasets_service = power_bi_client.push_datasets()
 
-# Grab the tables from a Dataset.
-pprint(
-    push_datasets_service.get_tables(dataset_id="8ea21119-fb8f-4592-b2b8-141b824a2b7e")
-)
+# Define workspace IDs.
+dev_group_id = "f78705a2-bead-4a5c-ba57-166794b05c78"
+prod_group_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
 
-# Grab the tables from a Dataset.
+# ---------------------------------------------------------------
+# GET: Pull the tables from a Dataset in the Prod workspace.
+# ---------------------------------------------------------------
 pprint(
     push_datasets_service.get_tables(
         dataset_id="8ea21119-fb8f-4592-b2b8-141b824a2b7e",
-        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+        group_id=prod_group_id,
     )
 )
+
+# ---------------------------------------------------------------
+# POST: Build and create a new Dataset in the Dev workspace.
+# ---------------------------------------------------------------
 
 # Create a new Table Object.
 table_sales = Table(name="sales_table")
 
-# Create a new column for our partner name.
+# Create columns.
 name_column = Column(name="partner_name", data_type=ColumnDataTypes.STRING)
-
-# Also create a new one for our sales numbers.
 sales_column = Column(name="partner_sales", data_type=ColumnDataTypes.DECIMAL)
 
 # Add the columns to the table.
@@ -65,9 +68,18 @@ new_dataset.default_mode = "Push"
 # Add the Sales table to it.
 new_dataset.add_table(table=table_sales)
 
-pprint(push_datasets_service.post_dataset(dataset=new_dataset))
+# Post the dataset to the Dev workspace with FIFO retention.
+pprint(
+    push_datasets_service.post_dataset(
+        dataset=new_dataset,
+        default_retention_policy="basicFIFO",
+        group_id=dev_group_id,
+    )
+)
 
-# Define some fake data.
+# ---------------------------------------------------------------
+# POST ROWS: Add data rows to the new dataset in the Dev workspace.
+# ---------------------------------------------------------------
 new_rows = [
     {"partner_name": "Alex Reed", "partner_sales": 1000.30},
     {"partner_name": "John Reed", "partner_sales": 2000.30},
@@ -78,19 +90,16 @@ push_datasets_service.post_dataset_rows(
     dataset_id="8ea21119-fb8f-4592-b2b8-141b824a2b7e",
     table_name="sales_table",
     rows=new_rows,
+    group_id=dev_group_id,
 )
 
-
-# Let's update the table by creating a new table object.
+# ---------------------------------------------------------------
+# PUT: Update the table schema in the Dev workspace.
+# ---------------------------------------------------------------
 new_table_sales = Table(name="sales_table")
 
-# Keep the Name Column.
 name_column = Column(name="partner_name", data_type=ColumnDataTypes.STRING)
-
-# Keep the Sales Column.
 sales_column = Column(name="partner_sales", data_type=ColumnDataTypes.DECIMAL)
-
-# Add a new column for the location.
 location_column = Column(name="partner_location", data_type=ColumnDataTypes.STRING)
 location_column.data_category = "Location"
 
@@ -98,6 +107,16 @@ new_table_sales.add_column(column=name_column)
 new_table_sales.add_column(column=sales_column)
 new_table_sales.add_column(column=location_column)
 
+pprint(
+    push_datasets_service.put_dataset(
+        dataset_id="8ea21119-fb8f-4592-b2b8-141b824a2b7e",
+        table_name="sales_table",
+        table=new_table_sales,
+        group_id=dev_group_id,
+    )
+)
+
+# Post the updated rows.
 new_rows = [
     {
         "partner_name": "Alex Reed",
@@ -116,18 +135,18 @@ new_rows = [
     },
 ]
 
-# Update the table.
-pprint(
-    push_datasets_service.put_dataset(
-        dataset_id="8ea21119-fb8f-4592-b2b8-141b824a2b7e",
-        table_name="sales_table",
-        table=new_table_sales,
-    )
-)
-
-# Add the new rows.
 push_datasets_service.post_dataset_rows(
     dataset_id="8ea21119-fb8f-4592-b2b8-141b824a2b7e",
     table_name="sales_table",
     rows=new_rows,
+    group_id=dev_group_id,
+)
+
+# ---------------------------------------------------------------
+# DELETE ROWS: Clear all rows from the table in the Dev workspace.
+# ---------------------------------------------------------------
+push_datasets_service.delete_dataset_rows(
+    dataset_id="8ea21119-fb8f-4592-b2b8-141b824a2b7e",
+    table_name="sales_table",
+    group_id=dev_group_id,
 )

@@ -19,9 +19,7 @@ client_secret = config.get("power_bi_api", "client_secret")
 power_bi_client = PowerBiClient(
     client_id=client_id,
     client_secret=client_secret,
-    # You need to make sure you request this permission, but you can't have it
-    # with the `.default` scope.
-    scope=["https://analysis.windows.net/powerbi/api/Pipeline.ReadWrite.All"],
+    scope=["https://analysis.windows.net/powerbi/api/.default"],
     redirect_uri=redirect_uri,
     credentials="config/power_bi_state.jsonc",
 )
@@ -32,23 +30,52 @@ pipeline_service = power_bi_client.pipelines()
 # Get all the Pipelines a User has access to.
 pprint(pipeline_service.get_pipelines())
 
-# Grab a specific pipeline.
+# Grab a specific pipeline (with stages expanded).
 pprint(
     pipeline_service.get_pipeline(
-        pipeline_id="a6ffe4a2-0b24-4b87-a83c-dc8e7f7a3357", expand_stages=True
+        pipeline_id="a1a5f0aa-5b6c-472f-ba3d-41c22fd01445", expand_stages=True
     )
 )
 
-# Grab a specific pipeline's operations.
+# Grab a specific pipeline (without stages expanded).
+pprint(
+    pipeline_service.get_pipeline(
+        pipeline_id="a1a5f0aa-5b6c-472f-ba3d-41c22fd01445", expand_stages=False
+    )
+)
+
+# Get the stages of a deployment pipeline.
+pprint(
+    pipeline_service.get_pipeline_stages(
+        pipeline_id="a1a5f0aa-5b6c-472f-ba3d-41c22fd01445"
+    )
+)
+
+# Grab a specific pipeline's operations (up to 20 most recent).
 pprint(
     pipeline_service.get_pipeline_operations(
-        pipeline_id="a6ffe4a2-0b24-4b87-a83c-dc8e7f7a3357"
+        pipeline_id="a1a5f0aa-5b6c-472f-ba3d-41c22fd01445"
     )
 )
 
-# Get the Stage Artifacts for the Development Pipeline (1)
+# Get the details of a specific deploy operation.
+pprint(
+    pipeline_service.get_pipeline_operation(
+        pipeline_id="a1a5f0aa-5b6c-472f-ba3d-41c22fd01445",
+        operation_id="89ed21f0-6034-467b-a1dc-b59411af2cc5",
+    )
+)
+
+# Get the Stage Artifacts for the Development stage (0).
 pprint(
     pipeline_service.get_pipeline_stage_artifacts(
-        pipeline_id="a6ffe4a2-0b24-4b87-a83c-dc8e7f7a3357", stage_order=0
+        pipeline_id="a1a5f0aa-5b6c-472f-ba3d-41c22fd01445", stage_order=0
+    )
+)
+
+# Get the users of a deployment pipeline.
+pprint(
+    pipeline_service.get_pipeline_users(
+        pipeline_id="a1a5f0aa-5b6c-472f-ba3d-41c22fd01445"
     )
 )

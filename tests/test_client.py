@@ -3,7 +3,7 @@
 import unittest
 
 from unittest import TestCase
-from configparser import ConfigParser
+from unittest.mock import patch
 
 from powerbi.client import PowerBiClient
 from powerbi.auth import PowerBiAuth
@@ -19,6 +19,10 @@ from powerbi.capacities import Capacities
 from powerbi.reports import Reports
 from powerbi.pipelines import Pipelines
 from powerbi.apps import Apps
+from powerbi.gateways import Gateways
+from powerbi.dataflows import Dataflows
+from powerbi.datasets import Datasets
+from powerbi.imports import Imports
 
 
 class TestPowerBiSession(TestCase):
@@ -27,24 +31,17 @@ class TestPowerBiSession(TestCase):
     def setUp(self) -> None:
         """Set up the `PowerBiClient` object."""
 
-        # Initialize the Parser.
-        config = ConfigParser()
+        # Patch login so no real auth or credential files are needed.
+        patcher = patch.object(PowerBiAuth, "login")
+        self.mock_login = patcher.start()
+        self.addCleanup(patcher.stop)
 
-        # Read the file.
-        config.read("config/config.ini")
-
-        # Get the specified credentials.
-        client_id = config.get("power_bi_api", "client_id")
-        redirect_uri = config.get("power_bi_api", "redirect_uri")
-        client_secret = config.get("power_bi_api", "client_secret")
-
-        # Initialize the Client.
+        # Initialize the Client with dummy credentials.
         self.power_bi_client = PowerBiClient(
-            client_id=client_id,
-            client_secret=client_secret,
+            client_id="test-client-id",
+            client_secret="test-client-secret",
             scope=["https://analysis.windows.net/powerbi/api/.default"],
-            redirect_uri=redirect_uri,
-            credentials="config/power_bi_state.jsonc",
+            redirect_uri="https://localhost:44300/",
         )
 
     def test_creates_instance_of_client(self):
@@ -120,6 +117,26 @@ class TestPowerBiSession(TestCase):
         """Create an instance and make sure it's a `Capacities` object"""
 
         self.assertIsInstance(self.power_bi_client.capacities(), Capacities)
+
+    def test_creates_instance_of_gateways(self):
+        """Create an instance and make sure it's a `Gateways` object"""
+
+        self.assertIsInstance(self.power_bi_client.gateways(), Gateways)
+
+    def test_creates_instance_of_dataflows(self):
+        """Create an instance and make sure it's a `Dataflows` object"""
+
+        self.assertIsInstance(self.power_bi_client.dataflows(), Dataflows)
+
+    def test_creates_instance_of_datasets(self):
+        """Create an instance and make sure it's a `Datasets` object"""
+
+        self.assertIsInstance(self.power_bi_client.datasets(), Datasets)
+
+    def test_creates_instance_of_imports(self):
+        """Create an instance and make sure it's a `Imports` object"""
+
+        self.assertIsInstance(self.power_bi_client.imports(), Imports)
 
     def tearDown(self) -> None:
         """Teardown the `PowerBiClient` object."""

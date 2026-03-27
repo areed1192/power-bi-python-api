@@ -37,3 +37,6 @@ Homepage = "https://github.com/areed1192/power-bi-python-api"
 
 [tool.setuptools.packages.find]
 include = ["powerbi", "powerbi.*"]
+
+[tool.setuptools.package-data]
+powerbi = ["py.typed"]

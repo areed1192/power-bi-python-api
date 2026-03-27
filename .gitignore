@@ -132,7 +132,6 @@ dmypy.json
 config/config.ini
 config/power_bi_state.jsonc
 logs/
-.github/
 *power_bi_state.jsonc
 power_bi_state.jsonc
 

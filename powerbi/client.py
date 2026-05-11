@@ -1,6 +1,6 @@
 """Module for the `PowerBiClient` class."""
 
-from typing import List, Optional
+from __future__ import annotations
 
 from powerbi.session import PowerBiSession
 from powerbi.auth import PowerBiAuth
@@ -17,7 +17,9 @@ from powerbi.reports import Reports
 from powerbi.available_features import AvailableFeatures
 from powerbi.capacities import Capacities
 from powerbi.pipelines import Pipelines
+from powerbi.admin import Admin
 from powerbi.apps import Apps
+from powerbi.embed_token import EmbedTokens
 from powerbi.gateways import Gateways
 
 
@@ -34,7 +36,7 @@ class PowerBiClient:
         client_id: str,
         client_secret: str,
         redirect_uri: str,
-        scope: List[str],
+        scope: list[str],
         account_type: str = "common",
         credentials: str = None,
     ):
@@ -95,21 +97,23 @@ class PowerBiClient:
         self.power_bi_auth_client.login()
 
         self.power_bi_session = PowerBiSession(client=self.power_bi_auth_client)
-        self._apps: Optional[Apps] = None
-        self._dashboards: Optional[Dashboards] = None
-        self._groups: Optional[Groups] = None
-        self._users: Optional[Users] = None
-        self._template_apps: Optional[TemplateApps] = None
-        self._dataflow_storage_account: Optional[DataflowStorageAccount] = None
-        self._push_datasets: Optional[PushDatasets] = None
-        self._dataflows: Optional[Dataflows] = None
-        self._datasets: Optional[Datasets] = None
-        self._imports: Optional[Imports] = None
-        self._reports: Optional[Reports] = None
-        self._available_features: Optional[AvailableFeatures] = None
-        self._capacities: Optional[Capacities] = None
-        self._pipelines: Optional[Pipelines] = None
-        self._gateways: Optional[Gateways] = None
+        self._admin: Admin | None = None
+        self._apps: Apps | None = None
+        self._dashboards: Dashboards | None = None
+        self._groups: Groups | None = None
+        self._users: Users | None = None
+        self._template_apps: TemplateApps | None = None
+        self._dataflow_storage_account: DataflowStorageAccount | None = None
+        self._push_datasets: PushDatasets | None = None
+        self._dataflows: Dataflows | None = None
+        self._datasets: Datasets | None = None
+        self._imports: Imports | None = None
+        self._reports: Reports | None = None
+        self._available_features: AvailableFeatures | None = None
+        self._capacities: Capacities | None = None
+        self._pipelines: Pipelines | None = None
+        self._gateways: Gateways | None = None
+        self._embed_tokens: EmbedTokens | None = None
 
     def close(self) -> None:
         """Close the underlying HTTP session."""
@@ -121,6 +125,30 @@ class PowerBiClient:
 
     def __exit__(self, *args) -> None:
         self.close()
+
+    def admin(self) -> Admin:
+        """Used to access the `Admin` Services and metadata.
+
+        ### Returns
+        ---
+        Admin :
+            The `Admin` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> admin_service = power_bi_client.admin()
+        """
+
+        if self._admin is None:
+            self._admin = Admin(session=self.power_bi_session)
+        return self._admin
 
     def apps(self) -> Apps:
         """Used to access the `Apps` Services and metadata.
@@ -481,3 +509,27 @@ class PowerBiClient:
         if self._gateways is None:
             self._gateways = Gateways(session=self.power_bi_session)
         return self._gateways
+
+    def embed_tokens(self) -> EmbedTokens:
+        """Used to access the `EmbedTokens` Services and metadata.
+
+        ### Returns
+        ---
+        EmbedTokens :
+            The `EmbedTokens` services Object.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://analysis.windows.net/powerbi/api/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> embed_tokens_service = power_bi_client.embed_tokens()
+        """
+
+        if self._embed_tokens is None:
+            self._embed_tokens = EmbedTokens(session=self.power_bi_session)
+        return self._embed_tokens

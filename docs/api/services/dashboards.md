@@ -1,0 +1,3 @@
+# Dashboards
+
+::: powerbi.dashboards.Dashboards

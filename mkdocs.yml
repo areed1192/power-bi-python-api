@@ -1,0 +1,84 @@
+site_name: Power BI Python API
+site_description: Unofficial Python wrapper for the Microsoft Power BI REST API
+site_url: https://areed1192.github.io/power-bi-python-api/
+repo_url: https://github.com/areed1192/power-bi-python-api
+repo_name: areed1192/power-bi-python-api
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - search.suggest
+    - content.code.copy
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: false
+            show_root_heading: true
+            show_root_full_path: false
+            heading_level: 2
+            members_order: source
+            docstring_style: numpy
+            merge_init_into_class: true
+            show_if_no_docstring: false
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Authentication: getting-started/authentication.md
+      - Quick Start: getting-started/quickstart.md
+  - API Reference:
+      - Client: api/client.md
+      - Authentication: api/auth.md
+      - Session: api/session.md
+      - Services:
+          - Admin: api/services/admin.md
+          - Apps: api/services/apps.md
+          - Available Features: api/services/available_features.md
+          - Capacities: api/services/capacities.md
+          - Dashboards: api/services/dashboards.md
+          - Dataflow Storage: api/services/dataflow_storage_account.md
+          - Dataflows: api/services/dataflows.md
+          - Datasets: api/services/datasets.md
+          - Embed Tokens: api/services/embed_tokens.md
+          - Gateways: api/services/gateways.md
+          - Groups: api/services/groups.md
+          - Imports: api/services/imports.md
+          - Pipelines: api/services/pipelines.md
+          - Push Datasets: api/services/push_datasets.md
+          - Reports: api/services/reports.md
+          - Template Apps: api/services/template_apps.md
+          - Users: api/services/users.md
+      - Utilities:
+          - Data Models: api/utils.md
+          - Enums: api/enums.md
+          - Exceptions: api/exceptions.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - toc:
+      permalink: true

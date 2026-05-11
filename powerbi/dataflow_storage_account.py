@@ -1,5 +1,7 @@
 """Module for the `DataflowStorageAccount` service."""
 
+from __future__ import annotations
+
 from typing import Dict
 from powerbi.session import PowerBiSession
 

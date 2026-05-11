@@ -1,0 +1,3 @@
+# PowerBiAuth
+
+::: powerbi.auth.PowerBiAuth

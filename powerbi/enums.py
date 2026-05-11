@@ -1,5 +1,7 @@
 """Power BI Python SDK Enums"""
 
+from __future__ import annotations
+
 from enum import Enum
 
 

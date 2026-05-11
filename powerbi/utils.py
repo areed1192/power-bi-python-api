@@ -1,5 +1,7 @@
 """This module contains helper functions and classes"""
 
+from __future__ import annotations
+
 import json
 
 from dataclasses import dataclass
@@ -292,6 +294,9 @@ class Column:
         """
         return json.dumps(obj=self.column, indent=4)
 
+    def __repr__(self) -> str:
+        return f"Column(name={self.name!r}, data_type={self.data_type!r})"
+
 
 class Measure:
     """
@@ -440,6 +445,9 @@ class Measure:
             properties.
         """
         return json.dumps(obj=self.measure, indent=4)
+
+    def __repr__(self) -> str:
+        return f"Measure(name={self.name!r}, expression={self.expression!r})"
 
 
 class Relationship:
@@ -642,6 +650,9 @@ class Relationship:
 
         return self.relationship
 
+    def __repr__(self) -> str:
+        return f"Relationship(name={self.name!r}, {self.from_table!r}.{self.from_column!r} -> {self.to_table!r}.{self.to_column!r})"
+
 
 class Columns:
     """
@@ -668,6 +679,9 @@ class Columns:
 
     def __iter__(self):
         return iter(self.columns)
+
+    def __repr__(self) -> str:
+        return f"Columns({self.columns!r})"
 
 
 class Measures:
@@ -696,6 +710,9 @@ class Measures:
     def __iter__(self):
         return iter(self.measures)
 
+    def __repr__(self) -> str:
+        return f"Measures({self.measures!r})"
+
 
 class Relationships:
     """
@@ -722,6 +739,9 @@ class Relationships:
 
     def __iter__(self):
         return iter(self.relationships)
+
+    def __repr__(self) -> str:
+        return f"Relationships({self.relationships!r})"
 
 
 class Tables:
@@ -750,6 +770,9 @@ class Tables:
 
     def __iter__(self):
         return iter(self.tables)
+
+    def __repr__(self) -> str:
+        return f"Tables({self.tables!r})"
 
 
 class DataSources:

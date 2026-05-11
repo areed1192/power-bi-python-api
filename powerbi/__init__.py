@@ -1,5 +1,7 @@
 """The Unofficial Python API wrapper for the Microsoft Power BI REST API."""
 
+from __future__ import annotations
+
 from powerbi.client import PowerBiClient
 from powerbi.enums import (
     ColumnAggregationMethods,

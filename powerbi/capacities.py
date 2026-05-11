@@ -1,5 +1,7 @@
 """"Module for the PowerBi `Capacities` service."""
 
+from __future__ import annotations
+
 from enum import Enum
 from typing import Dict
 from powerbi.session import PowerBiSession

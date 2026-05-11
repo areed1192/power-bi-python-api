@@ -1,5 +1,7 @@
 """Microsoft PowerBi `Pipeline` Service."""
 
+from __future__ import annotations
+
 from typing import Dict, List
 from powerbi.session import PowerBiSession
 

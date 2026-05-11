@@ -121,16 +121,169 @@ my_report_content = reports_service.export_report(
 with open(file="my_group_report_export.pbix", mode="wb+") as power_bi_file:
     power_bi_file.write(my_report_content)
 
+# Grab datasources from a report in "My Workspace".
 pprint(
     reports_service.get_datasources(report_id="cd5fd3b0-e806-4e38-a02b-ff13ef594c09")
 )
 
+# Grab datasources from a report in a specific workspace.
+pprint(
+    reports_service.get_datasources(
+        report_id="cd5fd3b0-e806-4e38-a02b-ff13ef594c09",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    )
+)
 
+# Export a report to a file format from "My Workspace".
 my_report_content = reports_service.export_to_file(
     report_id="cd5fd3b0-e806-4e38-a02b-ff13ef594c09", file_format=ExportFileFormats.PDF
 )
 
 pprint(my_report_content)
 
-with open(file="my_group_report_export.pdf", mode="wb+") as power_bi_file:
-    power_bi_file.write(my_report_content)
+# Export a report to a file format from a specific workspace.
+my_report_content = reports_service.export_to_file(
+    report_id="cd5fd3b0-e806-4e38-a02b-ff13ef594c09",
+    file_format=ExportFileFormats.PDF,
+    group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+)
+
+pprint(my_report_content)
+
+# Get the export to file status for a report in "My Workspace".
+pprint(
+    reports_service.get_export_to_file_status(
+        report_id="cd5fd3b0-e806-4e38-a02b-ff13ef594c09",
+        export_id="Mi9C5419i....PS4=",
+    )
+)
+
+# Get the export to file status for a report in a specific workspace.
+pprint(
+    reports_service.get_export_to_file_status(
+        report_id="cd5fd3b0-e806-4e38-a02b-ff13ef594c09",
+        export_id="Mi9C5419i....PS4=",
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    )
+)
+
+# Get the exported file from "My Workspace".
+file_content = reports_service.get_file_of_export_to_file(
+    report_id="cd5fd3b0-e806-4e38-a02b-ff13ef594c09",
+    export_id="Mi9C5419i....PS4=",
+)
+
+with open(file="my_exported_report.pdf", mode="wb+") as power_bi_file:
+    power_bi_file.write(file_content)
+
+# Get the exported file from a specific workspace.
+file_content = reports_service.get_file_of_export_to_file(
+    report_id="cd5fd3b0-e806-4e38-a02b-ff13ef594c09",
+    export_id="Mi9C5419i....PS4=",
+    group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+)
+
+with open(file="my_group_exported_report.pdf", mode="wb+") as power_bi_file:
+    power_bi_file.write(file_content)
+
+# Update report content in "My Workspace".
+pprint(
+    reports_service.update_report_content(
+        report_id="f0ca06d0-4a40-4329-823d-6184d9a3f468",
+        request_body={
+            "sourceReport": {
+                "sourceReportId": "8e4d5880-81d6-4804-ab97-054665050799",
+                "sourceWorkspaceId": "2f42a406-a075-4a15-bbf2-97ef958c94cb",
+            },
+            "sourceType": "ExistingReport",
+        },
+    )
+)
+
+# Update report content in a specific workspace.
+pprint(
+    reports_service.update_report_content(
+        report_id="f0ca06d0-4a40-4329-823d-6184d9a3f468",
+        request_body={
+            "sourceReport": {
+                "sourceReportId": "8e4d5880-81d6-4804-ab97-054665050799",
+                "sourceWorkspaceId": "2f42a406-a075-4a15-bbf2-97ef958c94cb",
+            },
+            "sourceType": "ExistingReport",
+        },
+        group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    )
+)
+
+# Bind a paginated report to a gateway.
+reports_service.bind_to_gateway(
+    report_id="cfafbeb1-8037-4d0c-896e-a46fb27ff229",
+    gateway_object_id="1f69e798-5852-4fdd-ab01-33bb14b6e934",
+    bind_details=[
+        {
+            "dataSourceName": "DataSource1",
+            "dataSourceObjectId": "dc2f2dac-e5e2-4c37-af76-2a0bc10f16cb",
+        }
+    ],
+)
+
+# Bind a paginated report to a gateway in a specific workspace.
+reports_service.bind_to_gateway(
+    report_id="cfafbeb1-8037-4d0c-896e-a46fb27ff229",
+    gateway_object_id="1f69e798-5852-4fdd-ab01-33bb14b6e934",
+    bind_details=[
+        {
+            "dataSourceName": "DataSource1",
+            "dataSourceObjectId": "dc2f2dac-e5e2-4c37-af76-2a0bc10f16cb",
+        }
+    ],
+    group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+)
+
+# Rebind a report to a different dataset.
+reports_service.rebind_report(
+    report_id="cec3fab1-2fc2-424e-8d36-d6180ef05082",
+    dataset_id="cfafbeb1-8037-4d0c-896e-a46fb27ff229",
+)
+
+# Rebind a report to a different dataset in a specific workspace.
+reports_service.rebind_report(
+    report_id="cec3fab1-2fc2-424e-8d36-d6180ef05082",
+    dataset_id="cfafbeb1-8037-4d0c-896e-a46fb27ff229",
+    group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+)
+
+# Take over a paginated report's data sources in a specific workspace.
+reports_service.take_over_in_group(
+    group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+    report_id="cec3fab1-2fc2-424e-8d36-d6180ef05082",
+)
+
+# Update data sources of a paginated report.
+reports_service.update_datasources(
+    report_id="cfafbeb1-8037-4d0c-896e-a46fb27ff229",
+    update_details=[
+        {
+            "datasourceName": "SqlDatasource",
+            "connectionDetails": {
+                "server": "New-Sql-Server",
+                "database": "New-Sql-Database",
+            },
+        }
+    ],
+)
+
+# Update data sources of a paginated report in a specific workspace.
+reports_service.update_datasources(
+    report_id="cfafbeb1-8037-4d0c-896e-a46fb27ff229",
+    update_details=[
+        {
+            "datasourceName": "SqlDatasource",
+            "connectionDetails": {
+                "server": "New-Sql-Server",
+                "database": "New-Sql-Database",
+            },
+        }
+    ],
+    group_id="f78705a2-bead-4a5c-ba57-166794b05c78",
+)

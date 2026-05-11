@@ -1,5 +1,7 @@
 """Module for the PowerBi `Groups` service."""
 
+from __future__ import annotations
+
 from enum import Enum
 from typing import Union
 from typing import Dict

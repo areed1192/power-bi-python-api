@@ -1,5 +1,7 @@
 """Handles all the requests made to the Microsoft Power Bi API."""
 
+from __future__ import annotations
+
 import json
 import logging
 
@@ -128,6 +130,20 @@ class PowerBiSession:
             A Dictionary object containing the
             JSON values.
         """
+
+        # Validate endpoint for missing ID parameters.
+        path_part = endpoint.split("?")[0]
+        segments = path_part.lstrip("/").split("/")
+        if "" in segments:
+            raise ValueError(
+                f"Invalid endpoint '{endpoint}': contains an empty path segment. "
+                "Verify that all required ID parameters are non-empty strings."
+            )
+        if "None" in segments:
+            raise ValueError(
+                f"Invalid endpoint '{endpoint}': contains a 'None' path segment. "
+                "Verify that all required ID parameters are provided."
+            )
 
         url = self.build_url(endpoint=endpoint)
         headers = self.build_headers()

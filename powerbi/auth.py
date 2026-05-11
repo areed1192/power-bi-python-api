@@ -1,15 +1,17 @@
 """Module for handling authentication with the Microsoft Power Bi API."""
 
-from typing import List
-from typing import Dict
+from __future__ import annotations
 
 import json
+import logging
 import time
 import urllib
 import secrets
 import pathlib
 
 import msal
+
+logger = logging.getLogger(__name__)
 
 
 class PowerBiAuth:
@@ -22,7 +24,7 @@ class PowerBiAuth:
         client_id: str,
         client_secret: str,
         redirect_uri: str,
-        scope: List[str],
+        scope: list[str],
         account_type: str = "common",
         credentials: str = None,
     ):
@@ -233,7 +235,7 @@ class PowerBiAuth:
 
         # Ask the user to go to the URL provided, they will be
         # prompted to authenticate themselves.
-        print(f"Please go to URL provided authorize your account: {url}")
+        logger.info("Please go to URL provided to authorize your account: %s", url)
 
         # Ask the user to take the final URL after authentication
         # and paste here so we can parse.
@@ -260,7 +262,7 @@ class PowerBiAuth:
 
         return auth_url
 
-    def grab_access_token(self) -> Dict:
+    def grab_access_token(self) -> dict:
         """Exchanges a code for an Access Token.
 
         ### Returns
@@ -285,7 +287,7 @@ class PowerBiAuth:
 
         return token_dict
 
-    def grab_refresh_token(self) -> Dict:
+    def grab_refresh_token(self) -> dict:
         """Grabs a new access token using a refresh token.
 
         ### Returns
@@ -300,7 +302,7 @@ class PowerBiAuth:
         )
 
         if "error" in token_dict:
-            print(token_dict)
+            logger.error("Token refresh failed: %s", token_dict.get("error_description", token_dict.get("error")))
             raise PermissionError(
                 "Permissions not authorized, delete json file and run again."
             )

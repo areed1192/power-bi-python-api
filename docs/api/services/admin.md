@@ -1,0 +1,3 @@
+# Admin
+
+::: powerbi.admin.Admin

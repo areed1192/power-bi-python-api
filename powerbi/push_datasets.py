@@ -1,5 +1,7 @@
 """Microsoft PowerBi `PushDatasets` Service."""
 
+from __future__ import annotations
+
 from typing import Dict
 from typing import Union
 from powerbi.utils import Dataset

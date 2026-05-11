@@ -1,0 +1,3 @@
+# Pipelines
+
+::: powerbi.pipelines.Pipelines

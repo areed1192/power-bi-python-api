@@ -29,6 +29,19 @@ dependencies = [
     "requests>=2.33.0",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "bandit>=1.7",
+    "pip-audit>=2.7",
+]
+docs = [
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.25",
+]
+
 [project.urls]
 Homepage = "https://github.com/areed1192/power-bi-python-api"
 "Bug Tracker" = "https://github.com/areed1192/power-bi-python-api/issues"

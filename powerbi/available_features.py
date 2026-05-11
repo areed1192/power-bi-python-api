@@ -1,5 +1,7 @@
 """Module for the `AvailableFeatures` service."""
 
+from __future__ import annotations
+
 from typing import Dict
 from powerbi.session import PowerBiSession
 

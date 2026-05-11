@@ -1,5 +1,7 @@
 """Module for the `Users` service."""
 
+from __future__ import annotations
+
 from powerbi.session import PowerBiSession
 
 

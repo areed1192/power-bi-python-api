@@ -1,5 +1,10 @@
 # Unofficial Power Bi Python API
 
+[![PyPI version](https://img.shields.io/pypi/v/python-power-bi)](https://pypi.org/project/python-power-bi/)
+[![CI](https://github.com/areed1192/power-bi-python-api/actions/workflows/ci.yml/badge.svg)](https://github.com/areed1192/power-bi-python-api/actions/workflows/ci.yml)
+[![Python versions](https://img.shields.io/pypi/pyversions/python-power-bi)](https://pypi.org/project/python-power-bi/)
+[![License: MIT](https://img.shields.io/github/license/areed1192/power-bi-python-api)](LICENSE)
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -69,10 +74,6 @@ before it has been indexed on `PyPi`. I would recommend you either install this 
 in `editable` mode or do a `local install`. For those of you, who want to make modifications
 to this project. I would recommend you install the library in `editable` mode.
 
-If you want to install the library in `editable` mode, make sure to run the `setup.py`
-file, so you can install any dependencies you may need. To run the `setup.py` file,
-run the following command in your terminal.
-
 ```console
 pip install -e .
 ```
@@ -84,7 +85,7 @@ your different projects, then do a local install.
 pip install .
 ```
 
-This will install all the dependencies listed in the `setup.py` file. Once done
+This will install all the dependencies listed in `pyproject.toml`. Once done
 you can use the library wherever you want.
 
 **Setup - PyPi Install:**
@@ -156,7 +157,7 @@ power_bi_client = PowerBiClient(
 
 # List all datasets in a workspace.
 datasets_service = power_bi_client.datasets()
-datasets = datasets_service.get_datasets_in_group(group_id="<group_id>")
+datasets = datasets_service.get_datasets(group_id="<group_id>")
 ```
 
 ### Working with Reports
@@ -165,13 +166,13 @@ datasets = datasets_service.get_datasets_in_group(group_id="<group_id>")
 reports_service = power_bi_client.reports()
 
 # Get all reports in a workspace.
-reports = reports_service.get_reports_in_group(group_id="<group_id>")
+reports = reports_service.get_reports(group_id="<group_id>")
 
 # Export a report to PDF.
-reports_service.export_to_file_in_group(
-    group_id="<group_id>",
+reports_service.export_to_file(
     report_id="<report_id>",
     file_format="PDF",
+    group_id="<group_id>",
 )
 ```
 

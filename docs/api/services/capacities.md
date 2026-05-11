@@ -1,0 +1,3 @@
+# Capacities
+
+::: powerbi.capacities.Capacities

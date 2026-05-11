@@ -1,5 +1,7 @@
 """Module for the Power BI `EmbedTokens` service."""
 
+from __future__ import annotations
+
 from powerbi.session import PowerBiSession
 
 

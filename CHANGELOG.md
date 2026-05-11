@@ -16,6 +16,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CONTRIBUTING.md` with development setup and contribution guidelines.
 - GitHub Actions CI workflow testing Python 3.9 – 3.13.
 - `samples/use_gateways_service.py` example file.
+- **reports**: `bind_to_gateway` — binds a paginated report data source to a gateway
+  (supports both My Workspace and In Group).
+- **reports**: `rebind_report` — rebinds a report to a different dataset
+  (supports both My Workspace and In Group).
+- **reports**: `take_over_in_group` — transfers ownership of paginated report data
+  sources to the current authorized user.
+- **reports**: `update_datasources` — updates data sources of a paginated report (RDL)
+  (supports both My Workspace and In Group).
+- **reports**: `get_export_to_file_status` — returns the status of an Export to File job
+  (supports both My Workspace and In Group).
+- **reports**: `get_file_of_export_to_file` — returns the file from an Export to File job
+  (supports both My Workspace and In Group).
+- **reports**: `update_report_content` — updates report content from a source report
+  (supports both My Workspace and In Group; replaces `update_report_content_in_group`).
 
 ### Fixed
 - **push_datasets**: `post_dataset` now sends JSON body (`json_payload=`) instead of
@@ -43,6 +57,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Minimum Python version is now **3.9** (previously 3.6).
 - Packaging moved from `setup.py` to `pyproject.toml` (PEP 621).
+- **reports**: `get_datasources` now supports `group_id` parameter for workspace-scoped
+  calls (previously only supported My Workspace).
+- **reports**: `export_to_file` now supports `group_id` parameter for workspace-scoped
+  calls (previously only supported My Workspace).
+- **reports**: `update_report_content_in_group` renamed to `update_report_content` with
+  optional `group_id` parameter, supporting both My Workspace and In Group variants.
 
 ## [0.1.2] - 2024-01-15
 

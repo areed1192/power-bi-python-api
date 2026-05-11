@@ -1,5 +1,7 @@
 """Module for the `Dataflows` service."""
 
+from __future__ import annotations
+
 from enum import Enum
 
 from powerbi.session import PowerBiSession

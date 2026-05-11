@@ -1,0 +1,3 @@
+# Gateways
+
+::: powerbi.gateways.Gateways

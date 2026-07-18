@@ -19,32 +19,37 @@ class PowerBiAuth:
 
     def __init__(
         self,
-        client_id: str,
-        client_secret: str,
-        redirect_uri: str,
-        scope: List[str],
+        client_id: str = None,
+        client_secret: str = None,
+        redirect_uri: str = None,
+        scope: List[str] = None,
         account_type: str = "common",
         credentials: str = None,
+        access_token: str = None,
     ):
         """Initializes the `PowerBiAuth` Client.
 
         ### Parameters
         ----
-        client_id : str
+        client_id : str (optional, Default=None)
             The application Client ID assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `access_token` is provided.
 
-        client_secret : str
+        client_secret : str (optional, Default=None)
             The application Client Secret assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `access_token` is provided.
 
-        redirect_uri : str
+        redirect_uri : str (optional, Default=None)
             The application Redirect URI assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `access_token` is provided.
 
-        scope : List[str]
+        scope : List[str] (optional, Default=None)
             The list of scopes you want the application
-            to have access to.
+            to have access to. Not required if
+            `access_token` is provided.
 
         account_type : str (optional, Default='common')
             The account type you're application wants to
@@ -52,6 +57,12 @@ class PowerBiAuth:
 
         credentials : str (optional, Default=None)
             The file path to your local credential file.
+
+        access_token : str (optional, Default=None)
+            An already-acquired Power BI access token. When
+            provided, no MSAL app is created and `login()`
+            becomes a no-op, since there's nothing left to
+            authenticate.
         """
 
         self.credentials = credentials
@@ -65,17 +76,22 @@ class PowerBiAuth:
         self.scope = scope
         self.state = secrets.token_urlsafe(16)
 
-        self.access_token = None
+        self.access_token = access_token
         self.refresh_token = None
 
         self._redirect_code = None
+        self._token_provided_directly = access_token is not None
 
-        # Initialize the Credential App.
-        self.client_app = msal.ConfidentialClientApplication(
-            client_id=self.client_id,
-            authority=self.AUTHORITY_URL + self.account_type,
-            client_credential=self.client_secret,
-        )
+        # Skip building the Credential App entirely when a token was
+        # handed to us directly, since there's nothing left to authenticate.
+        if self._token_provided_directly:
+            self.client_app = None
+        else:
+            self.client_app = msal.ConfidentialClientApplication(
+                client_id=self.client_id,
+                authority=self.AUTHORITY_URL + self.account_type,
+                client_credential=self.client_secret,
+            )
 
     def _load_or_save_credentials(self, action: str, token_dict: dict = None) -> bool:
         """Loads or saves the credential state for the Client Library.
@@ -220,6 +236,10 @@ class PowerBiAuth:
 
     def login(self) -> None:
         """Logs the user into the session."""
+
+        # A token was handed to us directly, nothing left to do.
+        if self._token_provided_directly:
+            return
 
         # Load the State.
         self._load_or_save_credentials(action="load")

@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CONTRIBUTING.md` with development setup and contribution guidelines.
 - GitHub Actions CI workflow testing Python 3.9 – 3.13.
 - `samples/use_gateways_service.py` example file.
+- `PowerBiClient` and `PowerBiAuth` now accept an `access_token` argument, letting
+  callers skip the MSAL/OAuth login flow entirely when they already have a token
+  (e.g. from a service principal or managed identity). See
+  `samples/use_client_with_access_token.py`.
 
 ### Fixed
 - **push_datasets**: `post_dataset` now sends JSON body (`json_payload=`) instead of

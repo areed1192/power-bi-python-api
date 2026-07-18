@@ -31,32 +31,37 @@ class PowerBiClient:
 
     def __init__(
         self,
-        client_id: str,
-        client_secret: str,
-        redirect_uri: str,
-        scope: List[str],
+        client_id: str = None,
+        client_secret: str = None,
+        redirect_uri: str = None,
+        scope: List[str] = None,
         account_type: str = "common",
         credentials: str = None,
+        access_token: str = None,
     ):
         """Initializes the Graph Client.
 
         ### Parameters
         ----
-        client_id : str
+        client_id : str (optional, Default=None)
             The application Client ID assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `access_token` is provided.
 
-        client_secret : str
+        client_secret : str (optional, Default=None)
             The application Client Secret assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `access_token` is provided.
 
-        redirect_uri : str
+        redirect_uri : str (optional, Default=None)
             The application Redirect URI assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `access_token` is provided.
 
-        scope : List[str]
+        scope : List[str] (optional, Default=None)
             The list of scopes you want the application
-            to have access to.
+            to have access to. Not required if
+            `access_token` is provided.
 
         account_type : str (optional, Default='common')
             The account type you're application wants to
@@ -64,6 +69,14 @@ class PowerBiClient:
 
         credentials : str (optional, Default=None)
             The file path to your local credential file.
+
+        access_token : str (optional, Default=None)
+            An already-acquired Power BI access token (for
+            example, obtained through a service principal,
+            managed identity, or an auth flow handled outside
+            this library). When provided, the standard
+            `client_id`/`client_secret`/`redirect_uri`/`scope`
+            login flow is skipped entirely.
 
         ### Usage
         ----
@@ -74,7 +87,16 @@ class PowerBiClient:
                 redirect_uri=redirect_uri,
                 credentials='config/power_bi_state.jsonc'
             )
+
+            >>> # Or, with a token you already have:
+            >>> power_bi_client = PowerBiClient(access_token=my_access_token)
         """
+
+        if not access_token and not all([client_id, client_secret, redirect_uri, scope]):
+            raise ValueError(
+                "Either `access_token` or all of `client_id`, `client_secret`, "
+                "`redirect_uri`, and `scope` must be provided."
+            )
 
         self.credentials = credentials
         self.client_id = client_id
@@ -90,6 +112,7 @@ class PowerBiClient:
             scope=self.scope,
             account_type=self.account_type,
             credentials=self.credentials,
+            access_token=access_token,
         )
 
         self.power_bi_auth_client.login()

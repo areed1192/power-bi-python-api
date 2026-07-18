@@ -58,11 +58,8 @@ class PowerBiSession:
             A dictionary containing all the components.
         """
 
-        # Ensure the access token is still valid before making a request.
-        self.client._token_validation()
-
         headers = {
-            "Authorization": f"Bearer {self.client.access_token}",
+            "Authorization": f"Bearer {self.client.get_token()}",
             "Content-Type": "application/json",
         }
 

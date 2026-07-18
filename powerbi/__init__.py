@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from powerbi.client import PowerBiClient
+from powerbi.token_provider import StaticTokenProvider, TokenProvider
 from powerbi.enums import (
     ColumnAggregationMethods,
     ColumnDataTypes,
@@ -41,6 +42,9 @@ from powerbi.utils import (
 __all__ = [
     # Client
     "PowerBiClient",
+    # Token providers
+    "TokenProvider",
+    "StaticTokenProvider",
     # Enums
     "ColumnAggregationMethods",
     "ColumnDataTypes",

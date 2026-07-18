@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from powerbi.session import PowerBiSession
 from powerbi.auth import PowerBiAuth
+from powerbi.token_provider import TokenProvider
 from powerbi.dashboards import Dashboards
 from powerbi.groups import Groups
 from powerbi.users import Users
@@ -33,32 +34,37 @@ class PowerBiClient:
 
     def __init__(
         self,
-        client_id: str,
-        client_secret: str,
-        redirect_uri: str,
-        scope: list[str],
+        client_id: str | None = None,
+        client_secret: str | None = None,
+        redirect_uri: str | None = None,
+        scope: list[str] | None = None,
         account_type: str = "common",
         credentials: str = None,
+        token_provider: TokenProvider | None = None,
     ):
         """Initializes the Graph Client.
 
         ### Parameters
         ----
-        client_id : str
+        client_id : str (optional, Default=None)
             The application Client ID assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `token_provider` is provided.
 
-        client_secret : str
+        client_secret : str (optional, Default=None)
             The application Client Secret assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `token_provider` is provided.
 
-        redirect_uri : str
+        redirect_uri : str (optional, Default=None)
             The application Redirect URI assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `token_provider` is provided.
 
-        scope : List[str]
+        scope : list[str] (optional, Default=None)
             The list of scopes you want the application
-            to have access to.
+            to have access to. Not required if
+            `token_provider` is provided.
 
         account_type : str (optional, Default='common')
             The account type you're application wants to
@@ -66,6 +72,14 @@ class PowerBiClient:
 
         credentials : str (optional, Default=None)
             The file path to your local credential file.
+
+        token_provider : TokenProvider (optional, Default=None)
+            A `TokenProvider` (e.g. `StaticTokenProvider`) supplying an
+            already-acquired Power BI access token (for example, obtained
+            through a service principal, managed identity, or an auth
+            flow handled outside this library). When provided, the
+            standard `client_id`/`client_secret`/`redirect_uri`/`scope`
+            login flow is skipped entirely.
 
         ### Usage
         ----
@@ -76,7 +90,21 @@ class PowerBiClient:
                 redirect_uri=redirect_uri,
                 credentials='config/power_bi_state.jsonc'
             )
+
+            >>> # Or, with a token you already have:
+            >>> from powerbi import StaticTokenProvider
+            >>> power_bi_client = PowerBiClient(
+                token_provider=StaticTokenProvider(my_access_token)
+            )
         """
+
+        if not token_provider and not all(
+            [client_id, client_secret, redirect_uri, scope]
+        ):
+            raise ValueError(
+                "Either `token_provider` or all of `client_id`, `client_secret`, "
+                "`redirect_uri`, and `scope` must be provided."
+            )
 
         self.credentials = credentials
         self.client_id = client_id
@@ -92,6 +120,7 @@ class PowerBiClient:
             scope=self.scope,
             account_type=self.account_type,
             credentials=self.credentials,
+            token_provider=token_provider,
         )
 
         self.power_bi_auth_client.login()

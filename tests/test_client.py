@@ -144,5 +144,37 @@ class TestPowerBiSession(TestCase):
         del self.power_bi_client
 
 
+class TestPowerBiClientWithAccessToken(TestCase):
+    """Covers constructing a `PowerBiClient` from an already-acquired
+    access token, bypassing the MSAL/OAuth login flow entirely."""
+
+    def test_skips_login_flow_and_uses_token_directly(self):
+        """No `client_id`/`client_secret`/etc. and no MSAL app should
+        be needed when an `access_token` is supplied."""
+
+        power_bi_client = PowerBiClient(access_token="my-existing-token")
+
+        self.assertIsInstance(power_bi_client, PowerBiClient)
+        self.assertIsInstance(power_bi_client.power_bi_auth_client, PowerBiAuth)
+        self.assertEqual(power_bi_client.power_bi_auth_client.access_token, "my-existing-token")
+        self.assertIsNone(power_bi_client.power_bi_auth_client.client_app)
+
+    def test_login_is_a_no_op_when_token_provided_directly(self):
+        """Calling `login()` again shouldn't attempt any MSAL/OAuth
+        work or touch the access token that was provided."""
+
+        power_bi_client = PowerBiClient(access_token="my-existing-token")
+        power_bi_client.power_bi_auth_client.login()
+
+        self.assertEqual(power_bi_client.power_bi_auth_client.access_token, "my-existing-token")
+
+    def test_raises_without_access_token_or_full_credentials(self):
+        """Should refuse to construct without either an `access_token`
+        or a complete set of client credentials."""
+
+        with self.assertRaises(ValueError):
+            PowerBiClient(client_id="only-a-client-id")
+
+
 if __name__ == "__main__":
     unittest.main()

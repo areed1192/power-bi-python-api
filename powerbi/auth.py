@@ -155,6 +155,12 @@ class PowerBiAuth:
             The number of seconds till expiration.
         """
 
+        # If we have no token state yet, treat the token as expired.
+        if not self.token_dict:
+            if token_type not in ("access_token", "refresh_token"):
+                raise ValueError("Invalid Token Type Provided.")
+            return 0
+
         # if needed check the access token.
         if token_type == "access_token":
 

@@ -1,11 +1,24 @@
 """Shared pytest fixtures for the powerbi test suite."""
 
+import time
+
 import pytest
 from unittest.mock import MagicMock, patch
 
 from powerbi.auth import PowerBiAuth
 from powerbi.session import PowerBiSession
 from powerbi.client import PowerBiClient
+
+
+def _valid_token_dict():
+    """Return a token dict that is valid well into the future."""
+    future = time.time() + 3600
+    return {
+        "access_token": "fake-access-token",
+        "refresh_token": "fake-refresh-token",
+        "expires_in": future,
+        "ext_expires_in": future,
+    }
 
 
 @pytest.fixture
@@ -20,6 +33,7 @@ def mock_auth():
         )
         auth.access_token = "fake-access-token"
         auth.refresh_token = "fake-refresh-token"
+        auth.token_dict = _valid_token_dict()
         yield auth
 
 
@@ -35,6 +49,7 @@ def mock_session(mock_auth):
         )
         # The session reads token from self.client (the auth client).
         client.power_bi_auth_client.access_token = "fake-access-token"
+        client.power_bi_auth_client.token_dict = _valid_token_dict()
 
         session = client.power_bi_session
         session._session = MagicMock()
@@ -52,4 +67,5 @@ def power_bi_client():
             scope=["https://analysis.windows.net/powerbi/api/.default"],
         )
         client.access_token = "fake-access-token"
+        client.power_bi_auth_client.token_dict = _valid_token_dict()
         yield client

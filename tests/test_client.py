@@ -23,6 +23,7 @@ from powerbi.gateways import Gateways
 from powerbi.dataflows import Dataflows
 from powerbi.datasets import Datasets
 from powerbi.imports import Imports
+from powerbi.token_provider import StaticTokenProvider
 
 
 class TestPowerBiSession(TestCase):
@@ -142,6 +143,85 @@ class TestPowerBiSession(TestCase):
         """Teardown the `PowerBiClient` object."""
 
         del self.power_bi_client
+
+
+class TestPowerBiClientWithTokenProvider(TestCase):
+    """Covers constructing a `PowerBiClient` from a `TokenProvider`,
+    bypassing the MSAL/OAuth login flow entirely."""
+
+    def test_skips_login_flow_and_delegates_to_provider(self):
+        """No `client_id`/`client_secret`/etc. and no MSAL app should
+        be needed when a `token_provider` is supplied, and `get_token()`
+        should delegate to it rather than reading a stored string."""
+
+        provider = StaticTokenProvider("my-existing-token")
+        power_bi_client = PowerBiClient(token_provider=provider)
+
+        self.assertIsInstance(power_bi_client, PowerBiClient)
+        self.assertIsInstance(power_bi_client.power_bi_auth_client, PowerBiAuth)
+        self.assertIsNone(power_bi_client.power_bi_auth_client.client_app)
+        self.assertEqual(
+            power_bi_client.power_bi_auth_client.get_token(), "my-existing-token"
+        )
+
+    def test_login_is_a_no_op_when_token_provider_supplied(self):
+        """Calling `login()` again shouldn't attempt any MSAL/OAuth
+        work or change what `get_token()` returns."""
+
+        provider = StaticTokenProvider("my-existing-token")
+        power_bi_client = PowerBiClient(token_provider=provider)
+        power_bi_client.power_bi_auth_client.login()
+
+        self.assertEqual(
+            power_bi_client.power_bi_auth_client.get_token(), "my-existing-token"
+        )
+
+    def test_get_token_reflects_provider_returning_a_new_value(self):
+        """`get_token()` should call the provider fresh each time, not
+        cache the first value it saw — this is what lets a custom
+        provider rotate/refresh its token transparently."""
+
+        class RotatingTokenProvider(StaticTokenProvider):
+            def __init__(self):
+                super().__init__("first-token")
+                self._calls = 0
+
+            def get_token(self) -> str:
+                self._calls += 1
+                return f"token-{self._calls}"
+
+        provider = RotatingTokenProvider()
+        power_bi_client = PowerBiClient(token_provider=provider)
+
+        self.assertEqual(power_bi_client.power_bi_auth_client.get_token(), "token-1")
+        self.assertEqual(power_bi_client.power_bi_auth_client.get_token(), "token-2")
+
+    def test_raises_without_token_provider_or_full_credentials(self):
+        """Should refuse to construct without either a `token_provider`
+        or a complete set of client credentials."""
+
+        with self.assertRaises(ValueError):
+            PowerBiClient(client_id="only-a-client-id")
+
+
+class TestPowerBiAuthWithTokenProvider(TestCase):
+    """Covers the same `token_provider` guard directly on `PowerBiAuth`,
+    since it can be constructed without going through `PowerBiClient`."""
+
+    def test_raises_without_token_provider_or_full_credentials(self):
+        """Constructing `PowerBiAuth` directly with no `token_provider`
+        and incomplete credentials should fail fast with a clear error,
+        not surface a confusing failure later when a request is made."""
+
+        with self.assertRaises(ValueError):
+            PowerBiAuth(client_id="only-a-client-id")
+
+    def test_accepts_token_provider_with_no_other_arguments(self):
+        provider = StaticTokenProvider("my-existing-token")
+        auth = PowerBiAuth(token_provider=provider)
+
+        self.assertIsNone(auth.client_app)
+        self.assertEqual(auth.get_token(), "my-existing-token")
 
 
 if __name__ == "__main__":

@@ -11,6 +11,8 @@ import pathlib
 
 import msal
 
+from powerbi.token_provider import TokenProvider
+
 logger = logging.getLogger(__name__)
 
 
@@ -21,32 +23,37 @@ class PowerBiAuth:
 
     def __init__(
         self,
-        client_id: str,
-        client_secret: str,
-        redirect_uri: str,
-        scope: list[str],
+        client_id: str | None = None,
+        client_secret: str | None = None,
+        redirect_uri: str | None = None,
+        scope: list[str] | None = None,
         account_type: str = "common",
         credentials: str = None,
+        token_provider: TokenProvider | None = None,
     ):
         """Initializes the `PowerBiAuth` Client.
 
         ### Parameters
         ----
-        client_id : str
+        client_id : str (optional, Default=None)
             The application Client ID assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `token_provider` is provided.
 
-        client_secret : str
+        client_secret : str (optional, Default=None)
             The application Client Secret assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `token_provider` is provided.
 
-        redirect_uri : str
+        redirect_uri : str (optional, Default=None)
             The application Redirect URI assigned when
-            creating a new Microsoft App.
+            creating a new Microsoft App. Not required
+            if `token_provider` is provided.
 
-        scope : List[str]
+        scope : list[str] (optional, Default=None)
             The list of scopes you want the application
-            to have access to.
+            to have access to. Not required if
+            `token_provider` is provided.
 
         account_type : str (optional, Default='common')
             The account type you're application wants to
@@ -54,7 +61,22 @@ class PowerBiAuth:
 
         credentials : str (optional, Default=None)
             The file path to your local credential file.
+
+        token_provider : TokenProvider (optional, Default=None)
+            A `TokenProvider` (e.g. `StaticTokenProvider`) that supplies
+            an already-acquired access token. When provided, no MSAL app
+            is created and `login()` becomes a no-op, since there's
+            nothing left to authenticate — every request instead calls
+            `token_provider.get_token()` to get a current token.
         """
+
+        if not token_provider and not all(
+            [client_id, client_secret, redirect_uri, scope]
+        ):
+            raise ValueError(
+                "Either `token_provider` or all of `client_id`, `client_secret`, "
+                "`redirect_uri`, and `scope` must be provided."
+            )
 
         self.credentials = credentials
         self.token_dict = None
@@ -71,13 +93,37 @@ class PowerBiAuth:
         self.refresh_token = None
 
         self._redirect_code = None
+        self._token_provider = token_provider
 
-        # Initialize the Credential App.
-        self.client_app = msal.ConfidentialClientApplication(
-            client_id=self.client_id,
-            authority=self.AUTHORITY_URL + self.account_type,
-            client_credential=self.client_secret,
-        )
+        # Skip building the Credential App entirely when an external token
+        # provider was handed to us, since there's nothing left to authenticate.
+        if self._token_provider is not None:
+            self.client_app = None
+        else:
+            self.client_app = msal.ConfidentialClientApplication(
+                client_id=self.client_id,
+                authority=self.AUTHORITY_URL + self.account_type,
+                client_credential=self.client_secret,
+            )
+
+    def get_token(self) -> str:
+        """Return a current, valid access token.
+
+        Delegates to the external `TokenProvider` if one was supplied;
+        otherwise validates/refreshes the MSAL-acquired token as needed
+        and returns it.
+
+        ### Returns
+        ----
+        str :
+            A valid access token.
+        """
+
+        if self._token_provider is not None:
+            return self._token_provider.get_token()
+
+        self._token_validation()
+        return self.access_token
 
     def _load_or_save_credentials(self, action: str, token_dict: dict = None) -> bool:
         """Loads or saves the credential state for the Client Library.
@@ -228,6 +274,10 @@ class PowerBiAuth:
 
     def login(self) -> None:
         """Logs the user into the session."""
+
+        # An external token provider was handed to us, nothing left to do.
+        if self._token_provider is not None:
+            return
 
         # Load the State.
         self._load_or_save_credentials(action="load")

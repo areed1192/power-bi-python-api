@@ -30,6 +30,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (supports both My Workspace and In Group).
 - **reports**: `update_report_content` — updates report content from a source report
   (supports both My Workspace and In Group; replaces `update_report_content_in_group`).
+- `TokenProvider` abstract base class and a built-in `StaticTokenProvider`
+  implementation (`powerbi.token_provider`), exported from `powerbi`.
+  `PowerBiClient` and `PowerBiAuth` now accept a `token_provider` argument,
+  letting callers skip the MSAL/OAuth login flow entirely when they already
+  have a token (e.g. from a service principal or managed identity) — every
+  request calls `token_provider.get_token()` fresh rather than reading a
+  stored string, so a custom provider can transparently rotate/refresh its
+  token. See `samples/use_client_with_access_token.py`.
 
 ### Fixed
 - **push_datasets**: `post_dataset` now sends JSON body (`json_payload=`) instead of

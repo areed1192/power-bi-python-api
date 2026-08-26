@@ -20,6 +20,13 @@ class TestBuildUrl:
         url = mock_session.build_url("myorg/groups/abc-123/datasets")
         assert url == "https://api.powerbi.com/v1.0/myorg/groups/abc-123/datasets"
 
+    def test_builds_url_with_base_url_override(self, mock_session):
+        url = mock_session.build_url(
+            "workspaces/abc-123/copyJobs",
+            base_url="https://api.fabric.microsoft.com/v1/",
+        )
+        assert url == "https://api.fabric.microsoft.com/v1/workspaces/abc-123/copyJobs"
+
 
 class TestBuildHeaders:
     """Tests for PowerBiSession.build_headers()."""
@@ -89,6 +96,44 @@ class TestMakeRequestSuccess:
         result = mock_session.make_request(method="delete", endpoint="myorg/datasets/x")
         assert result["message"] == "response successful"
         assert result["status_code"] == 200
+
+    def test_empty_response_surfaces_lro_headers(self, mock_session):
+        response = self._mock_response(content=b"", status_code=202)
+        response.content = b""
+        response.headers = {
+            "Location": "https://api.fabric.microsoft.com/v1/operations/abc-123",
+            "x-ms-operation-id": "abc-123",
+            "Retry-After": "20",
+        }
+        mock_session._session.send.return_value = response
+
+        result = mock_session.make_request(
+            method="post",
+            endpoint="workspaces/ws-1/copyJobs",
+            base_url="https://api.fabric.microsoft.com/v1/",
+        )
+        assert result["status_code"] == 202
+        assert (
+            result["Location"]
+            == "https://api.fabric.microsoft.com/v1/operations/abc-123"
+        )
+        assert result["x-ms-operation-id"] == "abc-123"
+        assert result["Retry-After"] == "20"
+
+    def test_make_request_uses_base_url_override(self, mock_session):
+        response = self._mock_response(json_body={"value": []}, content=b'{"value":[]}')
+        mock_session._session.send.return_value = response
+
+        mock_session.make_request(
+            method="get",
+            endpoint="workspaces/ws-1/copyJobs",
+            base_url="https://api.fabric.microsoft.com/v1/",
+        )
+
+        sent_request = mock_session._session.send.call_args.kwargs["request"]
+        assert sent_request.url.startswith(
+            "https://api.fabric.microsoft.com/v1/workspaces/ws-1/copyJobs"
+        )
 
     def test_zip_response_returns_bytes(self, mock_session):
         zip_bytes = b"PK\x03\x04fakecontent"

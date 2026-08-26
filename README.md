@@ -32,6 +32,7 @@ for you.
 
 - [Power BI App Registration Portal](https://dev.powerbi.com/Apps)
 - [Power BI Rest API Documentation](https://learn.microsoft.com/en-us/rest/api/power-bi/)
+- [Microsoft Fabric Rest API Documentation - Copy Job Items](https://learn.microsoft.com/en-us/rest/api/fabric/copyjob/items)
 
 ## Architecture
 
@@ -140,6 +141,14 @@ group_id = <your workspace / group id>
 
 > **Note:** `config/config.ini` is git-ignored and will never be committed.
 
+> **Note:** The `copy_jobs()` service targets the Microsoft Fabric REST API
+> (`https://api.fabric.microsoft.com/v1/`), not the Power BI REST API. It
+> requires a Fabric-compatible scope, for example
+> `https://api.fabric.microsoft.com/.default`, rather than the default Power
+> BI scope shown above. This library only supports a single scope per
+> `PowerBiClient` instance, so a client authenticated for Power BI cannot
+> also call Fabric endpoints, and vice versa.
+
 ## Quick Start
 
 ### Working with Datasets
@@ -201,6 +210,7 @@ The [`samples/`](samples/) directory contains working examples for every service
 | [`use_client.py`](samples/use_client.py)                               | Client initialization     |
 | [`use_available_features.py`](samples/use_available_features.py)       | Available Features        |
 | [`use_capacities.py`](samples/use_capacities.py)                       | Capacities                |
+| [`use_copy_jobs.py`](samples/use_copy_jobs.py)                         | Copy Jobs (Microsoft Fabric) |
 | [`use_dashboards_service.py`](samples/use_dashboards_service.py)       | Dashboards                |
 | [`use_dataflows.py`](samples/use_dataflows.py)                         | Dataflows                 |
 | [`use_dataflow_storage.py`](samples/use_dataflow_storage.py)           | Dataflow Storage Accounts |

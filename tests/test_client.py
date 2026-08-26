@@ -23,6 +23,7 @@ from powerbi.gateways import Gateways
 from powerbi.dataflows import Dataflows
 from powerbi.datasets import Datasets
 from powerbi.imports import Imports
+from powerbi.copy_jobs import CopyJobs
 
 
 class TestPowerBiSession(TestCase):
@@ -137,6 +138,11 @@ class TestPowerBiSession(TestCase):
         """Create an instance and make sure it's a `Imports` object"""
 
         self.assertIsInstance(self.power_bi_client.imports(), Imports)
+
+    def test_creates_instance_of_copy_jobs(self):
+        """Create an instance and make sure it's a `CopyJobs` object"""
+
+        self.assertIsInstance(self.power_bi_client.copy_jobs(), CopyJobs)
 
     def tearDown(self) -> None:
         """Teardown the `PowerBiClient` object."""

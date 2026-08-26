@@ -68,7 +68,7 @@ class PowerBiSession:
 
         return headers
 
-    def build_url(self, endpoint: str) -> str:
+    def build_url(self, endpoint: str, base_url: str = None) -> str:
         """Build the URL used the make string.
 
         ### Parameters
@@ -76,11 +76,19 @@ class PowerBiSession:
         endpoint : str
             The endpoint used to make the full URL.
 
+        base_url : str (optional, Default=None)
+            Overrides the default `resource_url` + `version` prefix. Used to
+            target APIs hosted elsewhere, such as the Microsoft Fabric REST
+            API, without needing a separate session.
+
         ### Returns
         ----
         str:
             The full URL with the endpoint needed.
         """
+
+        if base_url is not None:
+            return base_url + endpoint
 
         url = self.resource_url + self.version + endpoint
 
@@ -94,6 +102,7 @@ class PowerBiSession:
         data: dict = None,
         json_payload: dict = None,
         files: dict = None,
+        base_url: str = None,
     ) -> Dict:
         """Handles all the requests in the library.
 
@@ -127,6 +136,11 @@ class PowerBiSession:
             When provided, Content-Type is omitted so requests
             can set the multipart boundary automatically.
 
+        base_url : str (optional, Default=None)
+            Overrides the default `resource_url` + `version` prefix. Used to
+            target APIs hosted elsewhere, such as the Microsoft Fabric REST
+            API, without needing a separate session.
+
         ### Returns:
         ----
             A Dictionary object containing the
@@ -147,7 +161,7 @@ class PowerBiSession:
                 "Verify that all required ID parameters are provided."
             )
 
-        url = self.build_url(endpoint=endpoint)
+        url = self.build_url(endpoint=endpoint, base_url=base_url)
         headers = self.build_headers()
 
         # For multipart file uploads, remove Content-Type so requests
@@ -201,10 +215,18 @@ class PowerBiSession:
 
         # --- success path ---
         if not response.content:
-            return {
+            result = {
                 "message": "response successful",
                 "status_code": response.status_code,
             }
+
+            # Surface Long Running Operation headers (e.g. Fabric API `202
+            # Accepted` responses) so callers can poll for completion.
+            for header in ("Location", "x-ms-operation-id", "Retry-After"):
+                if header in response.headers:
+                    result[header] = response.headers[header]
+
+            return result
 
         content_type = response.headers.get("Content-Type", "")
         if content_type == "application/zip":

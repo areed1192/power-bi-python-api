@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **copy_jobs**: New `powerbi.copy_jobs.CopyJobs` service wrapping the Microsoft Fabric
+  `CopyJob` Items REST API (`create_copy_job`, `get_copy_jobs`, `get_copy_job`,
+  `update_copy_job`, `delete_copy_job`, `get_copy_job_definition`,
+  `update_copy_job_definition`, `reset_copy_job`), exposed via
+  `PowerBiClient.copy_jobs()`. Requires a Fabric-compatible scope (e.g.
+  `https://api.fabric.microsoft.com/.default`).
+- **session**: `PowerBiSession.build_url`/`make_request` accept an optional `base_url`
+  override so requests can target APIs hosted outside `api.powerbi.com`, such as the
+  Microsoft Fabric API.
+- **session**: `make_request` now surfaces `Location`, `x-ms-operation-id`, and
+  `Retry-After` headers on empty-body success responses, needed to poll Fabric Long
+  Running Operations.
+- `samples/use_copy_jobs.py` example file.
 - Clean public API exports in `powerbi/__init__.py` — all client, enum, and utility
   classes can now be imported directly from `powerbi`.
 - PEP 561 `py.typed` marker for inline type-checking support.

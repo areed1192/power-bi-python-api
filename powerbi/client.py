@@ -21,6 +21,7 @@ from powerbi.admin import Admin
 from powerbi.apps import Apps
 from powerbi.embed_token import EmbedTokens
 from powerbi.gateways import Gateways
+from powerbi.copy_jobs import CopyJobs
 
 
 class PowerBiClient:
@@ -114,6 +115,7 @@ class PowerBiClient:
         self._pipelines: Pipelines | None = None
         self._gateways: Gateways | None = None
         self._embed_tokens: EmbedTokens | None = None
+        self._copy_jobs: CopyJobs | None = None
 
     def close(self) -> None:
         """Close the underlying HTTP session."""
@@ -533,3 +535,34 @@ class PowerBiClient:
         if self._embed_tokens is None:
             self._embed_tokens = EmbedTokens(session=self.power_bi_session)
         return self._embed_tokens
+
+    def copy_jobs(self) -> CopyJobs:
+        """Used to access the `CopyJobs` Services and metadata.
+
+        ### Returns
+        ---
+        CopyJobs :
+            The `CopyJobs` services Object.
+
+        ### Note
+        ----
+        Copy Jobs are a Microsoft Fabric resource. This client must be
+        constructed with a Fabric-compatible scope (for example
+        `https://api.fabric.microsoft.com/.default`) in order to
+        authenticate against the Fabric API.
+
+        ### Usage
+        ----
+            >>> power_bi_client = PowerBiClient(
+                client_id=client_id,
+                client_secret=client_secret,
+                scope=['https://api.fabric.microsoft.com/.default'],
+                redirect_uri=redirect_uri,
+                credentials='config/power_bi_state.jsonc'
+            )
+            >>> copy_jobs_service = power_bi_client.copy_jobs()
+        """
+
+        if self._copy_jobs is None:
+            self._copy_jobs = CopyJobs(session=self.power_bi_session)
+        return self._copy_jobs
